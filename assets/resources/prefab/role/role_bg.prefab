@@ -1,0 +1,74 @@
+[
+  {
+    "__type__": "cc.Prefab",
+    "_name": "role_bg",
+    "data": {
+      "__id__": 1
+    }
+  },
+  {
+    "__type__": "cc.Node",
+    "_name": "role_bg",
+    "_children": [
+      {
+        "__id__": 2
+      }
+    ],
+    "_components": [
+      {
+        "__type__": "c2e30vY+7VPYb0C9jg3mwkR",
+        "move_range": 300,
+        "move_space": 3,
+        "node": {
+          "__id__": 1
+        },
+        "node_ani": {
+          "__id__": 2
+        }
+      }
+    ],
+    "_prefab": {
+      "__type__": "cc.PrefabInfo",
+      "root": {
+        "__id__": 1
+      }
+    }
+  },
+  {
+    "__type__": "cc.Node",
+    "_name": "node_ani",
+    "_parent": {
+      "__id__": 1
+    },
+    "_components": [
+      {
+        "__type__": "dragonBones.ArmatureDisplay",
+        "_armatureName": "Armature",
+        "_animationName": "benpao",
+        "_preCacheMode": 0,
+        "playTimes": 0,
+        "_armatureKey": "24d19002-035c-47d4-91c3-8393c8f0e283#8f20954c-82ef-4c0a-b635-9f8c5767684e",
+        "node": {
+          "__id__": 2
+        },
+        "_materials": [
+          {
+            "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
+          }
+        ]
+      }
+    ],
+    "_prefab": {
+      "__type__": "cc.PrefabInfo",
+      "fileId": "10Qb0qpV1N+5q/7pB+zK/5",
+      "root": {
+        "__id__": 1
+      }
+    },
+    "_contentSize": {
+      "__type__": "cc.Size",
+      "width": 133.34,
+      "height": 206.23
+    }
+  }
+]

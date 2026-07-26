@@ -1,0 +1,497 @@
+[
+  {
+    "id": "1",
+    "explain": "触发器",
+    "result": "0",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "2",
+    "explain": "NPC说话",
+    "result": "1",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "3",
+    "explain": "播放动画",
+    "result": "2",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "4",
+    "explain": "可破坏",
+    "result": "3",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "5",
+    "explain": "拾取物品",
+    "result": "4",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "6",
+    "explain": "互动操作",
+    "result": "6",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "7",
+    "explain": "位移",
+    "result": "7",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "8",
+    "explain": "梯子",
+    "result": "8",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "9",
+    "explain": "删除",
+    "result": "9",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "10",
+    "explain": "解锁/隐藏",
+    "result": "10",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "11",
+    "explain": "镜头",
+    "result": "11",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "12",
+    "explain": "翻转物件",
+    "result": "12",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "13",
+    "explain": "传送门",
+    "result": "13",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "14",
+    "explain": "状态换图",
+    "result": "14",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "15",
+    "explain": "取消/开启碰撞",
+    "result": "15",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "16",
+    "explain": "关卡结束",
+    "result": "16",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "17",
+    "explain": "行走切换",
+    "result": "17",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "18",
+    "explain": "跨图事件",
+    "result": "18",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "19",
+    "explain": "密码锁",
+    "result": "19",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "20",
+    "explain": "指引动画",
+    "result": "20",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "21",
+    "explain": "存档点",
+    "result": "21",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "22",
+    "explain": "空事件（预留）",
+    "result": "22",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "23",
+    "explain": "强制/解除等待",
+    "result": "23",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "24",
+    "explain": "检视",
+    "result": "24",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "25",
+    "explain": "范围掉落",
+    "result": "25",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "26",
+    "explain": "换装事件",
+    "result": "26",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "27",
+    "explain": "分镜",
+    "result": "27",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "28",
+    "explain": "乘船",
+    "result": "28",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "29",
+    "explain": "主角对齐",
+    "result": "29",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "30",
+    "explain": "基础属性",
+    "result": "30",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "31",
+    "explain": "主角表情",
+    "result": "31",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "32",
+    "explain": "播放插画",
+    "result": "32",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "33",
+    "explain": "锁定主角朝向",
+    "result": "33",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "34",
+    "explain": "掉落物",
+    "result": "34",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "35",
+    "explain": "解锁历史事实",
+    "result": "35",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "36",
+    "explain": "设置音乐音效",
+    "result": "36",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "37",
+    "explain": "跟随主角",
+    "result": "37",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "38",
+    "explain": "计时事件",
+    "result": "38",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "39",
+    "explain": "场景透明",
+    "result": "39",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "40",
+    "explain": "特殊事件",
+    "result": "40",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "41",
+    "explain": "打水",
+    "result": "41",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "42",
+    "explain": "主角气泡",
+    "result": "42",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "43",
+    "explain": "npc气泡",
+    "result": "43",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "44",
+    "explain": "拖拽npc",
+    "result": "44",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "45",
+    "explain": "离开事件",
+    "result": "45",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "46",
+    "explain": "答题弹窗",
+    "result": "46",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "47",
+    "explain": "黑屏事件",
+    "result": "47",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "48",
+    "explain": "npc换装事件",
+    "result": "48",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "101",
+    "explain": "多人冲锋（特殊事件）",
+    "result": "101",
+    "notui": "",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "1001",
+    "explain": "敌对AI 1",
+    "result": "1001",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "1002",
+    "explain": "敌对AI 2(灯)",
+    "result": "1002",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "1003",
+    "explain": "敌对AI 3(机关枪)",
+    "result": "1003",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "1004",
+    "explain": "敌对AI 4(带灯巡逻士兵1号)",
+    "result": "1004",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "1005",
+    "explain": "岗哨",
+    "result": "1005",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  },
+  {
+    "id": "1006",
+    "explain": "敌对AI 4(带灯巡逻士兵2号)",
+    "result": "1006",
+    "notui": "0",
+    "camera": "",
+    "rolestate": "",
+    "sound": ""
+  }
+]

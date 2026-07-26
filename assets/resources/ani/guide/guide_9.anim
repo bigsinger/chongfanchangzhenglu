@@ -1,0 +1,177 @@
+[
+  {
+    "__type__": "cc.AnimationClip",
+    "_name": "guide_9",
+    "_duration": 2.4,
+    "wrapMode": 2,
+    "curveData": {
+      "paths": {
+        "image_dd2": {
+          "props": {
+            "opacity": [
+              {
+                "frame": 1,
+                "value": 255
+              },
+              {
+                "frame": 1.0166666666666666,
+                "value": 0
+              }
+            ],
+            "angle": [
+              {
+                "frame": 0,
+                "value": 20
+              },
+              {
+                "frame": 0.5,
+                "value": -10
+              },
+              {
+                "frame": 1,
+                "value": -10
+              }
+            ]
+          },
+          "comps": {
+            "cc.Sprite": {
+              "spriteFrame": []
+            }
+          }
+        },
+        "image_jt": {
+          "props": {
+            "opacity": [
+              {
+                "frame": 1,
+                "value": 255
+              },
+              {
+                "frame": 1.0166666666666666,
+                "value": 0
+              },
+              {
+                "frame": 1.5,
+                "value": 0
+              }
+            ]
+          }
+        },
+        "image_sl": {
+          "props": {
+            "opacity": [
+              {
+                "frame": 0,
+                "value": 0
+              },
+              {
+                "frame": 1,
+                "value": 0
+              },
+              {
+                "frame": 1.0166666666666666,
+                "value": 255
+              },
+              {
+                "frame": 1.3,
+                "value": 255
+              },
+              {
+                "frame": 1.3166666666666667,
+                "value": 0
+              }
+            ]
+          }
+        },
+        "image_tz2_2": {
+          "props": {
+            "opacity": [
+              {
+                "frame": 0,
+                "value": 0
+              },
+              {
+                "frame": 1.3,
+                "value": 0
+              },
+              {
+                "frame": 1.3166666666666667,
+                "value": 255
+              },
+              {
+                "frame": 1.55,
+                "value": 255
+              },
+              {
+                "frame": 1.5833333333333333,
+                "value": 0
+              }
+            ]
+          }
+        },
+        "image_tz2": {
+          "props": {
+            "opacity": [
+              {
+                "frame": 1,
+                "value": 0
+              },
+              {
+                "frame": 1.0166666666666666,
+                "value": 255
+              },
+              {
+                "frame": 2.3833333333333333,
+                "value": 255
+              }
+            ]
+          },
+          "comps": {
+            "cc.Sprite": {
+              "spriteFrame": [
+                {
+                  "frame": 1.2833333333333334,
+                  "value": {
+                    "__uuid__": "48d9f576-fa10-4150-9b40-1d34699ca3d4"
+                  }
+                },
+                {
+                  "frame": 1.3333333333333333,
+                  "value": {
+                    "__uuid__": "9cef0a57-b324-4c36-a992-4b503e7f3aa4"
+                  }
+                },
+                {
+                  "frame": 2.3833333333333333,
+                  "value": {
+                    "__uuid__": "9cef0a57-b324-4c36-a992-4b503e7f3aa4"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "image_tz1": {
+          "comps": {
+            "cc.Sprite": {
+              "spriteFrame": [
+                {
+                  "frame": 0,
+                  "value": {
+                    "__uuid__": "18b173b1-79c3-4842-ba83-206992d84f17"
+                  }
+                },
+                {
+                  "frame": 1.5833333333333333,
+                  "value": {
+                    "__uuid__": "45702d36-20e6-4e01-a4c2-1030d91efedd"
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+]

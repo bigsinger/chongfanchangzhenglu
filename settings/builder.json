@@ -1,0 +1,24 @@
+{
+  "excludeScenes": [],
+  "orientation": {
+    "landscapeLeft": true,
+    "landscapeRight": true,
+    "portrait": false,
+    "upsideDown": false
+  },
+  "packageName": "com.game.longmarch.creator243",
+  "template": "link",
+  "apiLevel": "android-28",
+  "appABIs": [
+    "armeabi-v7a",
+    "arm64-v8a"
+  ],
+  "autoCompile": false,
+  "android": {
+    "packageName": "com.game.longmarch.creator243",
+    "REMOTE_SERVER_ROOT": ""
+  },
+  "startScene": "fccdc2f8-9f02-4e8c-978e-6aeefd1a8969",
+  "title": "重返长征路",
+  "webOrientation": "landscape"
+}

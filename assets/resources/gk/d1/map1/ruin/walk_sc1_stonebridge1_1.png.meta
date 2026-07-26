@@ -1,0 +1,36 @@
+{
+  "ver": "2.3.5",
+  "uuid": "00d12532-976d-40ec-8633-940431025198",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "width": 338,
+  "height": 56,
+  "platformSettings": {},
+  "subMetas": {
+    "walk_sc1_stonebridge1_1": {
+      "ver": "1.0.4",
+      "uuid": "c3b66bd6-0b07-4132-b124-d3988d9020f9",
+      "rawTextureUuid": "00d12532-976d-40ec-8633-940431025198",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 0,
+      "trimY": 0,
+      "width": 338,
+      "height": 56,
+      "rawWidth": 338,
+      "rawHeight": 56,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

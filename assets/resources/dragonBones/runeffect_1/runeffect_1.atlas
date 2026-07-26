@@ -1,0 +1,48 @@
+
+runeffect_1.png
+size: 314,78
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+00003
+  rotate: true
+  xy: 228, 17
+  size: 59, 41
+  orig: 154, 82
+  offset: 88, 6
+  index: -1
+00005
+  rotate: true
+  xy: 271, 17
+  size: 59, 41
+  orig: 154, 82
+  offset: 68, 19
+  index: -1
+00007
+  rotate: true
+  xy: 177, 10
+  size: 66, 49
+  orig: 154, 82
+  offset: 48, 20
+  index: -1
+00009
+  rotate: true
+  xy: 121, 4
+  size: 72, 54
+  orig: 154, 82
+  offset: 33, 17
+  index: -1
+00011
+  rotate: true
+  xy: 2, 2
+  size: 74, 58
+  orig: 154, 82
+  offset: 23, 12
+  index: -1
+00013
+  rotate: true
+  xy: 62, 3
+  size: 73, 57
+  orig: 154, 82
+  offset: 19, 7
+  index: -1

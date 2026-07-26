@@ -1,0 +1,90 @@
+
+scenes_ruins1.png
+size: 544,283
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+guding
+  rotate: false
+  xy: 2, 52
+  size: 307, 229
+  orig: 309, 231
+  offset: 1, 1
+  index: -1
+hou
+  rotate: false
+  xy: 355, 3
+  size: 80, 100
+  orig: 82, 102
+  offset: 1, 1
+  index: -1
+qian
+  rotate: false
+  xy: 433, 145
+  size: 106, 54
+  orig: 108, 56
+  offset: 1, 1
+  index: -1
+youqian1
+  rotate: false
+  xy: 433, 105
+  size: 105, 38
+  orig: 107, 40
+  offset: 1, 1
+  index: -1
+youqian2
+  rotate: true
+  xy: 318, 2
+  size: 111, 35
+  orig: 113, 37
+  offset: 1, 1
+  index: -1
+youqian3
+  rotate: false
+  xy: 2, 4
+  size: 112, 46
+  orig: 114, 48
+  offset: 1, 1
+  index: -1
+youqian4
+  rotate: true
+  xy: 311, 115
+  size: 166, 39
+  orig: 168, 41
+  offset: 1, 1
+  index: -1
+zhong1
+  rotate: true
+  xy: 352, 140
+  size: 141, 79
+  orig: 143, 81
+  offset: 1, 1
+  index: -1
+zhong2
+  rotate: true
+  xy: 437, 4
+  size: 99, 85
+  orig: 102, 87
+  offset: 1, 1
+  index: -1
+zhong3
+  rotate: false
+  xy: 433, 201
+  size: 109, 80
+  orig: 111, 83
+  offset: 1, 2
+  index: -1
+zuoqian1
+  rotate: false
+  xy: 221, 8
+  size: 95, 42
+  orig: 97, 44
+  offset: 1, 1
+  index: -1
+zuoqian2
+  rotate: false
+  xy: 116, 7
+  size: 103, 43
+  orig: 105, 45
+  offset: 1, 1
+  index: -1

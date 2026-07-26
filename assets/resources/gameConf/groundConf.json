@@ -1,0 +1,34 @@
+[
+  {
+    "id": "1",
+    "groundtype": "10001",
+    "": "泥土地面",
+    "wolksound": "",
+    "runsound": "",
+    "runeffect": "runeffect_1"
+  },
+  {
+    "id": "2",
+    "groundtype": "10002",
+    "": "石板地面",
+    "wolksound": "",
+    "runsound": "",
+    "runeffect": "runeffect_2"
+  },
+  {
+    "id": "3",
+    "groundtype": "10003",
+    "": "草地",
+    "wolksound": "",
+    "runsound": "",
+    "runeffect": "runeffect_3"
+  },
+  {
+    "id": "4",
+    "groundtype": "10004",
+    "": "雪地",
+    "wolksound": "",
+    "runsound": "",
+    "runeffect": "runeffect_4"
+  }
+]

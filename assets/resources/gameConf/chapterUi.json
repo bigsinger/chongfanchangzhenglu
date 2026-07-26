@@ -1,0 +1,90 @@
+[
+  {
+    "id": "1",
+    "chapterid": "1_1",
+    "chapter_name": "友谊",
+    "chapter_img": "",
+    "chapter_txt": "战争和饥荒迫使小二娃离开家乡，他沿着红军撤离的大致方向前行，准备投奔参加红军的哥哥。\n      赶了一天路的小二娃饥渴难耐，体力也所剩无几。前方是个村庄，他准备去村里找些可供果腹的食物。",
+    "chapter_prop": "3|4"
+  },
+  {
+    "id": "2",
+    "chapterid": "1_2",
+    "chapter_name": "相遇",
+    "chapter_img": "",
+    "chapter_txt": "小二娃和二虎从村里出来之后继续走着，想寻找红军的踪迹。此时，前方传来了枪炮声，好像在打仗。小二娃吓得赶忙要跑，却被二虎拦下。他们俩考虑再三，等枪炮声渐渐小了，便一同前往。",
+    "chapter_prop": "3|4"
+  },
+  {
+    "id": "3",
+    "chapterid": "1_3",
+    "chapter_name": "团结",
+    "chapter_img": "",
+    "chapter_txt": "小二娃和二虎跟着红军继续前行，越过一路围追堵截。途中小二娃也找机会打听了哥哥的消息，但都没有结果。长时间的行军作战让部队感到十分疲惫，最终决定在宜章县白石渡镇歇脚，整备扩红。",
+    "chapter_prop": "4|5"
+  },
+  {
+    "id": "4",
+    "chapterid": "1_4",
+    "chapter_name": "离别",
+    "chapter_img": "",
+    "chapter_txt": "",
+    "chapter_prop": "5|5"
+  },
+  {
+    "id": "5",
+    "chapterid": "2_1",
+    "chapter_name": "手足",
+    "chapter_img": "",
+    "chapter_txt": "",
+    "chapter_prop": "5|5"
+  },
+  {
+    "id": "6",
+    "chapterid": "2_2",
+    "chapter_name": "先锋",
+    "chapter_img": "",
+    "chapter_txt": "",
+    "chapter_prop": "5|5"
+  },
+  {
+    "id": "7",
+    "chapterid": "2_3",
+    "chapter_name": "死战",
+    "chapter_img": "",
+    "chapter_txt": "",
+    "chapter_prop": "5|5"
+  },
+  {
+    "id": "8",
+    "chapterid": "3_1",
+    "chapter_name": "奇缘",
+    "chapter_img": "",
+    "chapter_txt": "",
+    "chapter_prop": "5|5"
+  },
+  {
+    "id": "9",
+    "chapterid": "3_2",
+    "chapter_name": "奉献",
+    "chapter_img": "",
+    "chapter_txt": "",
+    "chapter_prop": "5|5"
+  },
+  {
+    "id": "10",
+    "chapterid": "3_3",
+    "chapter_name": "神农",
+    "chapter_img": "",
+    "chapter_txt": "",
+    "chapter_prop": "5|5"
+  },
+  {
+    "id": "11",
+    "chapterid": "3_4",
+    "chapter_name": "决胜",
+    "chapter_img": "",
+    "chapter_txt": "",
+    "chapter_prop": "5|5"
+  }
+]

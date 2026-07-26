@@ -1,0 +1,107 @@
+{
+  "skeleton": {
+    "hash": "avnYCtmCJDB010OB1tGlcF+jA9w",
+    "spine": "3.8.99",
+    "x": -826.84,
+    "y": -396,
+    "width": 1650,
+    "height": 800.06,
+    "images": "",
+    "audio": ""
+  },
+  "bones": [
+    {
+      "name": "root"
+    },
+    {
+      "name": "bone3",
+      "parent": "root"
+    },
+    {
+      "name": "bone",
+      "parent": "bone3",
+      "x": 153.79,
+      "y": 2.06
+    },
+    {
+      "name": "bone2",
+      "parent": "bone3",
+      "x": 124.69,
+      "y": 16.03
+    }
+  ],
+  "slots": [
+    {
+      "name": "1",
+      "bone": "bone2",
+      "attachment": "1"
+    },
+    {
+      "name": "js1",
+      "bone": "bone",
+      "attachment": "js1"
+    }
+  ],
+  "skins": [
+    {
+      "name": "default",
+      "attachments": {
+        "1": {
+          "1": {
+            "x": -126.53,
+            "y": -11.97,
+            "width": 1650,
+            "height": 800
+          }
+        },
+        "js1": {
+          "js1": {
+            "x": 15.64,
+            "y": -28.06,
+            "width": 445,
+            "height": 740
+          }
+        }
+      }
+    }
+  ],
+  "animations": {
+    "daiji": {
+      "bones": {
+        "bone2": {
+          "translate": [
+            {
+              "x": -59.2
+            },
+            {
+              "time": 2.2
+            }
+          ]
+        },
+        "bone": {
+          "translate": [
+            {
+              "x": 57.19
+            },
+            {
+              "time": 2.6
+            }
+          ]
+        },
+        "bone3": {
+          "scale": [
+            {
+              "x": 1.5,
+              "y": 1.5,
+              "curve": 0.25,
+              "c3": 0.75
+            },
+            {
+              "time": 4
+            }
+          ]
+        }
+      }
+    }
+  }
+}

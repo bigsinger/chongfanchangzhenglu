@@ -1,0 +1,20 @@
+
+scani14.png
+size: 407,144
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+tieshiwang1
+  rotate: true
+  xy: 234, 2
+  size: 140, 171
+  orig: 140, 171
+  offset: 0, 0
+  index: -1
+zhanan1
+  rotate: true
+  xy: 2, 29
+  size: 113, 230
+  orig: 138, 283
+  offset: 24, 19
+  index: -1

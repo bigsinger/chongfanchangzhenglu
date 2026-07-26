@@ -1,0 +1,22 @@
+{
+  "width": 256,
+  "imagePath": "scani18_tex.png",
+  "height": 128,
+  "name": "scani18",
+  "SubTexture": [
+    {
+      "width": 87,
+      "y": 1,
+      "height": 91,
+      "name": "scani18/t",
+      "x": 1
+    },
+    {
+      "width": 87,
+      "y": 1,
+      "height": 88,
+      "name": "scani18/t1",
+      "x": 90
+    }
+  ]
+}

@@ -1,0 +1,83 @@
+
+scenes_obstacle1.png
+size: 679,598
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+01
+  rotate: false
+  xy: 541, 403
+  size: 136, 193
+  orig: 138, 195
+  offset: 1, 1
+  index: -1
+02
+  rotate: true
+  xy: 258, 4
+  size: 222, 251
+  orig: 225, 253
+  offset: 1, 1
+  index: -1
+03
+  rotate: false
+  xy: 530, 259
+  size: 142, 142
+  orig: 144, 144
+  offset: 1, 1
+  index: -1
+04
+  rotate: false
+  xy: 127, 8
+  size: 129, 205
+  orig: 131, 207
+  offset: 1, 1
+  index: -1
+05
+  rotate: false
+  xy: 208, 332
+  size: 159, 264
+  orig: 161, 266
+  offset: 1, 1
+  index: -1
+06
+  rotate: false
+  xy: 208, 228
+  size: 88, 102
+  orig: 90, 104
+  offset: 1, 1
+  index: -1
+07
+  rotate: false
+  xy: 2, 6
+  size: 123, 207
+  orig: 125, 209
+  offset: 1, 1
+  index: -1
+08
+  rotate: true
+  xy: 298, 232
+  size: 98, 230
+  orig: 100, 232
+  offset: 1, 1
+  index: -1
+09
+  rotate: false
+  xy: 511, 2
+  size: 136, 228
+  orig: 138, 230
+  offset: 1, 1
+  index: -1
+10
+  rotate: false
+  xy: 369, 403
+  size: 170, 193
+  orig: 172, 196
+  offset: 1, 1
+  index: -1
+11
+  rotate: true
+  xy: 2, 215
+  size: 381, 204
+  orig: 383, 206
+  offset: 1, 1
+  index: -1

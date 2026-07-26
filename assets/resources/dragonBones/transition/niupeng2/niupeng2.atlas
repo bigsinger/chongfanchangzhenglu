@@ -1,0 +1,139 @@
+
+niupeng2.png
+size: 2258,2096
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+1650_750
+  rotate: true
+  xy: 2, 444
+  size: 1650, 750
+  orig: 1650, 750
+  offset: 0, 0
+  index: -1
+dise
+  rotate: true
+  xy: 754, 444
+  size: 1650, 750
+  orig: 1652, 752
+  offset: 1, 1
+  index: -1
+houtui
+  rotate: false
+  xy: 1645, 233
+  size: 80, 209
+  orig: 80, 209
+  offset: 0, 0
+  index: -1
+liemen1
+  rotate: false
+  xy: 1681, 44
+  size: 87, 187
+  orig: 89, 189
+  offset: 1, 1
+  index: -1
+liemen2
+  rotate: true
+  xy: 908, 7
+  size: 118, 172
+  orig: 120, 174
+  offset: 1, 1
+  index: -1
+liemen3
+  rotate: true
+  xy: 1082, 14
+  size: 111, 140
+  orig: 113, 142
+  offset: 1, 1
+  index: -1
+liemen4
+  rotate: true
+  xy: 1385, 15
+  size: 128, 204
+  orig: 130, 206
+  offset: 1, 1
+  index: -1
+men
+  rotate: false
+  xy: 316, 34
+  size: 121, 408
+  orig: 123, 410
+  offset: 1, 1
+  index: -1
+niu
+  rotate: true
+  xy: 2, 29
+  size: 413, 312
+  orig: 419, 312
+  offset: 6, 0
+  index: -1
+niupeng
+  rotate: true
+  xy: 1506, 444
+  size: 1650, 750
+  orig: 1652, 752
+  offset: 1, 1
+  index: -1
+qiantui
+  rotate: false
+  xy: 1727, 277
+  size: 62, 165
+  orig: 65, 165
+  offset: 0, 0
+  index: -1
+shengzi
+  rotate: false
+  xy: 1499, 157
+  size: 76, 285
+  orig: 76, 285
+  offset: 0, 0
+  index: -1
+tanzi
+  rotate: false
+  xy: 439, 37
+  size: 271, 405
+  orig: 273, 407
+  offset: 1, 1
+  index: -1
+weiba
+  rotate: false
+  xy: 1577, 221
+  size: 66, 221
+  orig: 69, 224
+  offset: 1, 2
+  index: -1
+zacao1
+  rotate: true
+  xy: 712, 2
+  size: 123, 194
+  orig: 127, 196
+  offset: 1, 1
+  index: -1
+zacao2
+  rotate: true
+  xy: 1577, 154
+  size: 65, 102
+  orig: 67, 104
+  offset: 1, 1
+  index: -1
+zacao3
+  rotate: false
+  xy: 1356, 145
+  size: 141, 297
+  orig: 143, 300
+  offset: 1, 1
+  index: -1
+zacao4
+  rotate: false
+  xy: 1224, 21
+  size: 159, 104
+  orig: 163, 106
+  offset: 3, 1
+  index: -1
+zuoqiangqianjing
+  rotate: true
+  xy: 712, 127
+  size: 315, 642
+  orig: 317, 644
+  offset: 1, 1
+  index: -1

@@ -1,0 +1,127 @@
+{
+  "skeleton": {
+    "hash": "e7Iay4r6BaXwl9FuVpEQIeZ0qYM",
+    "spine": "3.8.84",
+    "x": -333.89,
+    "y": 15.34,
+    "width": 688,
+    "height": 22,
+    "images": "./images/",
+    "audio": "E:/创新业务组/长征/场景动画/场景素材-运动"
+  },
+  "bones": [
+    {
+      "name": "heliuqianjing"
+    },
+    {
+      "name": "heliuqianjing_shuibo",
+      "parent": "heliuqianjing",
+      "y": 26.85
+    }
+  ],
+  "slots": [
+    {
+      "name": "heliuqianjing_shui",
+      "bone": "heliuqianjing"
+    },
+    {
+      "name": "heliuqianjing_shuibo",
+      "bone": "heliuqianjing_shuibo",
+      "attachment": "heliuqianjing_shuibo"
+    },
+    {
+      "name": "heliujinjing_he",
+      "bone": "heliuqianjing"
+    },
+    {
+      "name": "heliujinjing_shuibo",
+      "bone": "heliuqianjing"
+    },
+    {
+      "name": "jinjing_caocong",
+      "bone": "heliuqianjing"
+    },
+    {
+      "name": "zhangshu2_shuyehou",
+      "bone": "heliuqianjing"
+    },
+    {
+      "name": "zhangshu2_shugan",
+      "bone": "heliuqianjing"
+    },
+    {
+      "name": "zhangshu2_shuyeqian",
+      "bone": "heliuqianjing"
+    },
+    {
+      "name": "zhangshu1_shuyehou",
+      "bone": "heliuqianjing"
+    },
+    {
+      "name": "zhangshu1_shugan",
+      "bone": "heliuqianjing"
+    },
+    {
+      "name": "zhangshu1_shuyeqian",
+      "bone": "heliuqianjing"
+    }
+  ],
+  "skins": [
+    {
+      "name": "default",
+      "attachments": {
+        "heliuqianjing_shuibo": {
+          "heliuqianjing_shuibo": {
+            "x": 10.11,
+            "y": -0.51,
+            "width": 688,
+            "height": 22
+          }
+        }
+      }
+    }
+  ],
+  "animations": {
+    "await": {
+      "slots": {
+        "heliuqianjing_shuibo": {
+          "color": [
+            {
+              "color": "ffffff00"
+            },
+            {
+              "time": 1,
+              "color": "ffffffff"
+            },
+            {
+              "time": 2,
+              "color": "ffffff00"
+            }
+          ]
+        }
+      },
+      "bones": {
+        "heliuqianjing_shuibo": {
+          "rotate": [
+            {}
+          ],
+          "translate": [
+            {},
+            {
+              "time": 2,
+              "y": -14.46
+            }
+          ],
+          "scale": [
+            {},
+            {
+              "time": 2,
+              "x": 1.188,
+              "y": 1.188
+            }
+          ]
+        }
+      }
+    }
+  }
+}

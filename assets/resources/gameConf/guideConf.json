@@ -1,0 +1,72 @@
+[
+  {
+    "id": "1",
+    "img": "xs_1",
+    "explain": "攻击按钮图标"
+  },
+  {
+    "id": "2",
+    "img": "xs_2",
+    "explain": "互动按钮图标"
+  },
+  {
+    "id": "3",
+    "img": "xs_3",
+    "explain": "拾取按钮图标"
+  },
+  {
+    "id": "4",
+    "img": "xs_4",
+    "explain": "投掷手雷提示"
+  },
+  {
+    "id": "5",
+    "img": "xs_5",
+    "explain": "拖动按钮图标"
+  },
+  {
+    "id": "6",
+    "img": "xs_6",
+    "explain": ""
+  },
+  {
+    "id": "7",
+    "img": "xs_7",
+    "explain": ""
+  },
+  {
+    "id": "8",
+    "img": "xs_8",
+    "explain": ""
+  },
+  {
+    "id": "9",
+    "img": "xs_9",
+    "explain": ""
+  },
+  {
+    "id": "10",
+    "img": "xs_10",
+    "explain": ""
+  },
+  {
+    "id": "11",
+    "img": "xs_11",
+    "explain": ""
+  },
+  {
+    "id": "12",
+    "img": "xs_12",
+    "explain": ""
+  },
+  {
+    "id": "13",
+    "img": "xs_13",
+    "explain": ""
+  },
+  {
+    "id": "14",
+    "img": "xs_14",
+    "explain": ""
+  }
+]

@@ -1,0 +1,124 @@
+
+eff_shejishouji.png
+size: 1011,986
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+jiqiang/shouji/0000
+  rotate: true
+  xy: 2, 918
+  size: 66, 135
+  orig: 304, 242
+  offset: 111, 10
+  index: -1
+jiqiang/shouji/0001
+  rotate: true
+  xy: 139, 899
+  size: 85, 135
+  orig: 304, 242
+  offset: 111, 10
+  index: -1
+jiqiang/shouji/0002
+  rotate: true
+  xy: 620, 839
+  size: 145, 200
+  orig: 304, 242
+  offset: 66, 2
+  index: -1
+jiqiang/shouji/0003
+  rotate: true
+  xy: 2, 729
+  size: 168, 187
+  orig: 304, 242
+  offset: 61, 10
+  index: -1
+jiqiang/shouji/0004
+  rotate: true
+  xy: 191, 670
+  size: 187, 191
+  orig: 304, 242
+  offset: 57, 6
+  index: -1
+jiqiang/shouji/0005
+  rotate: false
+  xy: 384, 640
+  size: 217, 217
+  orig: 304, 242
+  offset: 43, 11
+  index: -1
+jiqiang/shouji/0006
+  rotate: false
+  xy: 603, 613
+  size: 243, 217
+  orig: 304, 242
+  offset: 31, 12
+  index: -1
+jiqiang/shouji/0007
+  rotate: false
+  xy: 2, 451
+  size: 265, 217
+  orig: 304, 242
+  offset: 21, 12
+  index: -1
+jiqiang/shouji2/0000
+  rotate: false
+  xy: 276, 859
+  size: 170, 125
+  orig: 464, 430
+  offset: 170, 0
+  index: -1
+jiqiang/shouji2/0001
+  rotate: false
+  xy: 448, 859
+  size: 170, 125
+  orig: 464, 430
+  offset: 170, 0
+  index: -1
+jiqiang/shouji2/0002
+  rotate: false
+  xy: 822, 832
+  size: 187, 152
+  orig: 464, 430
+  offset: 142, 0
+  index: -1
+jiqiang/shouji2/0003
+  rotate: true
+  xy: 269, 350
+  size: 261, 353
+  orig: 464, 430
+  offset: 111, 0
+  index: -1
+jiqiang/shouji2/0004
+  rotate: true
+  xy: 624, 269
+  size: 342, 351
+  orig: 464, 430
+  offset: 80, 2
+  index: -1
+jiqiang/shouji2/0005
+  rotate: false
+  xy: 2, 2
+  size: 389, 346
+  orig: 464, 430
+  offset: 57, 2
+  index: -1
+
+eff_shejishouji2.png
+size: 702,438
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+jiqiang/shouji2/0006
+  rotate: true
+  xy: 354, 2
+  size: 434, 346
+  orig: 464, 430
+  offset: 30, 2
+  index: -1
+jiqiang/shouji2/0007
+  rotate: true
+  xy: 2, 2
+  size: 434, 350
+  orig: 464, 430
+  offset: 6, 2
+  index: -1

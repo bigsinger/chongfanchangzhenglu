@@ -1,0 +1,79 @@
+[
+  {
+    "__type__": "cc.AnimationClip",
+    "_name": "guide_13",
+    "_duration": 1.55,
+    "sample": 20,
+    "wrapMode": 2,
+    "curveData": {
+      "paths": {
+        "image_chuang2": {
+          "props": {
+            "opacity": [
+              {
+                "frame": 0.75,
+                "value": 0
+              },
+              {
+                "frame": 0.8,
+                "value": 255
+              }
+            ]
+          }
+        },
+        "image_jt": {
+          "props": {
+            "opacity": [
+              {
+                "frame": 0.75,
+                "value": 255
+              },
+              {
+                "frame": 0.8,
+                "value": 0
+              }
+            ]
+          }
+        },
+        "image_gong1": {
+          "comps": {
+            "cc.Sprite": {
+              "spriteFrame": [
+                {
+                  "frame": 0,
+                  "value": {
+                    "__uuid__": "9cef0a57-b324-4c36-a992-4b503e7f3aa4"
+                  }
+                },
+                {
+                  "frame": 0.4,
+                  "value": {
+                    "__uuid__": "e19ee82b-ac9b-4599-9442-13c16ad20845"
+                  }
+                },
+                {
+                  "frame": 0.6,
+                  "value": {
+                    "__uuid__": "e19ee82b-ac9b-4599-9442-13c16ad20845"
+                  }
+                },
+                {
+                  "frame": 0.75,
+                  "value": {
+                    "__uuid__": "9cef0a57-b324-4c36-a992-4b503e7f3aa4"
+                  }
+                },
+                {
+                  "frame": 1.5,
+                  "value": {
+                    "__uuid__": "9cef0a57-b324-4c36-a992-4b503e7f3aa4"
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+]

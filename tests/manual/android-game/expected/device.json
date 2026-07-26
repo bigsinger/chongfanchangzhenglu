@@ -1,0 +1,6 @@
+{
+  "serial": "emulator-5554",
+  "package": "com.game.longmarch.creator243",
+  "activity": "org.cocos2dx.javascript.AppActivity",
+  "resolution": "1920x1080"
+}

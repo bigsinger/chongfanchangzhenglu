@@ -1,0 +1,13 @@
+
+heliuqianjing_shuibo.png
+size: 690,24
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+heliuqianjing_shuibo
+  rotate: false
+  xy: 2, 2
+  size: 686, 20
+  orig: 688, 22
+  offset: 1, 1
+  index: -1

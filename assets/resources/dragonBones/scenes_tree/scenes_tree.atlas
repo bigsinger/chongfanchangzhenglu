@@ -1,0 +1,20 @@
+
+scenes_tree.png
+size: 1160,257
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+xg
+  rotate: false
+  xy: 2, 2
+  size: 691, 253
+  orig: 691, 253
+  offset: 0, 0
+  index: -1
+xy
+  rotate: false
+  xy: 695, 11
+  size: 463, 244
+  orig: 463, 244
+  offset: 0, 0
+  index: -1

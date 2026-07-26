@@ -1,0 +1,194 @@
+
+loding.png
+size: 2033,1904
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+anying
+  rotate: true
+  xy: 1899, 1730
+  size: 172, 127
+  orig: 172, 127
+  offset: 0, 0
+  index: -1
+cao1
+  rotate: false
+  xy: 281, 1817
+  size: 978, 85
+  orig: 978, 85
+  offset: 0, 0
+  index: -1
+cao2
+  rotate: false
+  xy: 2, 1089
+  size: 1099, 248
+  orig: 1099, 248
+  offset: 0, 0
+  index: -1
+cao3
+  rotate: true
+  xy: 1759, 192
+  size: 1120, 272
+  orig: 1120, 275
+  offset: 0, 0
+  index: -1
+caoyou1
+  rotate: false
+  xy: 2, 591
+  size: 1652, 241
+  orig: 1652, 241
+  offset: 0, 0
+  index: -1
+jinjingcao
+  rotate: false
+  xy: 2, 340
+  size: 1141, 249
+  orig: 1144, 251
+  offset: 1, 1
+  index: -1
+r1
+  rotate: false
+  xy: 1747, 1786
+  size: 150, 116
+  orig: 150, 116
+  offset: 0, 0
+  index: -1
+r2
+  rotate: true
+  xy: 1619, 1787
+  size: 115, 126
+  orig: 115, 126
+  offset: 0, 0
+  index: -1
+r3
+  rotate: true
+  xy: 144, 1842
+  size: 60, 135
+  orig: 61, 146
+  offset: 0, 0
+  index: -1
+r4
+  rotate: true
+  xy: 1417, 1804
+  size: 98, 200
+  orig: 100, 201
+  offset: 2, 1
+  index: -1
+r5
+  rotate: true
+  xy: 67, 1860
+  size: 42, 75
+  orig: 42, 75
+  offset: 0, 0
+  index: -1
+r6
+  rotate: true
+  xy: 2, 1868
+  size: 34, 63
+  orig: 36, 65
+  offset: 1, 1
+  index: -1
+shitou
+  rotate: false
+  xy: 2, 1691
+  size: 1078, 124
+  orig: 1080, 126
+  offset: 1, 1
+  index: -1
+shitou_you
+  rotate: false
+  xy: 1261, 1810
+  size: 154, 92
+  orig: 156, 101
+  offset: 1, 8
+  index: -1
+shu
+  rotate: true
+  xy: 1423, 1557
+  size: 228, 273
+  orig: 230, 275
+  offset: 1, 1
+  index: -1
+youyun
+  rotate: false
+  xy: 1103, 864
+  size: 654, 448
+  orig: 654, 448
+  offset: 0, 0
+  index: -1
+yuanjincao
+  rotate: false
+  xy: 2, 834
+  size: 1071, 253
+  orig: 1071, 253
+  offset: 0, 0
+  index: -1
+yuanjingyun
+  rotate: false
+  xy: 2, 1464
+  size: 1002, 225
+  orig: 1002, 264
+  offset: 0, 39
+  index: -1
+yuanjinren
+  rotate: false
+  xy: 1082, 1632
+  size: 339, 170
+  orig: 341, 173
+  offset: 1, 2
+  index: -1
+yuanpingdi
+  rotate: false
+  xy: 1402, 1314
+  size: 586, 241
+  orig: 588, 243
+  offset: 1, 1
+  index: -1
+zhongjiancao
+  rotate: false
+  xy: 2, 2
+  size: 1093, 336
+  orig: 1257, 336
+  offset: 82, 0
+  index: -1
+zuoshan
+  rotate: false
+  xy: 1006, 1339
+  size: 394, 291
+  orig: 396, 293
+  offset: 1, 1
+  index: -1
+zuoyun
+  rotate: false
+  xy: 1145, 132
+  size: 581, 457
+  orig: 741, 533
+  offset: 0, 76
+  index: -1
+
+loding2.png
+size: 1656,1387
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+riguang
+  rotate: false
+  xy: 2, 633
+  size: 1652, 752
+  orig: 1652, 752
+  offset: 0, 0
+  index: -1
+youshan
+  rotate: false
+  xy: 695, 90
+  size: 778, 541
+  orig: 781, 544
+  offset: 2, 2
+  index: -1
+zuoshangshan
+  rotate: false
+  xy: 2, 2
+  size: 691, 629
+  orig: 693, 631
+  offset: 1, 1
+  index: -1

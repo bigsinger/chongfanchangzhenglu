@@ -1,0 +1,146 @@
+
+falls_xia.png
+size: 416,295
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+pubu1/00000
+  rotate: true
+  xy: 2, 179
+  size: 22, 355
+  orig: 45, 377
+  offset: 10, 7
+  index: -1
+pubu1/00002
+  rotate: true
+  xy: 2, 272
+  size: 21, 355
+  orig: 45, 377
+  offset: 11, 7
+  index: -1
+pubu1/00004
+  rotate: true
+  xy: 2, 155
+  size: 22, 355
+  orig: 45, 377
+  offset: 10, 7
+  index: -1
+pubu1/00006
+  rotate: true
+  xy: 2, 249
+  size: 21, 355
+  orig: 45, 377
+  offset: 11, 7
+  index: -1
+pubu1/00008
+  rotate: true
+  xy: 2, 131
+  size: 22, 355
+  orig: 45, 377
+  offset: 10, 7
+  index: -1
+pubu1/00010
+  rotate: true
+  xy: 2, 107
+  size: 22, 355
+  orig: 45, 377
+  offset: 10, 7
+  index: -1
+pubu1/00012
+  rotate: true
+  xy: 2, 83
+  size: 22, 355
+  orig: 45, 377
+  offset: 10, 7
+  index: -1
+pubu1/00014
+  rotate: true
+  xy: 2, 59
+  size: 22, 355
+  orig: 45, 377
+  offset: 10, 7
+  index: -1
+pubu1/00016
+  rotate: true
+  xy: 2, 226
+  size: 21, 355
+  orig: 45, 377
+  offset: 11, 7
+  index: -1
+pubu1/00018
+  rotate: true
+  xy: 2, 203
+  size: 21, 355
+  orig: 45, 377
+  offset: 11, 7
+  index: -1
+zutongjieshui_shuibo/00000
+  rotate: false
+  xy: 131, 9
+  size: 61, 48
+  orig: 92, 81
+  offset: 14, 11
+  index: -1
+zutongjieshui_shuibo/00002
+  rotate: false
+  xy: 194, 8
+  size: 60, 49
+  orig: 92, 81
+  offset: 18, 13
+  index: -1
+zutongjieshui_shuibo/00004
+  rotate: false
+  xy: 66, 10
+  size: 63, 47
+  orig: 92, 81
+  offset: 13, 16
+  index: -1
+zutongjieshui_shuibo/00006
+  rotate: false
+  xy: 319, 2
+  size: 68, 52
+  orig: 92, 81
+  offset: 10, 11
+  index: -1
+zutongjieshui_shuibo/00008
+  rotate: false
+  xy: 359, 236
+  size: 53, 57
+  orig: 92, 81
+  offset: 23, 10
+  index: -1
+zutongjieshui_shuibo/00010
+  rotate: true
+  xy: 359, 176
+  size: 58, 49
+  orig: 92, 81
+  offset: 21, 11
+  index: -1
+zutongjieshui_shuibo/00012
+  rotate: true
+  xy: 359, 116
+  size: 58, 49
+  orig: 92, 81
+  offset: 19, 17
+  index: -1
+zutongjieshui_shuibo/00014
+  rotate: true
+  xy: 359, 56
+  size: 58, 55
+  orig: 92, 81
+  offset: 17, 12
+  index: -1
+zutongjieshui_shuibo/00016
+  rotate: false
+  xy: 2, 13
+  size: 62, 44
+  orig: 92, 81
+  offset: 14, 16
+  index: -1
+zutongjieshui_shuibo/00018
+  rotate: false
+  xy: 256, 5
+  size: 61, 52
+  orig: 92, 81
+  offset: 18, 11
+  index: -1

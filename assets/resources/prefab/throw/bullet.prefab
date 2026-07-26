@@ -1,0 +1,126 @@
+[
+  {
+    "__type__": "cc.Prefab",
+    "_name": "bullet",
+    "data": {
+      "__id__": 1
+    }
+  },
+  {
+    "__type__": "cc.Node",
+    "_name": "bullet",
+    "_children": [
+      {
+        "__id__": 2
+      }
+    ],
+    "_components": [
+      {
+        "__type__": "cc.RigidBody",
+        "_gravityScale": 0,
+        "enabledContactListener": true,
+        "node": {
+          "__id__": 1
+        }
+      },
+      {
+        "__type__": "cc.PhysicsBoxCollider",
+        "tag": 1001,
+        "_density": 0.5,
+        "_sensor": true,
+        "_restitution": 0.2,
+        "node": {
+          "__id__": 1
+        },
+        "_offset": {
+          "__type__": "cc.Vec2",
+          "x": -30,
+          "y": 3
+        },
+        "_size": {
+          "__type__": "cc.Size",
+          "width": 50,
+          "height": 15
+        }
+      },
+      {
+        "__type__": "34d3a0ELINHMIk3rl1VNOVs",
+        "node": {
+          "__id__": 1
+        },
+        "img_bullet": {
+          "__id__": 2
+        }
+      }
+    ],
+    "_prefab": {
+      "__type__": "cc.PrefabInfo",
+      "root": {
+        "__id__": 1
+      }
+    },
+    "_contentSize": {
+      "__type__": "cc.Size",
+      "width": 196,
+      "height": 49
+    },
+    "_anchorPoint": {
+      "__type__": "cc.Vec2",
+      "x": 1,
+      "y": 0.5
+    }
+  },
+  {
+    "__type__": "cc.Node",
+    "_name": "img_bullet",
+    "_parent": {
+      "__id__": 1
+    },
+    "_components": [
+      {
+        "__type__": "cc.Sprite",
+        "_sizeMode": 0,
+        "node": {
+          "__id__": 2
+        },
+        "_materials": [
+          {
+            "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
+          }
+        ],
+        "_spriteFrame": {
+          "__uuid__": "e132eb7b-6b5d-4368-8ad4-abf66a84cba7"
+        }
+      }
+    ],
+    "_prefab": {
+      "__type__": "cc.PrefabInfo",
+      "fileId": "d7tPyF6vxNIINcbu64Zjcg",
+      "root": {
+        "__id__": 1
+      }
+    },
+    "_contentSize": {
+      "__type__": "cc.Size",
+      "width": 194,
+      "height": 30
+    },
+    "_anchorPoint": {
+      "__type__": "cc.Vec2",
+      "x": 1,
+      "y": 0.5
+    },
+    "_trs": [
+      0,
+      5,
+      0,
+      0,
+      0,
+      0,
+      1,
+      1,
+      1,
+      1
+    ]
+  }
+]

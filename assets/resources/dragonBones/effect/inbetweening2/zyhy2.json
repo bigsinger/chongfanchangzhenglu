@@ -1,0 +1,139 @@
+{
+  "skeleton": {
+    "hash": "KN8wxxalJNk/zMO/ZGkQgPHV6cg",
+    "spine": "3.8.99",
+    "x": -826,
+    "y": -400,
+    "width": 1650.01,
+    "height": 800,
+    "images": "",
+    "audio": ""
+  },
+  "bones": [
+    {
+      "name": "root"
+    },
+    {
+      "name": "bone",
+      "parent": "root",
+      "length": 78.19,
+      "rotation": -5.63,
+      "x": 10.52,
+      "y": -15.43
+    },
+    {
+      "name": "bone2",
+      "parent": "root",
+      "length": 47.18,
+      "rotation": -30.74,
+      "x": 17.09,
+      "y": -26.39
+    },
+    {
+      "name": "bone3",
+      "parent": "root",
+      "length": 63.26,
+      "rotation": 14.04,
+      "x": 42.3,
+      "y": 17.45
+    }
+  ],
+  "slots": [
+    {
+      "name": "2",
+      "bone": "bone",
+      "attachment": "2"
+    },
+    {
+      "name": "js2",
+      "bone": "bone3",
+      "attachment": "js2"
+    },
+    {
+      "name": "gy1",
+      "bone": "bone2",
+      "attachment": "gy1"
+    }
+  ],
+  "skins": [
+    {
+      "name": "default",
+      "attachments": {
+        "2": {
+          "2": {
+            "x": -12.97,
+            "y": 14.22,
+            "rotation": 5.63,
+            "width": 1650,
+            "height": 800
+          }
+        },
+        "gy1": {
+          "gy1": {
+            "x": 576.63,
+            "y": 340.99,
+            "rotation": 30.74,
+            "width": 274,
+            "height": 743
+          }
+        },
+        "js2": {
+          "js2": {
+            "x": 131.06,
+            "y": -37.36,
+            "rotation": -14.04,
+            "width": 1291,
+            "height": 753
+          }
+        }
+      }
+    }
+  ],
+  "animations": {
+    "daiji": {
+      "bones": {
+        "root": {
+          "scale": [
+            {
+              "x": 1.5,
+              "y": 1.5,
+              "curve": 0.25,
+              "c3": 0.75
+            },
+            {
+              "time": 4
+            }
+          ]
+        },
+        "bone3": {
+          "rotate": [
+            {
+              "angle": -4.71
+            },
+            {
+              "time": 3
+            }
+          ],
+          "translate": [
+            {
+              "x": 102.76,
+              "y": 16.88
+            },
+            {
+              "time": 3
+            }
+          ],
+          "scale": [
+            {
+              "x": 1.2,
+              "y": 1.2
+            },
+            {
+              "time": 3
+            }
+          ]
+        }
+      }
+    }
+  }
+}

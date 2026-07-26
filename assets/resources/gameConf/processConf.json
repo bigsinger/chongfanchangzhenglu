@@ -1,0 +1,86 @@
+[
+  {
+    "id": 1,
+    "hintid": "prop20",
+    "hintmode": 1,
+    "hintcont": "public/goods/prop_pail1"
+  },
+  {
+    "id": 2,
+    "hintid": "prop21",
+    "hintmode": 1,
+    "hintcont": "public/goods/prop_pail2"
+  },
+  {
+    "id": 3,
+    "hintid": "prop22",
+    "hintmode": 1,
+    "hintcont": "public/goods/prop_knife"
+  },
+  {
+    "id": 4,
+    "hintid": "prop23",
+    "hintmode": 1,
+    "hintcont": "public/goods/prop_bamboo1"
+  },
+  {
+    "id": 5,
+    "hintid": "prop24",
+    "hintmode": 1,
+    "hintcont": "public/goods/prop_bamboo2"
+  },
+  {
+    "id": 6,
+    "hintid": "prop41",
+    "hintmode": 1,
+    "hintcont": "public/goods/prop_cooked1"
+  },
+  {
+    "id": 7,
+    "hintid": "prop44",
+    "hintmode": 1,
+    "hintcont": "public/goods/prop_shovel"
+  },
+  {
+    "id": 8,
+    "hintid": "",
+    "hintmode": "",
+    "hintcont": ""
+  },
+  {
+    "id": 9,
+    "hintid": "",
+    "hintmode": "",
+    "hintcont": ""
+  },
+  {
+    "id": 10,
+    "hintid": "",
+    "hintmode": "",
+    "hintcont": ""
+  },
+  {
+    "id": 11,
+    "hintid": "",
+    "hintmode": "",
+    "hintcont": ""
+  },
+  {
+    "id": 12,
+    "hintid": "",
+    "hintmode": "",
+    "hintcont": ""
+  },
+  {
+    "id": 13,
+    "hintid": "",
+    "hintmode": "",
+    "hintcont": ""
+  },
+  {
+    "id": 14,
+    "hintid": "",
+    "hintmode": "",
+    "hintcont": ""
+  }
+]

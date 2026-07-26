@@ -1,0 +1,171 @@
+{
+  "frameRate": 24,
+  "name": "role01",
+  "version": "5.5",
+  "compatibleVersion": "5.5",
+  "armature": [
+    {
+      "type": "Armature",
+      "frameRate": 24,
+      "name": "Armature",
+      "aabb": {
+        "x": -71,
+        "y": -41,
+        "width": 142,
+        "height": 82
+      },
+      "bone": [
+        {
+          "name": "root"
+        },
+        {
+          "length": 5,
+          "name": "bone",
+          "parent": "root"
+        }
+      ],
+      "slot": [
+        {
+          "displayIndex": 14,
+          "name": "0000",
+          "parent": "bone"
+        }
+      ],
+      "skin": [
+        {
+          "slot": [
+            {
+              "name": "0000",
+              "display": [
+                {
+                  "name": "0028"
+                },
+                {
+                  "name": "0026"
+                },
+                {
+                  "name": "0024"
+                },
+                {
+                  "name": "0022"
+                },
+                {
+                  "name": "0020"
+                },
+                {
+                  "name": "0018"
+                },
+                {
+                  "name": "0016"
+                },
+                {
+                  "name": "0014"
+                },
+                {
+                  "name": "0012"
+                },
+                {
+                  "name": "0010"
+                },
+                {
+                  "name": "0008"
+                },
+                {
+                  "name": "0006"
+                },
+                {
+                  "name": "0004"
+                },
+                {
+                  "name": "0002"
+                },
+                {
+                  "name": "1",
+                  "path": "0000"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "animation": [
+        {
+          "duration": 28,
+          "playTimes": 0,
+          "name": "daiji",
+          "slot": [
+            {
+              "name": "0000",
+              "displayFrame": [
+                {
+                  "duration": 2,
+                  "value": 14
+                },
+                {
+                  "duration": 2,
+                  "value": 13
+                },
+                {
+                  "duration": 2,
+                  "value": 12
+                },
+                {
+                  "duration": 2,
+                  "value": 11
+                },
+                {
+                  "duration": 2,
+                  "value": 10
+                },
+                {
+                  "duration": 2,
+                  "value": 9
+                },
+                {
+                  "duration": 2,
+                  "value": 8
+                },
+                {
+                  "duration": 2,
+                  "value": 7
+                },
+                {
+                  "duration": 2,
+                  "value": 6
+                },
+                {
+                  "duration": 2,
+                  "value": 5
+                },
+                {
+                  "duration": 2,
+                  "value": 4
+                },
+                {
+                  "duration": 2,
+                  "value": 3
+                },
+                {
+                  "duration": 2,
+                  "value": 2
+                },
+                {
+                  "duration": 2,
+                  "value": 1
+                },
+                {
+                  "duration": 0
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "defaultActions": [
+        {
+          "gotoAndPlay": "daiji"
+        }
+      ]
+    }
+  ]
+}

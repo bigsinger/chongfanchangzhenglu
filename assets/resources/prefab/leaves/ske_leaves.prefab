@@ -1,0 +1,46 @@
+[
+  {
+    "__type__": "cc.Prefab",
+    "_name": "ske_leaves",
+    "data": {
+      "__id__": 1
+    }
+  },
+  {
+    "__type__": "cc.Node",
+    "_name": "ske_leaves",
+    "_components": [
+      {
+        "__type__": "sp.Skeleton",
+        "defaultSkin": "default",
+        "_preCacheMode": 1,
+        "_cacheMode": 1,
+        "loop": false,
+        "_animationName": "yezi01",
+        "_playTimes": 1,
+        "node": {
+          "__id__": 1
+        },
+        "_materials": [
+          {
+            "__uuid__": "7afd064b-113f-480e-b793-8817d19f63c3"
+          }
+        ],
+        "_N$skeletonData": {
+          "__uuid__": "0a6d16f1-aad2-4491-8351-103cf1065855"
+        }
+      }
+    ],
+    "_prefab": {
+      "__type__": "cc.PrefabInfo",
+      "root": {
+        "__id__": 1
+      }
+    },
+    "_contentSize": {
+      "__type__": "cc.Size",
+      "width": 27,
+      "height": 21
+    }
+  }
+]

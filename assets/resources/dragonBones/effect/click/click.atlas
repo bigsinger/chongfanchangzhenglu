@@ -1,0 +1,13 @@
+
+click.png
+size: 206,206
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+fx_quan
+  rotate: false
+  xy: 2, 2
+  size: 202, 202
+  orig: 256, 256
+  offset: 27, 27
+  index: -1

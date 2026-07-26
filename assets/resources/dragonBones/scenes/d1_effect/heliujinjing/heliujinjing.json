@@ -1,0 +1,134 @@
+{
+  "skeleton": {
+    "hash": "+8XBn58htQCXxYFzCJ1axrqlTKE",
+    "spine": "3.8.84",
+    "x": -413.75,
+    "y": -1.62,
+    "width": 828,
+    "height": 193,
+    "images": "./images/",
+    "audio": "E:/创新业务组/长征/场景动画/场景素材-运动"
+  },
+  "bones": [
+    {
+      "name": "root"
+    },
+    {
+      "name": "heliujinjing_shuibo",
+      "parent": "root",
+      "x": 0.48,
+      "y": 137.65
+    }
+  ],
+  "slots": [
+    {
+      "name": "heliuqianjing_shui",
+      "bone": "root"
+    },
+    {
+      "name": "heliuqianjing_shuibo",
+      "bone": "root"
+    },
+    {
+      "name": "heliujinjing_he",
+      "bone": "root"
+    },
+    {
+      "name": "heliujinjing_shuibo",
+      "bone": "heliujinjing_shuibo",
+      "attachment": "heliujinjing_shuibo"
+    },
+    {
+      "name": "jinjing_caocong",
+      "bone": "root"
+    },
+    {
+      "name": "zhangshu2_shuyehou",
+      "bone": "root"
+    },
+    {
+      "name": "zhangshu2_shugan",
+      "bone": "root"
+    },
+    {
+      "name": "zhangshu2_shuyeqian",
+      "bone": "root"
+    },
+    {
+      "name": "zhangshu1_shuyehou",
+      "bone": "root"
+    },
+    {
+      "name": "zhangshu1_shugan",
+      "bone": "root"
+    },
+    {
+      "name": "zhangshu1_shuyeqian",
+      "bone": "root"
+    }
+  ],
+  "skins": [
+    {
+      "name": "default",
+      "attachments": {
+        "heliujinjing_shuibo": {
+          "heliujinjing_shuibo": {
+            "x": -12.72,
+            "y": 0.73,
+            "width": 397,
+            "height": 82
+          }
+        }
+      }
+    }
+  ],
+  "animations": {
+    "animation": {
+      "slots": {
+        "heliujinjing_shuibo": {
+          "color": [
+            {
+              "color": "ffffff00"
+            },
+            {
+              "time": 1,
+              "color": "ffffffff"
+            },
+            {
+              "time": 2,
+              "color": "ffffff00"
+            }
+          ]
+        }
+      },
+      "bones": {
+        "heliujinjing_shuibo": {
+          "rotate": [
+            {
+              "curve": "stepped"
+            },
+            {
+              "time": 2
+            }
+          ],
+          "translate": [
+            {},
+            {
+              "time": 2,
+              "x": 4.67,
+              "y": -68.46
+            }
+          ],
+          "scale": [
+            {},
+            {
+              "time": 2,
+              "x": 1.28,
+              "y": 1.28
+            }
+          ]
+        }
+      }
+    }
+  }
+}

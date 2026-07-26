@@ -1,0 +1,216 @@
+
+falls_shang.png
+size: 779,838
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+pubu1/00000
+  rotate: true
+  xy: 2, 768
+  size: 22, 355
+  orig: 45, 377
+  offset: 10, 7
+  index: -1
+pubu1/00002
+  rotate: true
+  xy: 2, 815
+  size: 21, 355
+  orig: 45, 377
+  offset: 11, 7
+  index: -1
+pubu1/00004
+  rotate: true
+  xy: 359, 768
+  size: 22, 355
+  orig: 45, 377
+  offset: 10, 7
+  index: -1
+pubu1/00006
+  rotate: true
+  xy: 359, 815
+  size: 21, 355
+  orig: 45, 377
+  offset: 11, 7
+  index: -1
+pubu1/00008
+  rotate: true
+  xy: 2, 744
+  size: 22, 355
+  orig: 45, 377
+  offset: 10, 7
+  index: -1
+pubu1/00010
+  rotate: true
+  xy: 359, 744
+  size: 22, 355
+  orig: 45, 377
+  offset: 10, 7
+  index: -1
+pubu1/00012
+  rotate: true
+  xy: 2, 720
+  size: 22, 355
+  orig: 45, 377
+  offset: 10, 7
+  index: -1
+pubu1/00014
+  rotate: true
+  xy: 359, 720
+  size: 22, 355
+  orig: 45, 377
+  offset: 10, 7
+  index: -1
+pubu1/00016
+  rotate: true
+  xy: 2, 792
+  size: 21, 355
+  orig: 45, 377
+  offset: 11, 7
+  index: -1
+pubu1/00018
+  rotate: true
+  xy: 359, 792
+  size: 21, 355
+  orig: 45, 377
+  offset: 11, 7
+  index: -1
+pubu2/00000
+  rotate: true
+  xy: 2, 561
+  size: 52, 442
+  orig: 113, 463
+  offset: 29, 13
+  index: -1
+pubu2/00002
+  rotate: true
+  xy: 2, 507
+  size: 52, 442
+  orig: 113, 463
+  offset: 29, 13
+  index: -1
+pubu2/00004
+  rotate: true
+  xy: 2, 453
+  size: 52, 442
+  orig: 113, 463
+  offset: 29, 13
+  index: -1
+pubu2/00006
+  rotate: true
+  xy: 2, 615
+  size: 51, 442
+  orig: 113, 463
+  offset: 30, 13
+  index: -1
+pubu2/00008
+  rotate: true
+  xy: 2, 182
+  size: 53, 442
+  orig: 113, 463
+  offset: 29, 13
+  index: -1
+pubu2/00010
+  rotate: true
+  xy: 2, 399
+  size: 52, 442
+  orig: 113, 463
+  offset: 29, 13
+  index: -1
+pubu2/00012
+  rotate: true
+  xy: 2, 345
+  size: 52, 442
+  orig: 113, 463
+  offset: 29, 13
+  index: -1
+pubu2/00014
+  rotate: true
+  xy: 2, 291
+  size: 52, 442
+  orig: 113, 463
+  offset: 29, 13
+  index: -1
+pubu2/00016
+  rotate: true
+  xy: 2, 237
+  size: 52, 442
+  orig: 113, 463
+  offset: 30, 13
+  index: -1
+pubu2/00018
+  rotate: true
+  xy: 2, 668
+  size: 50, 442
+  orig: 113, 463
+  offset: 31, 13
+  index: -1
+pubu_shuibo/00000
+  rotate: true
+  xy: 604, 194
+  size: 183, 154
+  orig: 231, 211
+  offset: 21, 6
+  index: -1
+pubu_shuibo/00002
+  rotate: true
+  xy: 446, 233
+  size: 177, 156
+  orig: 231, 211
+  offset: 31, 14
+  index: -1
+pubu_shuibo/00004
+  rotate: false
+  xy: 2, 33
+  size: 200, 147
+  orig: 231, 211
+  offset: 18, 24
+  index: -1
+pubu_shuibo/00006
+  rotate: false
+  xy: 204, 17
+  size: 190, 163
+  orig: 231, 211
+  offset: 10, 8
+  index: -1
+pubu_shuibo/00008
+  rotate: false
+  xy: 446, 48
+  size: 151, 183
+  orig: 231, 211
+  offset: 45, 2
+  index: -1
+pubu_shuibo/00010
+  rotate: true
+  xy: 620, 554
+  size: 164, 157
+  orig: 231, 211
+  offset: 40, 6
+  index: -1
+pubu_shuibo/00012
+  rotate: true
+  xy: 620, 379
+  size: 173, 156
+  orig: 231, 211
+  offset: 35, 24
+  index: -1
+pubu_shuibo/00014
+  rotate: true
+  xy: 599, 2
+  size: 190, 175
+  orig: 231, 211
+  offset: 28, 9
+  index: -1
+pubu_shuibo/00016
+  rotate: false
+  xy: 446, 578
+  size: 172, 140
+  orig: 231, 211
+  offset: 21, 22
+  index: -1
+pubu_shuibo/00018
+  rotate: false
+  xy: 446, 412
+  size: 172, 164
+  orig: 231, 211
+  offset: 30, 7
+  index: -1

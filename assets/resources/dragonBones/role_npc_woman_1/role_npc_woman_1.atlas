@@ -1,0 +1,146 @@
+
+role_npc_woman_1.png
+size: 722,110
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+bozi
+  rotate: true
+  xy: 591, 67
+  size: 41, 46
+  orig: 41, 46
+  offset: 0, 0
+  index: -1
+erwahj_bg
+  rotate: false
+  xy: 248, 12
+  size: 85, 20
+  orig: 96, 27
+  offset: 5, 1
+  index: -1
+guazhang
+  rotate: true
+  xy: 335, 9
+  size: 37, 134
+  orig: 43, 134
+  offset: 6, 0
+  index: -1
+houbei
+  rotate: false
+  xy: 649, 20
+  size: 37, 46
+  orig: 37, 46
+  offset: 0, 0
+  index: -1
+lanbao
+  rotate: false
+  xy: 553, 5
+  size: 49, 60
+  orig: 49, 60
+  offset: 0, 0
+  index: -1
+lei
+  rotate: true
+  xy: 138, 5
+  size: 7, 11
+  orig: 9, 13
+  offset: 1, 1
+  index: -1
+qunzi
+  rotate: true
+  xy: 2, 6
+  size: 102, 134
+  orig: 102, 134
+  offset: 0, 0
+  index: -1
+shangyi
+  rotate: false
+  xy: 138, 14
+  size: 108, 94
+  orig: 108, 94
+  offset: 0, 0
+  index: -1
+tou
+  rotate: false
+  xy: 248, 34
+  size: 74, 74
+  orig: 74, 74
+  offset: 0, 0
+  index: -1
+xiayi
+  rotate: false
+  xy: 324, 48
+  size: 91, 60
+  orig: 91, 60
+  offset: 0, 0
+  index: -1
+youdabi
+  rotate: false
+  xy: 604, 2
+  size: 43, 63
+  orig: 43, 63
+  offset: 0, 0
+  index: -1
+youjiao
+  rotate: false
+  xy: 513, 2
+  size: 38, 35
+  orig: 38, 39
+  offset: 0, 2
+  index: -1
+youshou
+  rotate: true
+  xy: 471, 3
+  size: 34, 40
+  orig: 34, 40
+  offset: 0, 0
+  index: -1
+youxiaobi
+  rotate: true
+  xy: 517, 67
+  size: 41, 72
+  orig: 41, 72
+  offset: 0, 0
+  index: -1
+youxiukou
+  rotate: true
+  xy: 688, 39
+  size: 30, 21
+  orig: 30, 22
+  offset: 0, 0
+  index: -1
+zuodabi
+  rotate: false
+  xy: 471, 39
+  size: 44, 69
+  orig: 47, 69
+  offset: 0, 0
+  index: -1
+zuojiao
+  rotate: true
+  xy: 686, 71
+  size: 37, 34
+  orig: 38, 39
+  offset: 0, 1
+  index: -1
+zuoshou
+  rotate: false
+  xy: 639, 68
+  size: 45, 40
+  orig: 45, 40
+  offset: 0, 0
+  index: -1
+zuoxiaobi
+  rotate: true
+  xy: 417, 48
+  size: 60, 52
+  orig: 60, 58
+  offset: 0, 6
+  index: -1
+zuoxiukou
+  rotate: true
+  xy: 517, 40
+  size: 25, 34
+  orig: 25, 34
+  offset: 0, 0
+  index: -1

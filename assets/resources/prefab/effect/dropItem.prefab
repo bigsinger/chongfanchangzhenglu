@@ -1,0 +1,60 @@
+[
+  {
+    "__type__": "cc.Prefab",
+    "_name": "dropItem",
+    "data": {
+      "__id__": 1
+    }
+  },
+  {
+    "__type__": "cc.Node",
+    "_name": "dropItem",
+    "_components": [
+      {
+        "__type__": "cc.RigidBody",
+        "_gravityScale": 0,
+        "node": {
+          "__id__": 1
+        }
+      },
+      {
+        "__type__": "cc.PhysicsCircleCollider",
+        "tag": 1000,
+        "_sensor": true,
+        "_friction": 0,
+        "_radius": 25,
+        "node": {
+          "__id__": 1
+        }
+      },
+      {
+        "__type__": "dragonBones.ArmatureDisplay",
+        "_armatureName": "Armature",
+        "_animationName": "daiji",
+        "_preCacheMode": 0,
+        "playTimes": 0,
+        "_armatureKey": "47f84c21-7866-4497-a130-b0430e0ffc24#52e8f15c-ac63-417a-8672-9c2ccf5581cc",
+        "node": {
+          "__id__": 1
+        },
+        "_materials": [
+          {
+            "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
+          }
+        ],
+        "_N$dragonAsset": {
+          "__uuid__": "47f84c21-7866-4497-a130-b0430e0ffc24"
+        },
+        "_N$dragonAtlasAsset": {
+          "__uuid__": "52e8f15c-ac63-417a-8672-9c2ccf5581cc"
+        }
+      }
+    ],
+    "_prefab": {
+      "__type__": "cc.PrefabInfo",
+      "root": {
+        "__id__": 1
+      }
+    }
+  }
+]

@@ -1,0 +1,146 @@
+
+niupeng.png
+size: 2258,2084
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+1650_750
+  rotate: true
+  xy: 2, 432
+  size: 1650, 750
+  orig: 1650, 750
+  offset: 0, 0
+  index: -1
+dise
+  rotate: true
+  xy: 754, 432
+  size: 1650, 750
+  orig: 1652, 752
+  offset: 1, 1
+  index: -1
+houtui
+  rotate: false
+  xy: 1348, 221
+  size: 80, 209
+  orig: 80, 209
+  offset: 0, 0
+  index: -1
+liemen1
+  rotate: true
+  xy: 872, 26
+  size: 87, 187
+  orig: 89, 189
+  offset: 1, 1
+  index: -1
+liemen2
+  rotate: false
+  xy: 1430, 258
+  size: 118, 172
+  orig: 120, 174
+  offset: 1, 1
+  index: -1
+liemen3
+  rotate: true
+  xy: 441, 2
+  size: 111, 140
+  orig: 113, 142
+  offset: 1, 1
+  index: -1
+liemen4
+  rotate: true
+  xy: 1139, 3
+  size: 128, 204
+  orig: 130, 206
+  offset: 1, 1
+  index: -1
+men
+  rotate: false
+  xy: 316, 20
+  size: 123, 410
+  orig: 123, 410
+  offset: 0, 0
+  index: -1
+niu
+  rotate: true
+  xy: 2, 18
+  size: 412, 312
+  orig: 419, 312
+  offset: 7, 0
+  index: -1
+niupeng
+  rotate: true
+  xy: 1506, 432
+  size: 1650, 750
+  orig: 1652, 752
+  offset: 1, 1
+  index: -1
+qiantui
+  rotate: true
+  xy: 1306, 139
+  size: 65, 165
+  orig: 65, 165
+  offset: 0, 0
+  index: -1
+shandian1
+  rotate: false
+  xy: 1061, 32
+  size: 76, 81
+  orig: 80, 83
+  offset: 2, 1
+  index: -1
+shandian2
+  rotate: false
+  xy: 811, 19
+  size: 59, 94
+  orig: 61, 97
+  offset: 1, 1
+  index: -1
+shengzi
+  rotate: false
+  xy: 1228, 145
+  size: 76, 285
+  orig: 76, 285
+  offset: 0, 0
+  index: -1
+weiba
+  rotate: false
+  xy: 1306, 206
+  size: 40, 224
+  orig: 69, 224
+  offset: 0, 0
+  index: -1
+zacao1
+  rotate: true
+  xy: 1345, 14
+  size: 123, 194
+  orig: 127, 196
+  offset: 1, 1
+  index: -1
+zacao2
+  rotate: false
+  xy: 744, 11
+  size: 65, 102
+  orig: 67, 104
+  offset: 1, 1
+  index: -1
+zacao3
+  rotate: false
+  xy: 1085, 133
+  size: 141, 297
+  orig: 143, 300
+  offset: 1, 1
+  index: -1
+zacao4
+  rotate: false
+  xy: 583, 9
+  size: 159, 104
+  orig: 163, 106
+  offset: 3, 1
+  index: -1
+zuoqiangqianjing
+  rotate: true
+  xy: 441, 115
+  size: 315, 642
+  orig: 317, 644
+  offset: 1, 1
+  index: -1

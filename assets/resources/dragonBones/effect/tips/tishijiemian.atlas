@@ -1,0 +1,55 @@
+
+tishijiemian.png
+size: 1816,1210
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+image_bgxf1
+  rotate: false
+  xy: 1720, 1153
+  size: 94, 55
+  orig: 94, 55
+  offset: 0, 0
+  index: -1
+image_bgxf2
+  rotate: true
+  xy: 593, 288
+  size: 920, 449
+  orig: 920, 449
+  offset: 0, 0
+  index: -1
+image_bgxf3
+  rotate: true
+  xy: 1044, 347
+  size: 861, 405
+  orig: 861, 405
+  offset: 0, 0
+  index: -1
+xinfeng1
+  rotate: false
+  xy: 2, 2
+  size: 855, 265
+  orig: 952, 713
+  offset: 13, 324
+  index: -1
+xinfeng2
+  rotate: false
+  xy: 859, 7
+  size: 859, 279
+  orig: 952, 713
+  offset: 16, 302
+  index: -1
+xinfeng3
+  rotate: true
+  xy: 2, 269
+  size: 939, 589
+  orig: 952, 713
+  offset: 13, 17
+  index: -1
+xinfeng4
+  rotate: true
+  xy: 1451, 298
+  size: 853, 359
+  orig: 952, 713
+  offset: 12, 337
+  index: -1

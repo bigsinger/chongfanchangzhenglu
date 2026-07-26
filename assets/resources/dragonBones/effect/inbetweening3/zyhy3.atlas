@@ -1,0 +1,20 @@
+
+zyhy3.png
+size: 1437,404
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+3
+  rotate: false
+  xy: 2, 2
+  size: 825, 400
+  orig: 825, 400
+  offset: 0, 0
+  index: -1
+js3
+  rotate: false
+  xy: 829, 39
+  size: 606, 363
+  orig: 606, 365
+  offset: 0, 0
+  index: -1

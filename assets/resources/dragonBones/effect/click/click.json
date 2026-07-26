@@ -1,0 +1,129 @@
+{
+  "skeleton": {
+    "hash": "q2VNyWrfo8AMK+6HN1quqM6cnw4",
+    "spine": "3.8.84",
+    "images": "./点击/",
+    "audio": ""
+  },
+  "bones": [
+    {
+      "name": "root",
+      "scaleX": 0.4,
+      "scaleY": 0.4
+    },
+    {
+      "name": "fx_quan",
+      "parent": "root"
+    },
+    {
+      "name": "fx_quan2",
+      "parent": "root"
+    }
+  ],
+  "slots": [
+    {
+      "name": "fx_quan",
+      "bone": "fx_quan"
+    },
+    {
+      "name": "fx_quan2",
+      "bone": "fx_quan2"
+    }
+  ],
+  "skins": [
+    {
+      "name": "default",
+      "attachments": {
+        "fx_quan": {
+          "fx_quan": {
+            "width": 256,
+            "height": 256
+          }
+        },
+        "fx_quan2": {
+          "fx_quan": {
+            "width": 256,
+            "height": 256
+          }
+        }
+      }
+    }
+  ],
+  "animations": {
+    "click": {
+      "slots": {
+        "fx_quan": {
+          "color": [
+            {
+              "color": "ffffff00"
+            },
+            {
+              "time": 0.2333,
+              "color": "ffffffa0"
+            },
+            {
+              "time": 0.5,
+              "color": "ffffff00"
+            }
+          ],
+          "attachment": [
+            {
+              "name": "fx_quan"
+            }
+          ]
+        },
+        "fx_quan2": {
+          "color": [
+            {
+              "time": 0.1667,
+              "color": "ffffff00"
+            },
+            {
+              "time": 0.4,
+              "color": "ffffffa0"
+            },
+            {
+              "time": 0.6667,
+              "color": "ffffff00"
+            }
+          ],
+          "attachment": [
+            {
+              "time": 0.1667,
+              "name": "fx_quan"
+            }
+          ]
+        }
+      },
+      "bones": {
+        "fx_quan": {
+          "scale": [
+            {
+              "x": 0,
+              "y": 0,
+              "curve": 0.25,
+              "c3": 0.75
+            },
+            {
+              "time": 0.5
+            }
+          ]
+        },
+        "fx_quan2": {
+          "scale": [
+            {
+              "time": 0.1667,
+              "x": 0,
+              "y": 0,
+              "curve": 0.25,
+              "c3": 0.75
+            },
+            {
+              "time": 0.6667
+            }
+          ]
+        }
+      }
+    }
+  }
+}

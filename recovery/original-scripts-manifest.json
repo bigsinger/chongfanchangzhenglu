@@ -1,0 +1,669 @@
+{
+  "engineVersion": "2.4.3",
+  "source": "recovery/original-main-index.js",
+  "sourceSha256": "44EDFF580266F4E816179470122054E85EA80891EA097C8E825539F4B2B15E50",
+  "moduleCount": 60,
+  "serializedComponentClassIds": [
+    "06defpxchtH37eKOYAuV9uY",
+    "07f1eUY+cZCb5dL3y6xcthK",
+    "18565dXpqREe53J82VoAvPU",
+    "188578ZKd1CD78F6vF92jO/",
+    "212727+KdpBc725E8ahaEvv",
+    "21c88vuSidNNr3VcGuI/KNW",
+    "2a0bbWKUXpEUIih/FcsMJzR",
+    "3483dBCLMVJkYL5r++cqaW/",
+    "34d3a0ELINHMIk3rl1VNOVs",
+    "3704ds9GfdH65gbE3sCzA7b",
+    "3e00f9Sy6BLTbQ3K9SBM5Ss",
+    "3fe46kTCg9E3Z7kDHtWLZT5",
+    "548d75dFJBC7KRrBO7HNIG5",
+    "5bd727xjeRBfJGOmkvIDHO1",
+    "640cd8KF2NPIpMKxaBbvbVR",
+    "6d6e49GxLJB56hHzPi1p45x",
+    "6dc169VP/VJXYjHh/zU5nYs",
+    "7607aqYzo1PWZYEgqYY+E3+",
+    "7a47dBa0+NMlbdcRqmU5OXf",
+    "7aebeC9Z5dB9L23VnKPQcPk",
+    "7d883EWNJpDf76usmxzrHlh",
+    "8b5edRS37pK35C6+mF1B4Us",
+    "9505dKS6RZGFaRojyfXD/10",
+    "993c1l1CsxO54HdL96fGoTP",
+    "9d54egUN+dL4Kyj07oi9hsf",
+    "a432eh/LkVBe4zFH2oPu98/",
+    "b59e0qD9MdFdLEqVKt6CqgC",
+    "b69a2TjFIlKGJkGW9E/rYFP",
+    "bb86aiiq89D5rDbK4MywKHY",
+    "bec7dSuQCFKALWxZfFimK75",
+    "c2e30vY+7VPYb0C9jg3mwkR",
+    "c9d0buVGbpHsbfa628yONqa",
+    "cb0971hvm1GCKdrYfgI/h3T",
+    "d3f6cF/knBMSIonkg8Bl0U1",
+    "df0c0uTzetDIL9aAwDiiGIt",
+    "e3a5btPH+hOvKH07kqtn92m",
+    "f5274tLoixOS5OBvNlWoHpg",
+    "f7a08xGBeFNF4nQTIBZKRVh",
+    "f91b9kzkPdDroxsZ7v+Zw7A",
+    "fba22uO+qxEi5L1Ug4tHnkl"
+  ],
+  "serializedEventTargetClassIds": [
+    "3483dBCLMVJkYL5r++cqaW/",
+    "3704ds9GfdH65gbE3sCzA7b",
+    "3e00f9Sy6BLTbQ3K9SBM5Ss",
+    "5bd727xjeRBfJGOmkvIDHO1",
+    "6d6e49GxLJB56hHzPi1p45x",
+    "7aebeC9Z5dB9L23VnKPQcPk",
+    "7d883EWNJpDf76usmxzrHlh",
+    "8b5edRS37pK35C6+mF1B4Us",
+    "993c1l1CsxO54HdL96fGoTP",
+    "9d54egUN+dL4Kyj07oi9hsf",
+    "a432eh/LkVBe4zFH2oPu98/",
+    "b59e0qD9MdFdLEqVKt6CqgC",
+    "bb86aiiq89D5rDbK4MywKHY",
+    "bec7dSuQCFKALWxZfFimK75",
+    "c9d0buVGbpHsbfa628yONqa",
+    "cb0971hvm1GCKdrYfgI/h3T",
+    "d3f6cF/knBMSIonkg8Bl0U1",
+    "e4cb482oMZL56cOr9/vWvQc",
+    "f7a08xGBeFNF4nQTIBZKRVh",
+    "f91b9kzkPdDroxsZ7v+Zw7A"
+  ],
+  "missingClassIds": [],
+  "staleEventTargetIds": [
+    "e4cb482oMZL56cOr9/vWvQc"
+  ],
+  "modules": [
+    {
+      "name": "BaseScene",
+      "className": "BaseScene",
+      "classId": "28dd0D2y4BNE6o/0k1P9EKd",
+      "uuid": "28dd00f6-cb80-4d13-aa3f-d24d4ff4429d",
+      "dependencies": {
+        "./BaseView": "BaseView"
+      }
+    },
+    {
+      "name": "BaseView",
+      "className": "BaseView",
+      "classId": "837ccCcTjxBdaZNaCs+qT2A",
+      "uuid": "837cc09c-4e3c-4175-a64d-682b3ea93d80",
+      "dependencies": {
+        "../familiar/spineManager": "spineManager",
+        "./SoundManage": "SoundManage",
+        "./ViewManager": "ViewManager"
+      }
+    },
+    {
+      "name": "ConfManager",
+      "className": "ConfManager",
+      "classId": "763e7JAcZVNP42wIQUeUxOT",
+      "uuid": "763e7240-7195-4d3f-8db0-21051e531393",
+      "dependencies": {
+        "./GameData": "GameData"
+      }
+    },
+    {
+      "name": "DefaultZIndex",
+      "className": "DefaultZIndex",
+      "classId": "188578ZKd1CD78F6vF92jO/",
+      "uuid": "18857f19-29dd-420f-bf05-eaf17dda33bf",
+      "dependencies": {}
+    },
+    {
+      "name": "DragonBonesManager",
+      "className": "DragonBonesManager",
+      "classId": "71ab600gFpPLqhDGTCvpujH",
+      "uuid": "71ab6d34-805a-4f2e-a843-1930afa6e8c7",
+      "dependencies": {}
+    },
+    {
+      "name": "GameData",
+      "className": "GameData",
+      "classId": "535e30UpX9Ayo+0npWuqOqm",
+      "uuid": "535e3d14-a57f-40ca-8fb4-9e95aea8eaa6",
+      "dependencies": {}
+    },
+    {
+      "name": "GameInfo",
+      "className": "GameInfo",
+      "classId": "97db2GexvxD+4Zo79YqQPR7",
+      "uuid": "97db219e-c6fc-43fb-8668-efd62a40f47b",
+      "dependencies": {}
+    },
+    {
+      "name": "GameUpdata",
+      "className": "GameUpdata",
+      "classId": "b1ab8YNanpJnY0rLRqYfbuc",
+      "uuid": "b1ab860d-6a7a-499d-8d2b-2d1a987dbb9c",
+      "dependencies": {
+        "./GameInfo": "GameInfo"
+      }
+    },
+    {
+      "name": "HttpGame",
+      "className": "HttpGame",
+      "classId": "d4a764zD4lJSKripy6hzvEz",
+      "uuid": "d4a76e33-0f89-4948-aae2-a72ea1cef133",
+      "dependencies": {}
+    },
+    {
+      "name": "PopupView",
+      "className": "PopupView",
+      "classId": "d36e5y8rhRJ854i1byLSIOw",
+      "uuid": "d36e5cbc-ae14-49f3-9e22-d5bc8b4883b0",
+      "dependencies": {
+        "./BaseView": "BaseView"
+      }
+    },
+    {
+      "name": "SoundManage",
+      "className": "SoundManage",
+      "classId": "659b6IyoHFCPYrZBhq7DOgA",
+      "uuid": "659b6232-a071-423d-8ad9-061abb0ce800",
+      "dependencies": {
+        "./GameData": "GameData"
+      }
+    },
+    {
+      "name": "ToolsManager",
+      "className": "ToolsManager",
+      "classId": "d490dqRI0lP2oA6GqGw65Cm",
+      "uuid": "d490da91-2349-4fda-803a-1aa1b0eb90a6",
+      "dependencies": {}
+    },
+    {
+      "name": "ViewManager",
+      "className": "ViewManager",
+      "classId": "1374cGp3gZFYL1W24pRcokA",
+      "uuid": "1374c1a9-de06-4560-bd56-db8a51728900",
+      "dependencies": {}
+    },
+    {
+      "name": "answerDialog",
+      "className": "answerDialog",
+      "classId": "9d54egUN+dL4Kyj07oi9hsf",
+      "uuid": "9d54e814-37e7-4be0-aca3-d3ba22f61b1f",
+      "dependencies": {
+        "../common/GameData": "GameData",
+        "../common/PopupView": "PopupView"
+      }
+    },
+    {
+      "name": "baseEvent",
+      "className": "baseEvent",
+      "classId": "fd1c8+E9kRFeo+gLTaRfXfR",
+      "uuid": "fd1c8f84-f644-457a-8fa0-2d36917d77d1",
+      "dependencies": {}
+    },
+    {
+      "name": "blackDialog",
+      "className": "blackDialog",
+      "classId": "2a0bbWKUXpEUIih/FcsMJzR",
+      "uuid": "2a0bb58a-517a-4450-88a1-fc572c309cd1",
+      "dependencies": {
+        "../common/PopupView": "PopupView"
+      }
+    },
+    {
+      "name": "bullet",
+      "className": "bullet",
+      "classId": "34d3a0ELINHMIk3rl1VNOVs",
+      "uuid": "34d3ad04-2c83-4730-8937-ae5d5534e56c",
+      "dependencies": {
+        "../familiar/spineManager": "spineManager"
+      }
+    },
+    {
+      "name": "camera_master",
+      "className": "camera_master",
+      "classId": "e3a5btPH+hOvKH07kqtn92m",
+      "uuid": "e3a5bb4f-1fe8-4ebc-a1f4-ee4aad9fdda6",
+      "dependencies": {}
+    },
+    {
+      "name": "cgDialog",
+      "className": "cgDialog",
+      "classId": "6dc169VP/VJXYjHh/zU5nYs",
+      "uuid": "6dc16f55-3ff5-495d-88c7-87fcd4e6762c",
+      "dependencies": {
+        "../common/PopupView": "PopupView",
+        "./spineManager": "spineManager"
+      }
+    },
+    {
+      "name": "chapterDialog",
+      "className": "chapterDialog",
+      "classId": "bec7dSuQCFKALWxZfFimK75",
+      "uuid": "bec7d4ae-4021-4a00-b5b1-65f16298aef9",
+      "dependencies": {
+        "../common/ConfManager": "ConfManager",
+        "../common/GameData": "GameData",
+        "../common/PopupView": "PopupView",
+        "../common/SoundManage": "SoundManage",
+        "../common/ToolsManager": "ToolsManager",
+        "../common/ViewManager": "ViewManager"
+      }
+    },
+    {
+      "name": "checkDialog",
+      "className": "checkDialog",
+      "classId": "18565dXpqREe53J82VoAvPU",
+      "uuid": "18565757-a6a4-447b-9dc9-f3656802f3d4",
+      "dependencies": {
+        "../common/PopupView": "PopupView"
+      }
+    },
+    {
+      "name": "cloud",
+      "className": "cloud",
+      "classId": "7a47dBa0+NMlbdcRqmU5OXf",
+      "uuid": "7a47d05a-d3e3-4c95-b75c-46a994e4e5df",
+      "dependencies": {}
+    },
+    {
+      "name": "dialog",
+      "className": "dialog",
+      "classId": "640cd8KF2NPIpMKxaBbvbVR",
+      "uuid": "640cdf0a-1763-4f22-930a-c5a05bbdb551",
+      "dependencies": {}
+    },
+    {
+      "name": "editorScene",
+      "className": "editorScene",
+      "classId": "f91b9kzkPdDroxsZ7v+Zw7A",
+      "uuid": "f91b9933-90f7-43ae-8c6c-67bbfe670ec0",
+      "dependencies": {
+        "./common/BaseScene": "BaseScene",
+        "./common/ConfManager": "ConfManager",
+        "./common/GameData": "GameData",
+        "./gameTools/HttpGame": "HttpGame",
+        "./node_netTip": "node_netTip"
+      }
+    },
+    {
+      "name": "enemy_ai",
+      "className": "enemy_ai",
+      "classId": "24e47cIythI97eOjqn2VrBn",
+      "uuid": "24e47708-cad8-48f7-b78e-8ea9f656b067",
+      "dependencies": {
+        "../common/GameData": "GameData",
+        "../common/ToolsManager": "ToolsManager",
+        "../gameEvent": "gameEvent"
+      }
+    },
+    {
+      "name": "explodeBox",
+      "className": "explodeBox",
+      "classId": "7607aqYzo1PWZYEgqYY+E3+",
+      "uuid": "7607aa98-ce8d-4f59-9604-82a618f84dfe",
+      "dependencies": {
+        "./DragonBonesManager": "DragonBonesManager"
+      }
+    },
+    {
+      "name": "externalGame",
+      "className": "externalGame",
+      "classId": "3c87crXmgFInpNEgSblhOuE",
+      "uuid": "3c87cad7-9a01-489e-9344-8126e584eb84",
+      "dependencies": {}
+    },
+    {
+      "name": "fontFloating",
+      "className": "fontFloating",
+      "classId": "212727+KdpBc725E8ahaEvv",
+      "uuid": "21272efe-29da-4173-bdb9-13c6a1684bef",
+      "dependencies": {
+        "../common/PopupView": "PopupView"
+      }
+    },
+    {
+      "name": "gameEvent",
+      "className": "gameEvent",
+      "classId": "9505dKS6RZGFaRojyfXD/10",
+      "uuid": "9505d292-e916-4615-a468-8f27d70ffd74",
+      "dependencies": {
+        "./common/ConfManager": "ConfManager",
+        "./common/GameData": "GameData",
+        "./common/SoundManage": "SoundManage",
+        "./common/ViewManager": "ViewManager",
+        "./item/itemDrop": "itemDrop",
+        "./item/loopDrop": "loopDrop",
+        "./item/timingEvent": "timingEvent"
+      }
+    },
+    {
+      "name": "gameScene",
+      "className": "gameScene",
+      "classId": "993c1l1CsxO54HdL96fGoTP",
+      "uuid": "993c1975-0acc-4ee7-81dd-2fde9f1a84cf",
+      "dependencies": {
+        "./common/BaseView": "BaseView",
+        "./common/ConfManager": "ConfManager",
+        "./common/GameData": "GameData",
+        "./common/SoundManage": "SoundManage",
+        "./common/ToolsManager": "ToolsManager",
+        "./common/ViewManager": "ViewManager",
+        "./familiar/spineManager": "spineManager",
+        "./gameEvent": "gameEvent"
+      }
+    },
+    {
+      "name": "gameendDialog",
+      "className": "gameendDialog",
+      "classId": "cb0971hvm1GCKdrYfgI/h3T",
+      "uuid": "cb097d61-be6d-4608-a76b-61f808fe1dd3",
+      "dependencies": {
+        "../common/PopupView": "PopupView",
+        "../common/SoundManage": "SoundManage"
+      }
+    },
+    {
+      "name": "gametipsDialog",
+      "className": "gametipsDialog",
+      "classId": "3e00f9Sy6BLTbQ3K9SBM5Ss",
+      "uuid": "3e00ff52-cba0-4b4d-b437-2bd4813394ac",
+      "dependencies": {
+        "../common/GameData": "GameData",
+        "../common/PopupView": "PopupView"
+      }
+    },
+    {
+      "name": "image_sl",
+      "className": "image_sl",
+      "classId": "3fe46kTCg9E3Z7kDHtWLZT5",
+      "uuid": "3fe46913-0a0f-44dd-9ee4-0c7b562d94f9",
+      "dependencies": {
+        "../common/PopupView": "PopupView",
+        "../common/SoundManage": "SoundManage",
+        "./spineManager": "spineManager"
+      }
+    },
+    {
+      "name": "itemBox",
+      "className": "itemBox",
+      "classId": "8b5edRS37pK35C6+mF1B4Us",
+      "uuid": "8b5ed452-dfba-4adf-90ba-fa617507852c",
+      "dependencies": {
+        "../common/GameData": "GameData",
+        "../common/PopupView": "PopupView",
+        "../common/SoundManage": "SoundManage",
+        "../common/ToolsManager": "ToolsManager",
+        "../familiar/DragonBonesManager": "DragonBonesManager",
+        "../familiar/spineManager": "spineManager",
+        "../gameEvent": "gameEvent",
+        "../role/enemy_ai": "enemy_ai",
+        "./loopDrop": "loopDrop"
+      }
+    },
+    {
+      "name": "itemDrop",
+      "className": "itemDrop",
+      "classId": "b69a2TjFIlKGJkGW9E/rYFP",
+      "uuid": "b69a24e3-1489-4a18-9906-5bd13fad814f",
+      "dependencies": {
+        "../common/GameData": "GameData",
+        "../common/SoundManage": "SoundManage",
+        "../common/ToolsManager": "ToolsManager",
+        "../gameEvent": "gameEvent"
+      }
+    },
+    {
+      "name": "itemEventObj",
+      "className": "itemEventObj",
+      "classId": "b59e0qD9MdFdLEqVKt6CqgC",
+      "uuid": "b59e0a83-f4c7-4574-b12a-54ab7a0aa802",
+      "dependencies": {
+        "./common/GameData": "GameData"
+      }
+    },
+    {
+      "name": "itemObj",
+      "className": "itemObj",
+      "classId": "3483dBCLMVJkYL5r++cqaW/",
+      "uuid": "3483d042-2cc5-4991-82f9-afef9ca9a5bf",
+      "dependencies": {
+        "./common/ToolsManager": "ToolsManager",
+        "./familiar/DragonBonesManager": "DragonBonesManager",
+        "./familiar/spineManager": "spineManager"
+      }
+    },
+    {
+      "name": "loadScene",
+      "className": "loadScene",
+      "classId": "7aebeC9Z5dB9L23VnKPQcPk",
+      "uuid": "7aebe0bd-6797-41f4-bdb7-56728f41c3e4",
+      "dependencies": {
+        "./common/BaseView": "BaseView",
+        "./common/ConfManager": "ConfManager",
+        "./common/GameData": "GameData",
+        "./common/SoundManage": "SoundManage",
+        "./gameExternal/externalGame": "externalGame"
+      }
+    },
+    {
+      "name": "loopDrop",
+      "className": "loopDrop",
+      "classId": "127e5YpCPlH/5FLObjlsYaK",
+      "uuid": "127e5629-08f9-47ff-914b-39b8e5b1868a",
+      "dependencies": {
+        "../common/ToolsManager": "ToolsManager"
+      }
+    },
+    {
+      "name": "mainScene",
+      "className": "mainScene",
+      "classId": "bb86aiiq89D5rDbK4MywKHY",
+      "uuid": "bb86a8a2-abcf-43e6-b0db-2b8332c0a1d8",
+      "dependencies": {
+        "./common/BaseView": "BaseView",
+        "./common/GameData": "GameData",
+        "./common/SoundManage": "SoundManage",
+        "./common/ViewManager": "ViewManager",
+        "./familiar/spineManager": "spineManager"
+      }
+    },
+    {
+      "name": "node_cloud1",
+      "className": "node_cloud1",
+      "classId": "06defpxchtH37eKOYAuV9uY",
+      "uuid": "06defa71-721b-47df-b78a-39802e57db98",
+      "dependencies": {
+        "../common/ToolsManager": "ToolsManager"
+      }
+    },
+    {
+      "name": "node_cloud",
+      "className": "node_cloud",
+      "classId": "df0c0uTzetDIL9aAwDiiGIt",
+      "uuid": "df0c0b93-cdeb-4320-bf5a-0300e288622d",
+      "dependencies": {
+        "../common/ToolsManager": "ToolsManager"
+      }
+    },
+    {
+      "name": "node_leaves1",
+      "className": "node_leaves1",
+      "classId": "548d75dFJBC7KRrBO7HNIG5",
+      "uuid": "548d7e5d-1490-42ec-a46b-04eec73481b9",
+      "dependencies": {
+        "../common/ToolsManager": "ToolsManager"
+      }
+    },
+    {
+      "name": "node_netTip",
+      "className": "node_netTip",
+      "classId": "6d6e49GxLJB56hHzPi1p45x",
+      "uuid": "6d6e4f46-c4b2-41e7-a847-ccf8b5a78e71",
+      "dependencies": {}
+    },
+    {
+      "name": "passDialog",
+      "className": "passDialog",
+      "classId": "d3f6cF/knBMSIonkg8Bl0U1",
+      "uuid": "d3f6c17f-9270-4c48-8a27-920f01974535",
+      "dependencies": {
+        "../common/PopupView": "PopupView",
+        "../common/SoundManage": "SoundManage",
+        "../common/ViewManager": "ViewManager"
+      }
+    },
+    {
+      "name": "pickupDialog",
+      "className": "pickupDialog",
+      "classId": "07f1eUY+cZCb5dL3y6xcthK",
+      "uuid": "07f1e518-f9c6-426f-974b-df2eb172d84a",
+      "dependencies": {
+        "../common/GameData": "GameData",
+        "../common/PopupView": "PopupView",
+        "../common/ToolsManager": "ToolsManager",
+        "../gameEvent": "gameEvent"
+      }
+    },
+    {
+      "name": "plotDialog",
+      "className": "plotDialog",
+      "classId": "fba22uO+qxEi5L1Ug4tHnkl",
+      "uuid": "fba22b8e-faac-448b-92f5-520e2d1e7925",
+      "dependencies": {
+        "../common/GameData": "GameData",
+        "../common/PopupView": "PopupView",
+        "../common/ToolsManager": "ToolsManager"
+      }
+    },
+    {
+      "name": "putOutFire",
+      "className": "putOutFire",
+      "classId": "bbb26wtCUhKAKIK8w+uarEY",
+      "uuid": "bbb26c2d-0948-4a00-a20a-f30fae6ab118",
+      "dependencies": {
+        "../common/GameData": "GameData",
+        "../gameEvent": "gameEvent",
+        "./baseEvent": "baseEvent"
+      }
+    },
+    {
+      "name": "roadView",
+      "className": "roadView",
+      "classId": "56d42Qns/lNW5oivfOInBWM",
+      "uuid": "56d42427-b3f9-4d5b-9a22-bdf3889c158c",
+      "dependencies": {
+        "../common/BaseView": "BaseView"
+      }
+    },
+    {
+      "name": "role_1",
+      "className": "role_1",
+      "classId": "21c88vuSidNNr3VcGuI/KNW",
+      "uuid": "21c88bee-4a27-4d36-bdd5-706b88fca356",
+      "dependencies": {
+        "../common/GameData": "GameData",
+        "../common/SoundManage": "SoundManage",
+        "../common/ToolsManager": "ToolsManager",
+        "../familiar/spineManager": "spineManager",
+        "../gameEvent": "gameEvent"
+      }
+    },
+    {
+      "name": "role_bg",
+      "className": "role_bg",
+      "classId": "c2e30vY+7VPYb0C9jg3mwkR",
+      "uuid": "c2e30bd8-fbb5-4f61-bd02-f638379b0911",
+      "dependencies": {}
+    },
+    {
+      "name": "setDialog",
+      "className": "setDialog",
+      "classId": "5bd727xjeRBfJGOmkvIDHO1",
+      "uuid": "5bd72ef1-8de4-417c-918e-9a4bc80c73b5",
+      "dependencies": {
+        "../common/ConfManager": "ConfManager",
+        "../common/GameData": "GameData",
+        "../common/PopupView": "PopupView",
+        "../common/SoundManage": "SoundManage",
+        "../common/ViewManager": "ViewManager"
+      }
+    },
+    {
+      "name": "showhistoryDialog",
+      "className": "showhistoryDialog",
+      "classId": "f7a08xGBeFNF4nQTIBZKRVh",
+      "uuid": "f7a08c46-05e1-4d17-89d0-4c8059291561",
+      "dependencies": {
+        "../common/GameData": "GameData",
+        "../common/PopupView": "PopupView",
+        "../common/ViewManager": "ViewManager"
+      }
+    },
+    {
+      "name": "showpropDialog",
+      "className": "showpropDialog",
+      "classId": "a432eh/LkVBe4zFH2oPu98/",
+      "uuid": "a432e87f-2e45-417b-8cc5-1f6a0fbbdf3f",
+      "dependencies": {
+        "../common/GameData": "GameData",
+        "../common/PopupView": "PopupView",
+        "../common/SoundManage": "SoundManage"
+      }
+    },
+    {
+      "name": "showstoryDialog",
+      "className": "showstoryDialog",
+      "classId": "f5274tLoixOS5OBvNlWoHpg",
+      "uuid": "f5274b4b-a22c-4e4b-9381-bcd956a07a60",
+      "dependencies": {
+        "../common/PopupView": "PopupView"
+      }
+    },
+    {
+      "name": "spineManager",
+      "className": "spineManager",
+      "classId": "ea0d2Uw6+JPw7+jEj0ymbqE",
+      "uuid": "ea0d2530-ebe2-4fc3-bfa3-123d3299ba84",
+      "dependencies": {
+        "../common/GameData": "GameData",
+        "../common/SoundManage": "SoundManage"
+      }
+    },
+    {
+      "name": "timingEvent",
+      "className": "timingEvent",
+      "classId": "d7a8ecOUvRA8riXtrfl8MoM",
+      "uuid": "d7a8e70e-52f4-40f2-b897-b6b7e5f0ca0c",
+      "dependencies": {}
+    },
+    {
+      "name": "tipsDialog",
+      "className": "tipsDialog",
+      "classId": "3704ds9GfdH65gbE3sCzA7b",
+      "uuid": "3704db3d-19f7-47eb-981b-137b02cc0edb",
+      "dependencies": {
+        "../common/PopupView": "PopupView",
+        "../common/SoundManage": "SoundManage"
+      }
+    },
+    {
+      "name": "transitionScene",
+      "className": "transitionScene",
+      "classId": "c9d0buVGbpHsbfa628yONqa",
+      "uuid": "c9d0bb95-19ba-47b1-b7da-eb6f3238da9a",
+      "dependencies": {
+        "./common/BaseView": "BaseView",
+        "./common/ConfManager": "ConfManager",
+        "./common/GameData": "GameData",
+        "./common/SoundManage": "SoundManage",
+        "./familiar/DragonBonesManager": "DragonBonesManager",
+        "./familiar/spineManager": "spineManager",
+        "./gameExternal/externalGame": "externalGame"
+      }
+    },
+    {
+      "name": "unlockDialog",
+      "className": "unlockDialog",
+      "classId": "7d883EWNJpDf76usmxzrHlh",
+      "uuid": "7d883116-349a-437f-beae-b26c73ac7961",
+      "dependencies": {
+        "../common/PopupView": "PopupView",
+        "../common/ToolsManager": "ToolsManager"
+      }
+    }
+  ]
+}

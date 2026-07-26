@@ -1,0 +1,29 @@
+{
+  "SubTexture": [
+    {
+      "width": 403,
+      "y": 1,
+      "height": 166,
+      "name": "banche01",
+      "x": 1
+    },
+    {
+      "width": 183,
+      "y": 169,
+      "height": 114,
+      "name": "banche03",
+      "x": 1
+    },
+    {
+      "width": 98,
+      "y": 1,
+      "height": 103,
+      "name": "banche02",
+      "x": 406
+    }
+  ],
+  "width": 512,
+  "height": 512,
+  "name": "scani17",
+  "imagePath": "scani17_tex.png"
+}

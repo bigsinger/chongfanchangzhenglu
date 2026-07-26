@@ -1,0 +1,436 @@
+{
+  "frameRate": 12,
+  "name": "scani9",
+  "version": "5.5",
+  "compatibleVersion": "5.5",
+  "armature": [
+    {
+      "type": "Armature",
+      "frameRate": 12,
+      "name": "Armature",
+      "aabb": {
+        "x": -93.31,
+        "y": -126.4,
+        "width": 211.88,
+        "height": 97.97
+      },
+      "bone": [
+        {
+          "name": "root"
+        },
+        {
+          "length": 17,
+          "name": "bone",
+          "parent": "root",
+          "transform": {
+            "x": -75.7347,
+            "y": -33.8653,
+            "skX": -82.5257,
+            "skY": -82.5257
+          }
+        },
+        {
+          "length": 19,
+          "name": "bone1",
+          "parent": "root",
+          "transform": {
+            "x": -0.8235,
+            "y": -95.7603,
+            "skX": -48.9909,
+            "skY": -48.9909
+          }
+        },
+        {
+          "length": 17,
+          "name": "bone2",
+          "parent": "root",
+          "transform": {
+            "x": 103.18,
+            "y": -45.3066,
+            "skX": -114.9976,
+            "skY": -114.9976
+          }
+        }
+      ],
+      "slot": [
+        {
+          "name": "image_qp2",
+          "parent": "bone"
+        },
+        {
+          "name": "image_gth",
+          "parent": "bone"
+        },
+        {
+          "name": "image_qp21",
+          "parent": "bone2"
+        },
+        {
+          "name": "image_qp22",
+          "parent": "bone1"
+        },
+        {
+          "name": "image_dx",
+          "parent": "bone1"
+        },
+        {
+          "name": "image_dx1",
+          "parent": "bone1"
+        },
+        {
+          "name": "image_dx2",
+          "parent": "bone1"
+        },
+        {
+          "displayIndex": -1,
+          "name": "image_qp23",
+          "parent": "root"
+        },
+        {
+          "name": "image_dx3",
+          "parent": "bone2"
+        },
+        {
+          "name": "image_dx4",
+          "parent": "bone2"
+        },
+        {
+          "name": "image_dx5",
+          "parent": "bone2"
+        }
+      ],
+      "skin": [
+        {
+          "slot": [
+            {
+              "name": "image_dx",
+              "display": [
+                {
+                  "name": "image_dx",
+                  "transform": {
+                    "x": -0.43,
+                    "y": -10.34,
+                    "skX": 48.99,
+                    "skY": 48.99
+                  }
+                }
+              ]
+            },
+            {
+              "name": "image_qp21",
+              "display": [
+                {
+                  "name": "image_qp2",
+                  "transform": {
+                    "x": 14.64,
+                    "y": 2.29,
+                    "skX": 115,
+                    "skY": 115
+                  }
+                }
+              ]
+            },
+            {
+              "name": "image_dx2",
+              "display": [
+                {
+                  "name": "image_dx",
+                  "transform": {
+                    "x": 12.59,
+                    "y": 3.51,
+                    "skX": 48.99,
+                    "skY": 48.99
+                  }
+                }
+              ]
+            },
+            {
+              "name": "image_qp22",
+              "display": [
+                {
+                  "name": "image_qp2",
+                  "transform": {
+                    "x": 1.91,
+                    "y": 0.46,
+                    "skX": 48.99,
+                    "skY": 48.99
+                  }
+                }
+              ]
+            },
+            {
+              "name": "image_qp2",
+              "display": [
+                {
+                  "name": "image_qp2",
+                  "transform": {
+                    "x": 24.11,
+                    "y": -1.23,
+                    "skX": 82.53,
+                    "skY": 82.53
+                  }
+                }
+              ]
+            },
+            {
+              "name": "image_dx3",
+              "display": [
+                {
+                  "name": "image_dx",
+                  "transform": {
+                    "x": 24.29,
+                    "y": -4.05,
+                    "skX": 115,
+                    "skY": 115
+                  }
+                }
+              ]
+            },
+            {
+              "name": "image_dx4",
+              "display": [
+                {
+                  "name": "image_dx",
+                  "transform": {
+                    "x": 19.73,
+                    "y": 6.28,
+                    "skX": 115,
+                    "skY": 115
+                  }
+                }
+              ]
+            },
+            {
+              "name": "image_qp23"
+            },
+            {
+              "name": "image_dx1",
+              "display": [
+                {
+                  "name": "image_dx",
+                  "transform": {
+                    "x": 6.08,
+                    "y": -3.45,
+                    "skX": 48.99,
+                    "skY": 48.99
+                  }
+                }
+              ]
+            },
+            {
+              "name": "image_gth",
+              "display": [
+                {
+                  "name": "image_gth",
+                  "transform": {
+                    "x": 30.5,
+                    "y": -3.17,
+                    "skX": 82.53,
+                    "skY": 82.53
+                  }
+                }
+              ]
+            },
+            {
+              "name": "image_dx5",
+              "display": [
+                {
+                  "name": "image_dx",
+                  "transform": {
+                    "x": 15.5,
+                    "y": 15.87,
+                    "skX": 115,
+                    "skY": 115
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "animation": [
+        {
+          "duration": 79,
+          "playTimes": 0,
+          "name": "daiji",
+          "bone": [
+            {
+              "name": "bone",
+              "scaleFrame": [
+                {
+                  "tweenEasing": 0,
+                  "x": 0.01,
+                  "y": 0.01
+                },
+                {
+                  "duration": 10,
+                  "tweenEasing": 0
+                },
+                {
+                  "tweenEasing": 0
+                },
+                {
+                  "duration": 67,
+                  "x": 0.01,
+                  "y": 0.01
+                }
+              ]
+            },
+            {
+              "name": "bone1",
+              "scaleFrame": [
+                {
+                  "duration": 13,
+                  "tweenEasing": 0,
+                  "x": 0.01,
+                  "y": 0.01
+                },
+                {
+                  "tweenEasing": 0,
+                  "x": 0.01,
+                  "y": 0.01
+                },
+                {
+                  "duration": 16,
+                  "tweenEasing": 0
+                },
+                {
+                  "tweenEasing": 0
+                },
+                {
+                  "duration": 48,
+                  "x": 0.01,
+                  "y": 0.01
+                }
+              ]
+            },
+            {
+              "name": "bone2",
+              "scaleFrame": [
+                {
+                  "duration": 32,
+                  "tweenEasing": 0,
+                  "x": 0.01,
+                  "y": 0.01
+                },
+                {
+                  "tweenEasing": 0,
+                  "x": 0.01,
+                  "y": 0.01
+                },
+                {
+                  "duration": 15,
+                  "tweenEasing": 0
+                },
+                {
+                  "tweenEasing": 0
+                },
+                {
+                  "duration": 30,
+                  "x": 0.01,
+                  "y": 0.01
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "duration": 68,
+          "playTimes": 0,
+          "name": "daiji2",
+          "bone": [
+            {
+              "name": "bone",
+              "scaleFrame": [
+                {
+                  "duration": 19,
+                  "tweenEasing": 0,
+                  "x": 0.01,
+                  "y": 0.01
+                },
+                {
+                  "tweenEasing": 0,
+                  "x": 0.01,
+                  "y": 0.01
+                },
+                {
+                  "duration": 10,
+                  "tweenEasing": 0
+                },
+                {
+                  "tweenEasing": 0
+                },
+                {
+                  "duration": 37,
+                  "x": 0.01,
+                  "y": 0.01
+                }
+              ]
+            },
+            {
+              "name": "bone1",
+              "scaleFrame": [
+                {
+                  "duration": 32,
+                  "tweenEasing": 0,
+                  "x": 0.01,
+                  "y": 0.01
+                },
+                {
+                  "tweenEasing": 0,
+                  "x": 0.01,
+                  "y": 0.01
+                },
+                {
+                  "duration": 16,
+                  "tweenEasing": 0
+                },
+                {
+                  "tweenEasing": 0
+                },
+                {
+                  "duration": 18,
+                  "x": 0.01,
+                  "y": 0.01
+                }
+              ]
+            },
+            {
+              "name": "bone2",
+              "scaleFrame": [
+                {
+                  "duration": 51,
+                  "tweenEasing": 0,
+                  "x": 0.01,
+                  "y": 0.01
+                },
+                {
+                  "tweenEasing": 0,
+                  "x": 0.01,
+                  "y": 0.01
+                },
+                {
+                  "duration": 15,
+                  "tweenEasing": 0
+                },
+                {
+                  "tweenEasing": 0
+                },
+                {
+                  "duration": 0,
+                  "x": 0.01,
+                  "y": 0.01
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "defaultActions": [
+        {
+          "gotoAndPlay": "daiji"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,153 @@
+
+role_erhu2.png
+size: 725,110
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+bozi
+  rotate: true
+  xy: 495, 2
+  size: 56, 54
+  orig: 56, 54
+  offset: 0, 0
+  index: -1
+lian
+  rotate: false
+  xy: 596, 2
+  size: 60, 59
+  orig: 61, 59
+  offset: 1, 0
+  index: -1
+mao
+  rotate: false
+  xy: 495, 60
+  size: 83, 48
+  orig: 85, 52
+  offset: 0, 2
+  index: -1
+pidai
+  rotate: false
+  xy: 183, 2
+  size: 96, 24
+  orig: 98, 38
+  offset: 2, 13
+  index: -1
+toufa
+  rotate: false
+  xy: 417, 42
+  size: 76, 66
+  orig: 79, 66
+  offset: 3, 0
+  index: -1
+xiong1
+  rotate: false
+  xy: 2, 4
+  size: 113, 104
+  orig: 113, 104
+  offset: 0, 0
+  index: -1
+xiong2
+  rotate: false
+  xy: 658, 27
+  size: 46, 42
+  orig: 46, 42
+  offset: 0, 0
+  index: -1
+yan
+  rotate: false
+  xy: 183, 38
+  size: 35, 10
+  orig: 37, 13
+  offset: 1, 1
+  index: -1
+yao
+  rotate: false
+  xy: 117, 50
+  size: 115, 58
+  orig: 115, 58
+  offset: 0, 0
+  index: -1
+youdabi
+  rotate: true
+  xy: 650, 71
+  size: 37, 73
+  orig: 37, 73
+  offset: 0, 0
+  index: -1
+youdatui
+  rotate: true
+  xy: 328, 42
+  size: 66, 87
+  orig: 66, 87
+  offset: 0, 0
+  index: -1
+youjiao
+  rotate: false
+  xy: 658, 2
+  size: 44, 23
+  orig: 44, 23
+  offset: 0, 0
+  index: -1
+youshou
+  rotate: false
+  xy: 442, 7
+  size: 32, 33
+  orig: 32, 33
+  offset: 0, 0
+  index: -1
+youxiaobi
+  rotate: false
+  xy: 551, 2
+  size: 43, 56
+  orig: 43, 56
+  offset: 0, 0
+  index: -1
+youxiaotui
+  rotate: false
+  xy: 406, 7
+  size: 34, 33
+  orig: 35, 34
+  offset: 1, 0
+  index: -1
+zuodabi
+  rotate: true
+  xy: 580, 63
+  size: 45, 68
+  orig: 45, 68
+  offset: 0, 0
+  index: -1
+zuodatui
+  rotate: true
+  xy: 234, 28
+  size: 80, 92
+  orig: 80, 94
+  offset: 0, 2
+  index: -1
+zuojiao
+  rotate: false
+  xy: 281, 2
+  size: 46, 24
+  orig: 46, 24
+  offset: 0, 0
+  index: -1
+zuoshou
+  rotate: false
+  xy: 370, 4
+  size: 34, 36
+  orig: 34, 36
+  offset: 0, 0
+  index: -1
+zuoxiaobi
+  rotate: true
+  xy: 117, 2
+  size: 46, 64
+  orig: 46, 64
+  offset: 0, 0
+  index: -1
+zuoxiaotui
+  rotate: true
+  xy: 329, 3
+  size: 37, 39
+  orig: 38, 39
+  offset: 1, 0
+  index: -1

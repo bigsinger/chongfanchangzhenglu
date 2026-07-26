@@ -1,0 +1,110 @@
+[
+  {
+    "__type__": "cc.AnimationClip",
+    "_name": "guide_10",
+    "_duration": 3,
+    "wrapMode": 2,
+    "curveData": {
+      "paths": {
+        "image_hq2": {
+          "props": {
+            "position": [
+              {
+                "frame": 0.5,
+                "value": [
+                  62.1,
+                  9.025,
+                  0
+                ]
+              },
+              {
+                "frame": 2.5,
+                "value": [
+                  62.1,
+                  97.36,
+                  0
+                ]
+              },
+              {
+                "frame": 3,
+                "value": [
+                  62.1,
+                  97.36,
+                  0
+                ]
+              }
+            ]
+          }
+        },
+        "image_tz222": {
+          "props": {
+            "opacity": [
+              {
+                "frame": 0.48333333333333334,
+                "value": 255
+              },
+              {
+                "frame": 0.5,
+                "value": 0
+              }
+            ]
+          }
+        },
+        "image_tz222_1": {
+          "props": {
+            "opacity": [
+              {
+                "frame": 0,
+                "value": 0
+              },
+              {
+                "frame": 0.48333333333333334,
+                "value": 0
+              },
+              {
+                "frame": 0.5,
+                "value": 255
+              }
+            ]
+          },
+          "comps": {
+            "cc.Sprite": {
+              "spriteFrame": [
+                {
+                  "frame": 0.5,
+                  "value": {
+                    "__uuid__": "ba87f628-7ddb-4b43-bb57-a39b254b3a0d"
+                  }
+                },
+                {
+                  "frame": 1,
+                  "value": {
+                    "__uuid__": "23800e50-b6b6-4618-b0d9-66a7a6451e9d"
+                  }
+                },
+                {
+                  "frame": 1.5,
+                  "value": {
+                    "__uuid__": "ba87f628-7ddb-4b43-bb57-a39b254b3a0d"
+                  }
+                },
+                {
+                  "frame": 2,
+                  "value": {
+                    "__uuid__": "d47dc6ff-29fa-447d-a4d4-9f08bac7ead1"
+                  }
+                },
+                {
+                  "frame": 2.5,
+                  "value": {
+                    "__uuid__": "ba87f628-7ddb-4b43-bb57-a39b254b3a0d"
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+]

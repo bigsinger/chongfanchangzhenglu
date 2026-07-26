@@ -1,0 +1,37 @@
+[
+  {
+    "id": "1",
+    "configname": "主角走路速度",
+    "configname2": "walk",
+    "configdata": "2.5",
+    "configtxt": "小二娃走路的速度设置"
+  },
+  {
+    "id": "2",
+    "configname": "主角跑步速度",
+    "configname2": "run",
+    "configdata": "5.8",
+    "configtxt": "小二娃奔跑的速度设置"
+  },
+  {
+    "id": "3",
+    "configname": "主角慢走速度",
+    "configname2": "slow_walk",
+    "configdata": "2.1",
+    "configtxt": "小二娃在火焰区域遮脸慢走的速度设置"
+  },
+  {
+    "id": "4",
+    "configname": "火焰：恢复时间（s/秒）",
+    "configname2": "firerecover_time",
+    "configdata": "20",
+    "configtxt": "每次浇水后，XX秒后，未能及时再次浇水，火焰势头回到上一阶段。"
+  },
+  {
+    "id": "5",
+    "configname": "红薯：熟-炙烤时间区间（s/秒）",
+    "configname2": "cooked_time",
+    "configdata": "3|7",
+    "configtxt": "计时开始 ，小于3秒，点击按钮的反馈是“生”的反馈；"
+  }
+]

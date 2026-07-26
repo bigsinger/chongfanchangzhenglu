@@ -1,0 +1,50 @@
+[
+  {
+    "id": "1",
+    "nameid": "scenes_d1_1",
+    "aniname": "ani01",
+    "scale": 0.8,
+    "go": "walk",
+    "bgm": "scenes_d1_1"
+  },
+  {
+    "id": "2",
+    "nameid": "scenes_d1_2",
+    "aniname": "ani01",
+    "scale": 1,
+    "go": "walk",
+    "bgm": "scenes_d1_1"
+  },
+  {
+    "id": "3",
+    "nameid": "scenes_d1_3",
+    "aniname": "ani02",
+    "scale": 1,
+    "go": "walk",
+    "bgm": "scenes_d1_3"
+  },
+  {
+    "id": "4",
+    "nameid": "scenes_d2_1",
+    "aniname": "ani02",
+    "scale": 1,
+    "go": "run",
+    "bgm": "scenes_d2_1"
+  },
+  {
+    "id": "5",
+    "nameid": "scenes_d2_2",
+    "aniname": "ani02",
+    "scale": 1,
+    "go": "run",
+    "bgm": "scenes_d2_2"
+  },
+  {
+    "id": "6",
+    "nameid": "scenes_d2_3",
+    "aniname": "ani02",
+    "scale": 1,
+    "go": "run",
+    "bgm": "scenes_d2_3"
+  }
+]

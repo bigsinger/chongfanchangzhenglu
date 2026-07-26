@@ -1,0 +1,372 @@
+{
+  "skeleton": {
+    "hash": "7GY2pSKTi6CBADIhng+1/yDMTCU",
+    "spine": "3.8.84",
+    "x": -21.33,
+    "y": 127.51,
+    "width": 45,
+    "height": 377,
+    "images": "",
+    "audio": "E:/创新业务组/长征/特效/第二章"
+  },
+  "bones": [
+    {
+      "name": "root"
+    },
+    {
+      "name": "pubu1/0",
+      "parent": "root",
+      "x": -4.01,
+      "y": 487.25
+    },
+    {
+      "name": "zutongjieshui_shuibo/00000",
+      "parent": "root",
+      "length": 23.63,
+      "rotation": -83.05,
+      "x": 19.1,
+      "y": 61.15
+    }
+  ],
+  "slots": [
+    {
+      "name": "pubu1/0",
+      "bone": "pubu1/0",
+      "attachment": "pubu1/00018"
+    },
+    {
+      "name": "zutongjieshui_shuibo/00000",
+      "bone": "zutongjieshui_shuibo/00000"
+    }
+  ],
+  "skins": [
+    {
+      "name": "default",
+      "attachments": {
+        "pubu1/0": {
+          "pubu1/00000": {
+            "x": 5.18,
+            "y": -171.24,
+            "width": 45,
+            "height": 377
+          },
+          "pubu1/00002": {
+            "x": 5.18,
+            "y": -171.24,
+            "width": 45,
+            "height": 377
+          },
+          "pubu1/00004": {
+            "x": 5.18,
+            "y": -171.24,
+            "width": 45,
+            "height": 377
+          },
+          "pubu1/00006": {
+            "x": 5.18,
+            "y": -171.24,
+            "width": 45,
+            "height": 377
+          },
+          "pubu1/00008": {
+            "x": 5.18,
+            "y": -171.24,
+            "width": 45,
+            "height": 377
+          },
+          "pubu1/00010": {
+            "x": 5.18,
+            "y": -171.24,
+            "width": 45,
+            "height": 377
+          },
+          "pubu1/00012": {
+            "x": 5.18,
+            "y": -171.24,
+            "width": 45,
+            "height": 377
+          },
+          "pubu1/00014": {
+            "x": 5.18,
+            "y": -171.24,
+            "width": 45,
+            "height": 377
+          },
+          "pubu1/00016": {
+            "x": 5.18,
+            "y": -171.24,
+            "width": 45,
+            "height": 377
+          },
+          "pubu1/00018": {
+            "x": 5.18,
+            "y": -171.24,
+            "width": 45,
+            "height": 377
+          }
+        },
+        "zutongjieshui_shuibo/00000": {
+          "zutongjieshui_shuibo/00000": {
+            "x": 5.61,
+            "y": -2.97,
+            "rotation": 83.05,
+            "width": 92,
+            "height": 81
+          },
+          "zutongjieshui_shuibo/00002": {
+            "x": 5.61,
+            "y": -2.97,
+            "rotation": 83.05,
+            "width": 92,
+            "height": 81
+          },
+          "zutongjieshui_shuibo/00004": {
+            "x": 5.61,
+            "y": -2.97,
+            "rotation": 83.05,
+            "width": 92,
+            "height": 81
+          },
+          "zutongjieshui_shuibo/00006": {
+            "x": 5.61,
+            "y": -2.97,
+            "rotation": 83.05,
+            "width": 92,
+            "height": 81
+          },
+          "zutongjieshui_shuibo/00008": {
+            "x": 5.61,
+            "y": -2.97,
+            "rotation": 83.05,
+            "width": 92,
+            "height": 81
+          },
+          "zutongjieshui_shuibo/00010": {
+            "x": 5.61,
+            "y": -2.97,
+            "rotation": 83.05,
+            "width": 92,
+            "height": 81
+          },
+          "zutongjieshui_shuibo/00012": {
+            "x": 5.61,
+            "y": -2.97,
+            "rotation": 83.05,
+            "width": 92,
+            "height": 81
+          },
+          "zutongjieshui_shuibo/00014": {
+            "x": 5.61,
+            "y": -2.97,
+            "rotation": 83.05,
+            "width": 92,
+            "height": 81
+          },
+          "zutongjieshui_shuibo/00016": {
+            "x": 5.61,
+            "y": -2.97,
+            "rotation": 83.05,
+            "width": 92,
+            "height": 81
+          },
+          "zutongjieshui_shuibo/00018": {
+            "x": 5.61,
+            "y": -2.97,
+            "rotation": 83.05,
+            "width": 92,
+            "height": 81
+          }
+        }
+      }
+    }
+  ],
+  "animations": {
+    "await": {
+      "slots": {
+        "pubu1/0": {
+          "attachment": [
+            {
+              "name": "pubu1/00000"
+            },
+            {
+              "time": 0.0667,
+              "name": "pubu1/00002"
+            },
+            {
+              "time": 0.1333,
+              "name": "pubu1/00004"
+            },
+            {
+              "time": 0.2,
+              "name": "pubu1/00006"
+            },
+            {
+              "time": 0.2667,
+              "name": "pubu1/00008"
+            },
+            {
+              "time": 0.3333,
+              "name": "pubu1/00010"
+            },
+            {
+              "time": 0.4,
+              "name": "pubu1/00012"
+            },
+            {
+              "time": 0.4667,
+              "name": "pubu1/00014"
+            },
+            {
+              "time": 0.5333,
+              "name": "pubu1/00016"
+            },
+            {
+              "time": 0.6,
+              "name": "pubu1/00018"
+            },
+            {
+              "time": 0.6667,
+              "name": null
+            }
+          ]
+        }
+      },
+      "bones": {
+        "pubu1/0": {
+          "translate": [
+            {
+              "x": 1.4,
+              "y": 3.06
+            }
+          ],
+          "scale": [
+            {
+              "y": 1.464
+            }
+          ]
+        }
+      }
+    },
+    "falls_1": {
+      "slots": {
+        "pubu1/0": {
+          "attachment": [
+            {
+              "name": "pubu1/00000"
+            },
+            {
+              "time": 0.0667,
+              "name": "pubu1/00002"
+            },
+            {
+              "time": 0.1333,
+              "name": "pubu1/00004"
+            },
+            {
+              "time": 0.2,
+              "name": "pubu1/00006"
+            },
+            {
+              "time": 0.2667,
+              "name": "pubu1/00008"
+            },
+            {
+              "time": 0.3333,
+              "name": "pubu1/00010"
+            },
+            {
+              "time": 0.4,
+              "name": "pubu1/00012"
+            },
+            {
+              "time": 0.4667,
+              "name": "pubu1/00014"
+            },
+            {
+              "time": 0.5333,
+              "name": "pubu1/00016"
+            },
+            {
+              "time": 0.6,
+              "name": "pubu1/00018"
+            },
+            {
+              "time": 0.6667,
+              "name": null
+            }
+          ]
+        },
+        "zutongjieshui_shuibo/00000": {
+          "attachment": [
+            {
+              "name": "zutongjieshui_shuibo/00000"
+            },
+            {
+              "time": 0.0667,
+              "name": "zutongjieshui_shuibo/00002"
+            },
+            {
+              "time": 0.1333,
+              "name": "zutongjieshui_shuibo/00004"
+            },
+            {
+              "time": 0.2,
+              "name": "zutongjieshui_shuibo/00006"
+            },
+            {
+              "time": 0.2667,
+              "name": "zutongjieshui_shuibo/00008"
+            },
+            {
+              "time": 0.3333,
+              "name": "zutongjieshui_shuibo/00010"
+            },
+            {
+              "time": 0.4,
+              "name": "zutongjieshui_shuibo/00012"
+            },
+            {
+              "time": 0.4667,
+              "name": "zutongjieshui_shuibo/00014"
+            },
+            {
+              "time": 0.5333,
+              "name": "zutongjieshui_shuibo/00016"
+            },
+            {
+              "time": 0.6,
+              "name": "zutongjieshui_shuibo/00018"
+            },
+            {
+              "time": 0.6667,
+              "name": null
+            }
+          ]
+        }
+      },
+      "bones": {
+        "pubu1/0": {
+          "translate": [
+            {
+              "x": 1.4,
+              "y": 3.06
+            }
+          ],
+          "scale": [
+            {
+              "y": 1.375
+            }
+          ]
+        },
+        "zutongjieshui_shuibo/00000": {
+          "translate": [
+            {
+              "x": -17.58,
+              "y": -47.94
+            }
+          ]
+        }
+      }
+    }
+  }
+}

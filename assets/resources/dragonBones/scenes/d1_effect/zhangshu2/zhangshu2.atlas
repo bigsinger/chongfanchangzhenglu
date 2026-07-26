@@ -1,0 +1,27 @@
+
+zhangshu2.png
+size: 486,772
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+zhangshu2_shugan
+  rotate: false
+  xy: 2, 2
+  size: 221, 396
+  orig: 221, 396
+  offset: 0, 0
+  index: -1
+zhangshu2_shuyehou
+  rotate: true
+  xy: 225, 107
+  size: 291, 259
+  orig: 291, 259
+  offset: 0, 0
+  index: -1
+zhangshu2_shuyeqian
+  rotate: false
+  xy: 2, 400
+  size: 467, 370
+  orig: 467, 370
+  offset: 0, 0
+  index: -1

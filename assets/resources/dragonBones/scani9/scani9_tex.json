@@ -1,0 +1,29 @@
+{
+  "width": 64,
+  "imagePath": "scani9_tex.png",
+  "name": "scani9",
+  "SubTexture": [
+    {
+      "width": 39,
+      "y": 1,
+      "height": 59,
+      "name": "image_qp2",
+      "x": 1
+    },
+    {
+      "width": 5,
+      "y": 1,
+      "height": 18,
+      "name": "image_gth",
+      "x": 42
+    },
+    {
+      "width": 6,
+      "y": 21,
+      "height": 6,
+      "name": "image_dx",
+      "x": 42
+    }
+  ],
+  "height": 64
+}

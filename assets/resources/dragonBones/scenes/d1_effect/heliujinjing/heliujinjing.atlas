@@ -1,0 +1,13 @@
+
+heliujinjing.png
+size: 392,84
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+heliujinjing_shuibo
+  rotate: false
+  xy: 2, 2
+  size: 388, 80
+  orig: 397, 82
+  offset: 1, 1
+  index: -1

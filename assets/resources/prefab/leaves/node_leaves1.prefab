@@ -1,0 +1,27 @@
+[
+  {
+    "__type__": "cc.Prefab",
+    "_name": "node_leaves1",
+    "data": {
+      "__id__": 1
+    }
+  },
+  {
+    "__type__": "cc.Node",
+    "_name": "node_leaves1",
+    "_components": [
+      {
+        "__type__": "548d75dFJBC7KRrBO7HNIG5",
+        "node": {
+          "__id__": 1
+        }
+      }
+    ],
+    "_prefab": {
+      "__type__": "cc.PrefabInfo",
+      "root": {
+        "__id__": 1
+      }
+    }
+  }
+]

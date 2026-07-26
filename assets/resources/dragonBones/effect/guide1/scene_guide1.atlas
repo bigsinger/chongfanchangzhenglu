@@ -1,0 +1,55 @@
+
+scene_guide1.png
+size: 336,269
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+1
+  rotate: true
+  xy: 194, 2
+  size: 129, 133
+  orig: 129, 133
+  offset: 0, 0
+  index: -1
+4
+  rotate: true
+  xy: 194, 133
+  size: 134, 140
+  orig: 134, 140
+  offset: 0, 0
+  index: -1
+d
+  rotate: false
+  xy: 2, 27
+  size: 41, 53
+  orig: 71, 60
+  offset: 30, 7
+  index: -1
+d2
+  rotate: false
+  xy: 47, 40
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: -1
+d3
+  rotate: false
+  xy: 47, 122
+  size: 145, 145
+  orig: 145, 145
+  offset: 0, 0
+  index: -1
+image_dxx
+  rotate: false
+  xy: 2, 5
+  size: 20, 20
+  orig: 20, 20
+  offset: 0, 0
+  index: -1
+x
+  rotate: true
+  xy: 2, 82
+  size: 185, 43
+  orig: 185, 43
+  offset: 0, 0
+  index: -1

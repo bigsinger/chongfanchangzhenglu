@@ -1,0 +1,151 @@
+{
+  "width": 256,
+  "imagePath": "scani3_1_tex.png",
+  "SubTexture": [
+    {
+      "frameWidth": 63,
+      "y": 1,
+      "frameHeight": 117,
+      "width": 47,
+      "frameX": -14,
+      "height": 58,
+      "name": "xiaohuo/0006",
+      "frameY": -51,
+      "x": 189
+    },
+    {
+      "frameWidth": 63,
+      "y": 129,
+      "frameHeight": 117,
+      "width": 47,
+      "frameX": -14,
+      "height": 58,
+      "name": "xiaohuo/0024",
+      "frameY": -51,
+      "x": 187
+    },
+    {
+      "frameWidth": 63,
+      "y": 1,
+      "frameHeight": 117,
+      "width": 45,
+      "frameX": -16,
+      "height": 66,
+      "name": "xiaohuo/0004",
+      "frameY": -43,
+      "x": 53
+    },
+    {
+      "frameWidth": 63,
+      "y": 1,
+      "frameHeight": 117,
+      "width": 45,
+      "frameX": -16,
+      "height": 66,
+      "name": "xiaohuo/0022",
+      "frameY": -43,
+      "x": 142
+    },
+    {
+      "frameWidth": 63,
+      "y": 69,
+      "frameHeight": 117,
+      "width": 44,
+      "frameX": -17,
+      "height": 67,
+      "name": "xiaohuo/0002",
+      "frameY": -42,
+      "x": 53
+    },
+    {
+      "frameWidth": 63,
+      "y": 138,
+      "frameHeight": 117,
+      "width": 43,
+      "frameX": -17,
+      "height": 67,
+      "name": "xiaohuo/0020",
+      "frameY": -42,
+      "x": 142
+    },
+    {
+      "frameWidth": 63,
+      "y": 153,
+      "frameHeight": 117,
+      "width": 41,
+      "frameX": -19,
+      "height": 74,
+      "name": "xiaohuo/0000",
+      "frameY": -42,
+      "x": 99
+    },
+    {
+      "frameWidth": 63,
+      "y": 69,
+      "frameHeight": 117,
+      "width": 43,
+      "frameX": -17,
+      "height": 67,
+      "name": "xiaohuo/0018",
+      "frameY": -42,
+      "x": 99
+    },
+    {
+      "frameWidth": 63,
+      "y": 153,
+      "frameHeight": 117,
+      "width": 45,
+      "frameX": -16,
+      "height": 74,
+      "name": "xiaohuo/0016",
+      "frameY": -43,
+      "x": 52
+    },
+    {
+      "frameWidth": 63,
+      "y": 153,
+      "frameHeight": 117,
+      "width": 49,
+      "frameX": -13,
+      "height": 73,
+      "name": "xiaohuo/0014",
+      "frameY": -44,
+      "x": 1
+    },
+    {
+      "frameWidth": 63,
+      "y": 1,
+      "frameHeight": 117,
+      "width": 50,
+      "frameX": -11,
+      "height": 74,
+      "name": "xiaohuo/0012",
+      "frameY": -43,
+      "x": 1
+    },
+    {
+      "frameWidth": 63,
+      "y": 77,
+      "frameHeight": 117,
+      "width": 50,
+      "frameX": -11,
+      "height": 74,
+      "name": "xiaohuo/0010",
+      "frameY": -43,
+      "x": 1
+    },
+    {
+      "frameWidth": 63,
+      "y": 69,
+      "frameHeight": 117,
+      "width": 47,
+      "frameX": -14,
+      "height": 58,
+      "name": "xiaohuo/0008",
+      "frameY": -51,
+      "x": 144
+    }
+  ],
+  "height": 256,
+  "name": "scani3_1"
+}

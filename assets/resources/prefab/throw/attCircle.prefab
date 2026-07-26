@@ -1,0 +1,44 @@
+[
+  {
+    "__type__": "cc.Prefab",
+    "_name": "attCircle",
+    "data": {
+      "__id__": 1
+    }
+  },
+  {
+    "__type__": "cc.Node",
+    "_name": "attCircle",
+    "_components": [
+      {
+        "__type__": "cc.RigidBody",
+        "_gravityScale": 0,
+        "_linearDamping": 0.5,
+        "node": {
+          "__id__": 1
+        }
+      },
+      {
+        "__type__": "cc.PhysicsCircleCollider",
+        "tag": 201,
+        "_sensor": true,
+        "_friction": 0.5,
+        "_radius": 20,
+        "node": {
+          "__id__": 1
+        }
+      }
+    ],
+    "_prefab": {
+      "__type__": "cc.PrefabInfo",
+      "root": {
+        "__id__": 1
+      }
+    },
+    "_contentSize": {
+      "__type__": "cc.Size",
+      "width": 20,
+      "height": 20
+    }
+  }
+]

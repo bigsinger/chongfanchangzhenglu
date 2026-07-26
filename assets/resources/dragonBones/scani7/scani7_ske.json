@@ -1,0 +1,261 @@
+{
+  "frameRate": 24,
+  "armature": [
+    {
+      "ik": [],
+      "type": "Armature",
+      "name": "Armature",
+      "defaultActions": [
+        {
+          "gotoAndPlay": "daiji"
+        }
+      ],
+      "bone": [
+        {
+          "name": "root",
+          "transform": {}
+        },
+        {
+          "length": 19.5,
+          "transform": {
+            "y": -14.2389,
+            "x": 0.39735
+          },
+          "parent": "root",
+          "name": "bone"
+        }
+      ],
+      "aabb": {
+        "width": 61,
+        "y": -44.23891794637894,
+        "height": 60,
+        "x": -30.10263484800803
+      },
+      "slot": [
+        {
+          "displayIndex": 14,
+          "name": "0000",
+          "parent": "bone",
+          "color": {}
+        }
+      ],
+      "frameRate": 24,
+      "animation": [
+        {
+          "ffd": [],
+          "ik": [],
+          "playTimes": 0,
+          "duration": 14,
+          "frame": [],
+          "bone": [
+            {
+              "frame": [
+                {
+                  "transform": {},
+                  "duration": 14
+                }
+              ],
+              "name": "root"
+            },
+            {
+              "frame": [
+                {
+                  "transform": {},
+                  "duration": 14
+                }
+              ],
+              "name": "bone"
+            }
+          ],
+          "slot": [
+            {
+              "frame": [
+                {
+                  "displayIndex": 14,
+                  "tweenEasing": null,
+                  "duration": 1
+                },
+                {
+                  "displayIndex": 13,
+                  "tweenEasing": null,
+                  "duration": 1
+                },
+                {
+                  "displayIndex": 12,
+                  "tweenEasing": null,
+                  "duration": 1
+                },
+                {
+                  "displayIndex": 11,
+                  "tweenEasing": null,
+                  "duration": 1
+                },
+                {
+                  "displayIndex": 10,
+                  "tweenEasing": null,
+                  "duration": 1
+                },
+                {
+                  "displayIndex": 9,
+                  "tweenEasing": null,
+                  "duration": 1
+                },
+                {
+                  "displayIndex": 8,
+                  "tweenEasing": null,
+                  "duration": 1
+                },
+                {
+                  "displayIndex": 7,
+                  "tweenEasing": null,
+                  "duration": 1
+                },
+                {
+                  "displayIndex": 6,
+                  "tweenEasing": null,
+                  "duration": 1
+                },
+                {
+                  "displayIndex": 5,
+                  "tweenEasing": null,
+                  "duration": 1
+                },
+                {
+                  "displayIndex": 4,
+                  "tweenEasing": null,
+                  "duration": 1
+                },
+                {
+                  "displayIndex": 3,
+                  "tweenEasing": null,
+                  "duration": 1
+                },
+                {
+                  "displayIndex": 2,
+                  "tweenEasing": null,
+                  "duration": 1
+                },
+                {
+                  "displayIndex": 1,
+                  "tweenEasing": null,
+                  "duration": 1
+                },
+                {
+                  "tweenEasing": null,
+                  "duration": 0
+                }
+              ],
+              "name": "0000"
+            }
+          ],
+          "name": "daiji"
+        }
+      ],
+      "skin": [
+        {
+          "slot": [
+            {
+              "display": [
+                {
+                  "path": "0028",
+                  "type": "image",
+                  "name": "0028",
+                  "transform": {}
+                },
+                {
+                  "path": "0026",
+                  "type": "image",
+                  "name": "0026",
+                  "transform": {}
+                },
+                {
+                  "path": "0024",
+                  "type": "image",
+                  "name": "0024",
+                  "transform": {}
+                },
+                {
+                  "path": "0022",
+                  "type": "image",
+                  "name": "0022",
+                  "transform": {}
+                },
+                {
+                  "path": "0020",
+                  "type": "image",
+                  "name": "0020",
+                  "transform": {}
+                },
+                {
+                  "path": "0018",
+                  "type": "image",
+                  "name": "0018",
+                  "transform": {}
+                },
+                {
+                  "path": "0016",
+                  "type": "image",
+                  "name": "0016",
+                  "transform": {}
+                },
+                {
+                  "path": "0014",
+                  "type": "image",
+                  "name": "0014",
+                  "transform": {}
+                },
+                {
+                  "path": "0012",
+                  "type": "image",
+                  "name": "0012",
+                  "transform": {}
+                },
+                {
+                  "path": "0010",
+                  "type": "image",
+                  "name": "0010",
+                  "transform": {}
+                },
+                {
+                  "path": "0008",
+                  "type": "image",
+                  "name": "0008",
+                  "transform": {}
+                },
+                {
+                  "path": "0006",
+                  "type": "image",
+                  "name": "0006",
+                  "transform": {}
+                },
+                {
+                  "path": "0004",
+                  "type": "image",
+                  "name": "0004",
+                  "transform": {}
+                },
+                {
+                  "path": "0002",
+                  "type": "image",
+                  "name": "0002",
+                  "transform": {}
+                },
+                {
+                  "path": "0000",
+                  "type": "image",
+                  "name": "0000",
+                  "transform": {}
+                }
+              ],
+              "name": "0000"
+            }
+          ],
+          "name": ""
+        }
+      ]
+    }
+  ],
+  "isGlobal": 0,
+  "name": "scani7",
+  "version": "5.0"
+}

@@ -1,0 +1,173 @@
+{
+  "width": 256,
+  "imagePath": "role01_tex.png",
+  "SubTexture": [
+    {
+      "frameWidth": 142,
+      "y": 114,
+      "frameHeight": 82,
+      "width": 55,
+      "frameX": -55,
+      "height": 31,
+      "name": "0018",
+      "frameY": -29,
+      "x": 132
+    },
+    {
+      "frameWidth": 142,
+      "y": 40,
+      "frameHeight": 82,
+      "width": 83,
+      "frameX": -27,
+      "height": 33,
+      "name": "0006",
+      "frameY": -28,
+      "x": 153
+    },
+    {
+      "frameWidth": 142,
+      "y": 1,
+      "frameHeight": 82,
+      "width": 82,
+      "frameX": -30,
+      "height": 35,
+      "name": "0004",
+      "frameY": -27,
+      "x": 78
+    },
+    {
+      "frameWidth": 142,
+      "y": 111,
+      "frameHeight": 82,
+      "width": 56,
+      "frameX": -56,
+      "height": 33,
+      "name": "0016",
+      "frameY": -29,
+      "x": 1
+    },
+    {
+      "frameWidth": 142,
+      "y": 1,
+      "frameHeight": 82,
+      "width": 77,
+      "frameX": -35,
+      "height": 37,
+      "name": "0002",
+      "frameY": -27,
+      "x": 162
+    },
+    {
+      "frameWidth": 142,
+      "y": 109,
+      "frameHeight": 82,
+      "width": 54,
+      "frameX": -57,
+      "height": 36,
+      "name": "0028",
+      "frameY": -32,
+      "x": 76
+    },
+    {
+      "frameWidth": 142,
+      "y": 145,
+      "frameHeight": 82,
+      "width": 46,
+      "frameX": -67,
+      "height": 30,
+      "name": "0014",
+      "frameY": -32,
+      "x": 189
+    },
+    {
+      "frameWidth": 142,
+      "y": 43,
+      "frameHeight": 82,
+      "width": 73,
+      "frameX": -39,
+      "height": 35,
+      "name": "0000",
+      "frameY": -27,
+      "x": 1
+    },
+    {
+      "frameWidth": 142,
+      "y": 38,
+      "frameHeight": 82,
+      "width": 73,
+      "frameX": -39,
+      "height": 38,
+      "name": "0026",
+      "frameY": -28,
+      "x": 78
+    },
+    {
+      "frameWidth": 142,
+      "y": 78,
+      "frameHeight": 82,
+      "width": 69,
+      "frameX": -44,
+      "height": 29,
+      "name": "0012",
+      "frameY": -32,
+      "x": 76
+    },
+    {
+      "frameWidth": 142,
+      "y": 1,
+      "frameHeight": 82,
+      "width": 75,
+      "frameX": -41,
+      "height": 40,
+      "name": "0024",
+      "frameY": -26,
+      "x": 1
+    },
+    {
+      "frameWidth": 142,
+      "y": 75,
+      "frameHeight": 82,
+      "width": 67,
+      "frameX": -46,
+      "height": 37,
+      "name": "0022",
+      "frameY": -27,
+      "x": 153
+    },
+    {
+      "frameWidth": 142,
+      "y": 80,
+      "frameHeight": 82,
+      "width": 64,
+      "frameX": -48,
+      "height": 29,
+      "name": "0010",
+      "frameY": -30,
+      "x": 1
+    },
+    {
+      "frameWidth": 142,
+      "y": 146,
+      "frameHeight": 82,
+      "width": 57,
+      "frameX": -50,
+      "height": 31,
+      "name": "0020",
+      "frameY": -28,
+      "x": 1
+    },
+    {
+      "frameWidth": 142,
+      "y": 114,
+      "frameHeight": 82,
+      "width": 52,
+      "frameX": -51,
+      "height": 29,
+      "name": "0008",
+      "frameY": -31,
+      "x": 189
+    }
+  ],
+  "height": 256,
+  "name": "role01"
+}

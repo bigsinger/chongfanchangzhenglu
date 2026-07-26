@@ -1,0 +1,50 @@
+[
+  {
+    "__type__": "cc.AnimationClip",
+    "_name": "guide_7",
+    "_duration": 1.6833333333333333,
+    "wrapMode": 2,
+    "curveData": {
+      "paths": {
+        "image_jt": {
+          "comps": {
+            "cc.Sprite": {
+              "spriteFrame": [
+                {
+                  "frame": 0,
+                  "value": {
+                    "__uuid__": "6759a192-f768-4129-8efa-f4c3f49bfe0a"
+                  }
+                },
+                {
+                  "frame": 0.3333333333333333,
+                  "value": {
+                    "__uuid__": "25edc5f5-ed7f-4579-80b0-37c18721b086"
+                  }
+                },
+                {
+                  "frame": 0.5333333333333333,
+                  "value": {
+                    "__uuid__": "145f30f9-7aa1-4570-b00d-b432c3fcff44"
+                  }
+                },
+                {
+                  "frame": 0.75,
+                  "value": {
+                    "__uuid__": "c41969e1-11f4-4d39-9792-4effc72d5f17"
+                  }
+                },
+                {
+                  "frame": 1.6666666666666667,
+                  "value": {
+                    "__uuid__": "c41969e1-11f4-4d39-9792-4effc72d5f17"
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+]

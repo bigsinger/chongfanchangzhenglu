@@ -1,0 +1,27 @@
+
+zyhy2.png
+size: 1599,404
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+2
+  rotate: false
+  xy: 2, 2
+  size: 825, 400
+  orig: 825, 400
+  offset: 0, 0
+  index: -1
+gy1
+  rotate: false
+  xy: 1476, 31
+  size: 121, 371
+  orig: 137, 372
+  offset: 16, 0
+  index: -1
+js2
+  rotate: false
+  xy: 829, 25
+  size: 645, 377
+  orig: 646, 377
+  offset: 1, 0
+  index: -1

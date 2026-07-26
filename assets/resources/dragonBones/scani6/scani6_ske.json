@@ -1,0 +1,356 @@
+{
+  "frameRate": 24,
+  "armature": [
+    {
+      "ik": [],
+      "type": "Armature",
+      "name": "Armature",
+      "defaultActions": [
+        {
+          "gotoAndPlay": "daiji"
+        }
+      ],
+      "bone": [
+        {
+          "name": "root",
+          "transform": {}
+        },
+        {
+          "length": 19.5,
+          "transform": {
+            "y": -80.64175,
+            "x": 79.39925
+          },
+          "parent": "root",
+          "name": "bone"
+        }
+      ],
+      "aabb": {
+        "width": 261,
+        "y": -169.1417540068532,
+        "height": 177,
+        "x": -51.1007624446119
+      },
+      "slot": [
+        {
+          "displayIndex": 29,
+          "name": "0000",
+          "parent": "bone",
+          "color": {}
+        }
+      ],
+      "frameRate": 24,
+      "animation": [
+        {
+          "ffd": [],
+          "ik": [],
+          "playTimes": 0,
+          "duration": 58,
+          "frame": [],
+          "bone": [
+            {
+              "frame": [
+                {
+                  "transform": {},
+                  "duration": 58
+                }
+              ],
+              "name": "root"
+            },
+            {
+              "frame": [
+                {
+                  "transform": {},
+                  "duration": 58
+                }
+              ],
+              "name": "bone"
+            }
+          ],
+          "slot": [
+            {
+              "frame": [
+                {
+                  "displayIndex": 14,
+                  "tweenEasing": null,
+                  "duration": 4
+                },
+                {
+                  "displayIndex": 12,
+                  "tweenEasing": null,
+                  "duration": 4
+                },
+                {
+                  "displayIndex": 10,
+                  "tweenEasing": null,
+                  "duration": 4
+                },
+                {
+                  "displayIndex": 8,
+                  "tweenEasing": null,
+                  "duration": 4
+                },
+                {
+                  "displayIndex": 6,
+                  "tweenEasing": null,
+                  "duration": 4
+                },
+                {
+                  "displayIndex": 4,
+                  "tweenEasing": null,
+                  "duration": 4
+                },
+                {
+                  "displayIndex": 2,
+                  "tweenEasing": null,
+                  "duration": 4
+                },
+                {
+                  "tweenEasing": null,
+                  "duration": 4
+                },
+                {
+                  "displayIndex": 28,
+                  "tweenEasing": null,
+                  "duration": 4
+                },
+                {
+                  "displayIndex": 26,
+                  "tweenEasing": null,
+                  "duration": 4
+                },
+                {
+                  "displayIndex": 24,
+                  "tweenEasing": null,
+                  "duration": 4
+                },
+                {
+                  "displayIndex": 22,
+                  "tweenEasing": null,
+                  "duration": 4
+                },
+                {
+                  "displayIndex": 20,
+                  "tweenEasing": null,
+                  "duration": 4
+                },
+                {
+                  "displayIndex": 18,
+                  "tweenEasing": null,
+                  "duration": 4
+                },
+                {
+                  "displayIndex": 16,
+                  "tweenEasing": null,
+                  "duration": 2
+                },
+                {
+                  "displayIndex": 15,
+                  "tweenEasing": null,
+                  "duration": 0
+                }
+              ],
+              "name": "0000"
+            }
+          ],
+          "name": "daiji"
+        }
+      ],
+      "skin": [
+        {
+          "slot": [
+            {
+              "display": [
+                {
+                  "path": "0028",
+                  "type": "image",
+                  "name": "0028",
+                  "transform": {}
+                },
+                {
+                  "path": "0026",
+                  "type": "image",
+                  "name": "0026",
+                  "transform": {}
+                },
+                {
+                  "path": "0024",
+                  "type": "image",
+                  "name": "0024",
+                  "transform": {}
+                },
+                {
+                  "path": "0022",
+                  "type": "image",
+                  "name": "0022",
+                  "transform": {}
+                },
+                {
+                  "path": "0020",
+                  "type": "image",
+                  "name": "0020",
+                  "transform": {}
+                },
+                {
+                  "path": "0018",
+                  "type": "image",
+                  "name": "0018",
+                  "transform": {}
+                },
+                {
+                  "path": "0016",
+                  "type": "image",
+                  "name": "0016",
+                  "transform": {}
+                },
+                {
+                  "path": "0014",
+                  "type": "image",
+                  "name": "0014",
+                  "transform": {}
+                },
+                {
+                  "path": "0012",
+                  "type": "image",
+                  "name": "0012",
+                  "transform": {}
+                },
+                {
+                  "path": "0010",
+                  "type": "image",
+                  "name": "0010",
+                  "transform": {}
+                },
+                {
+                  "path": "0008",
+                  "type": "image",
+                  "name": "0008",
+                  "transform": {}
+                },
+                {
+                  "path": "0006",
+                  "type": "image",
+                  "name": "0006",
+                  "transform": {}
+                },
+                {
+                  "path": "0004",
+                  "type": "image",
+                  "name": "0004",
+                  "transform": {}
+                },
+                {
+                  "path": "0002",
+                  "type": "image",
+                  "name": "0002",
+                  "transform": {}
+                },
+                {
+                  "path": "0000",
+                  "type": "image",
+                  "name": "0000",
+                  "transform": {}
+                },
+                {
+                  "path": "0058",
+                  "type": "image",
+                  "name": "0058",
+                  "transform": {}
+                },
+                {
+                  "path": "0056",
+                  "type": "image",
+                  "name": "0056",
+                  "transform": {}
+                },
+                {
+                  "path": "0054",
+                  "type": "image",
+                  "name": "0054",
+                  "transform": {}
+                },
+                {
+                  "path": "0052",
+                  "type": "image",
+                  "name": "0052",
+                  "transform": {}
+                },
+                {
+                  "path": "0050",
+                  "type": "image",
+                  "name": "0050",
+                  "transform": {}
+                },
+                {
+                  "path": "0048",
+                  "type": "image",
+                  "name": "0048",
+                  "transform": {}
+                },
+                {
+                  "path": "0046",
+                  "type": "image",
+                  "name": "0046",
+                  "transform": {}
+                },
+                {
+                  "path": "0044",
+                  "type": "image",
+                  "name": "0044",
+                  "transform": {}
+                },
+                {
+                  "path": "0042",
+                  "type": "image",
+                  "name": "0042",
+                  "transform": {}
+                },
+                {
+                  "path": "0040",
+                  "type": "image",
+                  "name": "0040",
+                  "transform": {}
+                },
+                {
+                  "path": "0038",
+                  "type": "image",
+                  "name": "0038",
+                  "transform": {}
+                },
+                {
+                  "path": "0036",
+                  "type": "image",
+                  "name": "0036",
+                  "transform": {}
+                },
+                {
+                  "path": "0034",
+                  "type": "image",
+                  "name": "0034",
+                  "transform": {}
+                },
+                {
+                  "path": "0032",
+                  "type": "image",
+                  "name": "0032",
+                  "transform": {}
+                },
+                {
+                  "path": "0030",
+                  "type": "image",
+                  "name": "0030",
+                  "transform": {}
+                }
+              ],
+              "name": "0000"
+            }
+          ],
+          "name": ""
+        }
+      ]
+    }
+  ],
+  "isGlobal": 0,
+  "name": "scani6",
+  "version": "5.0"
+}

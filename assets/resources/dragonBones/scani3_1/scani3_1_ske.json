@@ -1,0 +1,220 @@
+{
+  "frameRate": 24,
+  "name": "scani3_1",
+  "version": "5.5",
+  "compatibleVersion": "5.5",
+  "armature": [
+    {
+      "type": "Armature",
+      "frameRate": 24,
+      "name": "Armature",
+      "bone": [
+        {
+          "name": "root"
+        },
+        {
+          "length": 14,
+          "name": "bone",
+          "parent": "root"
+        },
+        {
+          "length": 92,
+          "name": "bone11",
+          "parent": "root",
+          "transform": {
+            "x": -2.3963,
+            "y": -1.1468,
+            "skX": -57.431,
+            "skY": -57.431
+          }
+        }
+      ],
+      "slot": [
+        {
+          "displayIndex": -1,
+          "name": "00001",
+          "parent": "bone11"
+        }
+      ],
+      "skin": [
+        {
+          "slot": [
+            {
+              "name": "00001",
+              "display": [
+                {
+                  "name": "xiaohuo/0024",
+                  "transform": {
+                    "x": -2.84,
+                    "y": -33.12
+                  }
+                },
+                {
+                  "name": "xiaohuo/0022",
+                  "transform": {
+                    "x": -2.84,
+                    "y": -33.12
+                  }
+                },
+                {
+                  "name": "xiaohuo/0020",
+                  "transform": {
+                    "x": -2.84,
+                    "y": -33.12
+                  }
+                },
+                {
+                  "name": "xiaohuo/0018",
+                  "transform": {
+                    "x": -2.84,
+                    "y": -33.12
+                  }
+                },
+                {
+                  "name": "xiaohuo/0016",
+                  "transform": {
+                    "x": -2.84,
+                    "y": -33.12
+                  }
+                },
+                {
+                  "name": "xiaohuo/0014",
+                  "transform": {
+                    "x": -2.84,
+                    "y": -33.12
+                  }
+                },
+                {
+                  "name": "xiaohuo/0012",
+                  "transform": {
+                    "x": -2.84,
+                    "y": -33.12
+                  }
+                },
+                {
+                  "name": "xiaohuo/0010",
+                  "transform": {
+                    "x": -2.84,
+                    "y": -33.12
+                  }
+                },
+                {
+                  "name": "xiaohuo/0008",
+                  "transform": {
+                    "x": -2.84,
+                    "y": -33.12
+                  }
+                },
+                {
+                  "name": "xiaohuo/0006",
+                  "transform": {
+                    "x": -2.84,
+                    "y": -33.12
+                  }
+                },
+                {
+                  "name": "xiaohuo/0004",
+                  "transform": {
+                    "x": -2.84,
+                    "y": -33.12
+                  }
+                },
+                {
+                  "name": "xiaohuo/0002",
+                  "transform": {
+                    "x": -2.84,
+                    "y": -33.12
+                  }
+                },
+                {
+                  "name": "xiaohuo/1",
+                  "transform": {
+                    "x": -2.84,
+                    "y": -33.12
+                  },
+                  "path": "xiaohuo/0000"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "animation": [
+        {
+          "duration": 12,
+          "playTimes": 0,
+          "name": "daiji",
+          "bone": [
+            {
+              "name": "bone11",
+              "translateFrame": [
+                {
+                  "duration": 12,
+                  "x": 1.68,
+                  "y": -7.24
+                }
+              ],
+              "rotateFrame": [
+                {
+                  "duration": 12,
+                  "rotate": 54.38
+                }
+              ]
+            }
+          ],
+          "slot": [
+            {
+              "name": "00001",
+              "displayFrame": [
+                {
+                  "value": 12
+                },
+                {
+                  "value": 11
+                },
+                {
+                  "value": 10
+                },
+                {
+                  "value": 9
+                },
+                {
+                  "value": 8
+                },
+                {
+                  "value": 7
+                },
+                {
+                  "value": 6
+                },
+                {
+                  "value": 5
+                },
+                {
+                  "value": 4
+                },
+                {
+                  "value": 3
+                },
+                {
+                  "value": 2
+                },
+                {
+                  "value": 1
+                },
+                {
+                  "duration": 0
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "defaultActions": [
+        {
+          "gotoAndPlay": "daiji"
+        }
+      ]
+    }
+  ]
+}

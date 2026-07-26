@@ -1,0 +1,48 @@
+
+yingxiao.png
+size: 1727,1718
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+1
+  rotate: false
+  xy: 2, 2
+  size: 79, 89
+  orig: 94, 97
+  offset: 14, 8
+  index: -1
+2
+  rotate: true
+  xy: 562, 92
+  size: 921, 525
+  orig: 921, 525
+  offset: 0, 0
+  index: -1
+3
+  rotate: true
+  xy: 1089, 136
+  size: 858, 538
+  orig: 858, 538
+  offset: 0, 0
+  index: -1
+4
+  rotate: true
+  xy: 2, 93
+  size: 920, 558
+  orig: 920, 558
+  offset: 0, 0
+  index: -1
+5
+  rotate: true
+  xy: 1381, 996
+  size: 720, 344
+  orig: 720, 344
+  offset: 0, 0
+  index: -1
+image_db
+  rotate: false
+  xy: 2, 1015
+  size: 1377, 701
+  orig: 1377, 701
+  offset: 0, 0
+  index: -1

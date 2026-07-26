@@ -1,0 +1,45 @@
+{
+  "collision-matrix": [
+    [
+      true
+    ],
+    [
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false
+    ]
+  ],
+  "excluded-modules": [],
+  "group-list": [
+    "default",
+    "static",
+    "ui",
+    "3D"
+  ],
+  "start-scene": "fccdc2f8-9f02-4e8c-978e-6aeefd1a8969",
+  "design-resolution-width": 1334,
+  "design-resolution-height": 750,
+  "fit-width": false,
+  "fit-height": true,
+  "use-project-simulator-setting": false,
+  "simulator-orientation": false,
+  "use-customize-simulator": true,
+  "simulator-resolution": {
+    "width": 1650,
+    "height": 750
+  },
+  "last-module-event-record-time": 0,
+  "assets-sort-type": "name",
+  "package-name": "com.game.longmarch.creator243",
+  "migrate-history": []
+}

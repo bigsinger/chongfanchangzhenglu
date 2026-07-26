@@ -1,0 +1,14 @@
+[
+  {
+    "id": 1,
+    "zjid": "1|1",
+    "bgimg": "bg1",
+    "rwname": "ani01",
+    "zjtxt": "1|2|3|4",
+    "state": "start",
+    "startvideoid": "video1",
+    "endvideoid": "video2",
+    "animeid": 0,
+    "order": "startvideoid|zjtxt|animeid"
+  }
+]

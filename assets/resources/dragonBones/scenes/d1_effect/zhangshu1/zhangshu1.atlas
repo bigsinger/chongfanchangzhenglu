@@ -1,0 +1,27 @@
+
+zhangshu1.png
+size: 1715,766
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+zhangshu1_shugan
+  rotate: false
+  xy: 696, 20
+  size: 583, 744
+  orig: 583, 744
+  offset: 0, 0
+  index: -1
+zhangshu1_shuyehou
+  rotate: true
+  xy: 1281, 200
+  size: 564, 432
+  orig: 564, 432
+  offset: 0, 0
+  index: -1
+zhangshu1_shuyeqian
+  rotate: true
+  xy: 2, 2
+  size: 762, 692
+  orig: 762, 692
+  offset: 0, 0
+  index: -1

@@ -1,0 +1,41 @@
+{
+  "width": 512,
+  "imagePath": "eff_baozha_tex.png",
+  "height": 512,
+  "name": "eff_baozha",
+  "SubTexture": [
+    {
+      "frameHeight": 401,
+      "y": 298,
+      "frameX": -43,
+      "width": 166,
+      "frameY": -193,
+      "height": 160,
+      "name": "bz_1",
+      "frameWidth": 267,
+      "x": 206
+    },
+    {
+      "frameHeight": 401,
+      "y": 1,
+      "frameX": -43,
+      "width": 203,
+      "frameY": -32,
+      "height": 353,
+      "name": "bz_3",
+      "frameWidth": 267,
+      "x": 1
+    },
+    {
+      "frameHeight": 401,
+      "y": 1,
+      "frameX": -40,
+      "width": 168,
+      "frameY": -58,
+      "height": 295,
+      "name": "bz_2",
+      "frameWidth": 267,
+      "x": 206
+    }
+  ]
+}

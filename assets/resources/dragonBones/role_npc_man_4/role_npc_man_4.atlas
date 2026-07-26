@@ -1,0 +1,132 @@
+
+role_npc_man_4.png
+size: 565,146
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+bozi
+  rotate: false
+  xy: 423, 36
+  size: 57, 59
+  orig: 57, 59
+  offset: 0, 0
+  index: -1
+erwahj_bg
+  rotate: false
+  xy: 117, 12
+  size: 85, 20
+  orig: 96, 27
+  offset: 5, 1
+  index: -1
+majia
+  rotate: true
+  xy: 117, 34
+  size: 110, 116
+  orig: 110, 116
+  offset: 0, 0
+  index: -1
+shangyi
+  rotate: true
+  xy: 235, 37
+  size: 107, 116
+  orig: 107, 116
+  offset: 0, 0
+  index: -1
+tou
+  rotate: false
+  xy: 353, 77
+  size: 61, 67
+  orig: 61, 67
+  offset: 0, 0
+  index: -1
+toujin
+  rotate: false
+  xy: 353, 30
+  size: 68, 45
+  orig: 68, 45
+  offset: 0, 0
+  index: -1
+xiayi
+  rotate: false
+  xy: 2, 30
+  size: 113, 114
+  orig: 113, 136
+  offset: 0, 22
+  index: -1
+yaodai
+  rotate: false
+  xy: 2, 3
+  size: 101, 25
+  orig: 101, 25
+  offset: 0, 0
+  index: -1
+youdabi
+  rotate: true
+  xy: 494, 95
+  size: 49, 69
+  orig: 49, 69
+  offset: 0, 0
+  index: -1
+youjiao
+  rotate: true
+  xy: 523, 3
+  size: 45, 25
+  orig: 45, 28
+  offset: 0, 1
+  index: -1
+youshou
+  rotate: false
+  xy: 486, 6
+  size: 35, 42
+  orig: 35, 42
+  offset: 0, 0
+  index: -1
+youxiaobi
+  rotate: true
+  xy: 416, 97
+  size: 47, 76
+  orig: 47, 76
+  offset: 0, 0
+  index: -1
+youxiaotui
+  rotate: true
+  xy: 295, 10
+  size: 25, 53
+  orig: 30, 53
+  offset: 5, 0
+  index: -1
+zuodabi
+  rotate: true
+  xy: 423, 2
+  size: 32, 61
+  orig: 32, 61
+  offset: 0, 0
+  index: -1
+zuojiao
+  rotate: false
+  xy: 350, 4
+  size: 45, 24
+  orig: 45, 25
+  offset: 0, 1
+  index: -1
+zuoshou
+  rotate: true
+  xy: 204, 2
+  size: 30, 34
+  orig: 31, 34
+  offset: 1, 0
+  index: -1
+zuoxiaobi
+  rotate: true
+  xy: 482, 50
+  size: 43, 61
+  orig: 43, 61
+  offset: 0, 0
+  index: -1
+zuoxiaotui
+  rotate: true
+  xy: 240, 6
+  size: 29, 53
+  orig: 41, 53
+  offset: 6, 0
+  index: -1

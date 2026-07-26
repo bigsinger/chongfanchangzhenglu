@@ -1,0 +1,225 @@
+[CmdletBinding()]
+param(
+    [Parameter(Position = 0)]
+    [ValidateSet('state', 'launch', 'stop', 'tap', 'swipe', 'screenshot', 'inspect', 'logs', 'checkpoint', 'restore', 'direct', 'relocate', 'jump', 'smoke')]
+    [string]$Command = 'state',
+
+    [string]$Name = 'current',
+    [int]$X = 960,
+    [int]$Y = 540,
+    [int]$X2 = 960,
+    [int]$Y2 = 540,
+    [int]$DurationMs = 500,
+    [int]$Chapter = 1,
+    [int]$Map = 1,
+    [int]$WaitSeconds = 8,
+    [string]$Serial = 'emulator-5554',
+    [string]$Adb = 'D:\Android\Sdk\platform-tools\adb.exe'
+)
+
+$ErrorActionPreference = 'Stop'
+$Package = 'com.game.longmarch.creator243'
+$Activity = 'org.cocos2dx.javascript.AppActivity'
+$ResultDir = Join-Path $PSScriptRoot '..\results'
+$ResultDir = [System.IO.Path]::GetFullPath($ResultDir)
+
+if (-not (Test-Path -LiteralPath $Adb)) {
+    throw "ADB 不存在：$Adb"
+}
+if ($Name -notmatch '^[A-Za-z0-9_.-]+$') {
+    throw 'Name 只能包含字母、数字、点、下划线和短横线'
+}
+if ($Chapter -lt 1 -or $Chapter -gt 3 -or $Map -lt 1 -or $Map -gt 9) {
+    throw '章节或地图编号超出测试范围'
+}
+
+New-Item -ItemType Directory -Force -Path $ResultDir | Out-Null
+
+function Invoke-Adb {
+    param([Parameter(Mandatory)][string[]]$Arguments)
+    & $Adb -s $Serial @Arguments
+    if ($LASTEXITCODE -ne 0) {
+        throw "ADB 命令失败：$($Arguments -join ' ')"
+    }
+}
+
+function Stop-Game {
+    Invoke-Adb -Arguments @('shell', 'am', 'force-stop', $Package)
+}
+
+function Start-Game {
+    Invoke-Adb -Arguments @(
+        'shell', 'am', 'start', '-W',
+        '-n', "$Package/$Activity"
+    )
+}
+
+function Get-GameState {
+    $focus = (Invoke-Adb -Arguments @('shell', 'dumpsys', 'window', 'windows') |
+        Select-String 'mCurrentFocus|mFocusedApp' |
+        ForEach-Object { $_.Line.Trim() })
+    $sql = 'select key,value from data where key in (''chapter'',''mapIndex'',''unlockchapters'',''heroSpine'') order by key;'
+    $remote = "run-as $Package sqlite3 databases/jsb.sqlite `"$sql`""
+    $save = Invoke-Adb -Arguments @('shell', $remote)
+    [pscustomobject]@{
+        serial = $Serial
+        focus = @($focus)
+        save = @($save)
+    }
+}
+
+function Save-Screenshot {
+    $remotePath = "/sdcard/$Name.png"
+    $localPath = Join-Path $ResultDir "$Name.png"
+    Invoke-Adb -Arguments @('shell', 'screencap', '-p', $remotePath)
+    Invoke-Adb -Arguments @('pull', $remotePath, $localPath)
+    Invoke-Adb -Arguments @('shell', 'rm', $remotePath)
+    Write-Output $localPath
+}
+
+function Save-Logs {
+    $localPath = Join-Path $ResultDir "$Name.log"
+    $lines = Invoke-Adb -Arguments @('logcat', '-d', '-v', 'time', '-t', '3000')
+    $lines | Set-Content -LiteralPath $localPath -Encoding utf8
+    $errors = $lines | Select-String 'TypeError|ReferenceError|FATAL EXCEPTION|Fatal signal|SIGSEGV|SIGABRT|crash_dump|tombstone|ANR in|Uncaught Exception|AndroidRuntime|asset.*failed|load.*failed'
+    if ($errors) {
+        $errors | ForEach-Object { Write-Error $_.Line }
+        throw "运行日志包含错误，完整日志：$localPath"
+    }
+    Write-Output $localPath
+}
+
+function Save-Checkpoint {
+    $remote = "run-as $Package mkdir -p files/checkpoints"
+    Invoke-Adb -Arguments @('shell', $remote)
+    # SQLite online backup keeps the running game in place and includes WAL data.
+    $remote = "run-as $Package sqlite3 databases/jsb.sqlite `".backup 'files/checkpoints/$Name.sqlite'`""
+    Invoke-Adb -Arguments @('shell', $remote)
+    $remote = "run-as $Package ls -l files/checkpoints/$Name.sqlite"
+    Invoke-Adb -Arguments @('shell', $remote)
+}
+
+function Restore-Checkpoint {
+    param([switch]$DirectToGame)
+    Stop-Game
+    $remote = "run-as $Package test -s files/checkpoints/$Name.sqlite"
+    Invoke-Adb -Arguments @('shell', $remote)
+    $remote = "run-as $Package cp files/checkpoints/$Name.sqlite databases/jsb.sqlite"
+    Invoke-Adb -Arguments @('shell', $remote)
+    $remote = "run-as $Package rm -f databases/jsb.sqlite-wal databases/jsb.sqlite-shm"
+    Invoke-Adb -Arguments @('shell', $remote)
+    if ($DirectToGame) {
+        $sql = "insert or replace into data(key,value) values('codex_direct_scene','gameScene');"
+        $remote = "run-as $Package sqlite3 databases/jsb.sqlite `"$sql`""
+        Invoke-Adb -Arguments @('shell', $remote)
+    }
+    Start-Game
+}
+
+function Set-MapStart {
+    Stop-Game
+    $sql = @"
+begin;
+delete from data where key in ('tempData','cross','heroItem','heroFollow','heroSpine');
+  insert or replace into data(key,value) values('chapter','$Chapter');
+  insert or replace into data(key,value) values('mapIndex','$Map');
+  insert or replace into data(key,value) values('unlockchapters','$([Math]::Max(0, $Chapter - 1))');
+  insert or replace into data(key,value) values('codex_direct_scene','gameScene');
+  commit;
+"@ -replace "`r?`n", ' '
+    $remote = "run-as $Package sqlite3 databases/jsb.sqlite `"$sql`""
+    Invoke-Adb -Arguments @('shell', $remote)
+    Start-Game
+}
+
+function Set-HeroPosition {
+    Stop-Game
+    $sceneKey = "scenes_d${Chapter}_${Map}"
+    $query = "select value from data where key='tempData';"
+    $json = $query | & $Adb -s $Serial shell run-as $Package sqlite3 databases/jsb.sqlite
+    if ($LASTEXITCODE -ne 0 -or -not $json) {
+        throw '读取 tempData 失败'
+    }
+    $tempData = $json | ConvertFrom-Json
+    $scene = $tempData.$sceneKey
+    if (-not $scene) {
+        throw "存档中不存在场景：$sceneKey"
+    }
+    $scene.heroPos = [pscustomobject]@{ x = $X; y = $Y }
+    $updated = $tempData | ConvertTo-Json -Compress -Depth 100
+    $escaped = $updated.Replace("'", "''")
+    $sql = @"
+begin;
+update data set value='$escaped' where key='tempData';
+insert or replace into data(key,value) values('chapter','$Chapter');
+insert or replace into data(key,value) values('mapIndex','$Map');
+insert or replace into data(key,value) values('codex_direct_scene','gameScene');
+commit;
+"@ -replace "`r?`n", ' '
+    $sql | & $Adb -s $Serial shell run-as $Package sqlite3 databases/jsb.sqlite
+    if ($LASTEXITCODE -ne 0) {
+        throw '写入重定位存档失败'
+    }
+    Start-Game
+}
+
+switch ($Command) {
+    'state' {
+        Get-GameState | ConvertTo-Json -Depth 5
+    }
+    'launch' {
+        Start-Game
+    }
+    'stop' {
+        Stop-Game
+    }
+    'tap' {
+        Invoke-Adb -Arguments @('shell', 'input', 'tap', "$X", "$Y")
+    }
+    'swipe' {
+        Invoke-Adb -Arguments @('shell', 'input', 'swipe', "$X", "$Y", "$X2", "$Y2", "$DurationMs")
+    }
+    'screenshot' {
+        Save-Screenshot
+    }
+    'inspect' {
+        Save-Screenshot
+        $source = Join-Path $ResultDir "$Name.png"
+        $analyzer = Join-Path $PSScriptRoot 'analyze-screenshot.py'
+        & python $analyzer --input $source
+        if ($LASTEXITCODE -ne 0) {
+            throw '本地截图压缩/OCR 失败'
+        }
+    }
+    'logs' {
+        Save-Logs
+    }
+    'checkpoint' {
+        Save-Checkpoint
+    }
+    'restore' {
+        Restore-Checkpoint
+    }
+    'direct' {
+        Restore-Checkpoint -DirectToGame
+    }
+    'relocate' {
+        Set-HeroPosition
+    }
+    'jump' {
+        Set-MapStart
+    }
+    'smoke' {
+        Invoke-Adb -Arguments @('logcat', '-c')
+        Start-Game
+        Start-Sleep -Seconds $WaitSeconds
+        $state = Get-GameState
+        $state | ConvertTo-Json -Depth 5 |
+            Set-Content -LiteralPath (Join-Path $ResultDir 'smoke-state.json') -Encoding utf8
+        Save-Screenshot
+        if (($state.focus -join "`n") -notmatch [regex]::Escape($Package)) {
+            throw '游戏未保持在前台'
+        }
+        Save-Logs
+    }
+}

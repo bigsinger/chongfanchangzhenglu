@@ -1,0 +1,285 @@
+{
+  "frameRate": 24,
+  "name": "scani17",
+  "version": "5.5",
+  "compatibleVersion": "5.5",
+  "armature": [
+    {
+      "type": "Armature",
+      "frameRate": 24,
+      "name": "Armature",
+      "aabb": {
+        "x": -155,
+        "y": -135.96,
+        "width": 403,
+        "height": 166
+      },
+      "bone": [
+        {
+          "name": "root"
+        },
+        {
+          "length": 116,
+          "name": "banche01",
+          "parent": "root",
+          "transform": {
+            "x": 20.4483,
+            "y": -51.0589,
+            "skX": -18.4194,
+            "skY": -18.4194
+          }
+        },
+        {
+          "name": "banche02",
+          "parent": "root",
+          "transform": {
+            "x": 22.219,
+            "y": -28.4409
+          }
+        },
+        {
+          "length": 18,
+          "name": "banche021",
+          "parent": "banche01",
+          "transform": {
+            "x": -3.6746,
+            "y": -19.0269,
+            "skX": -10.4815,
+            "skY": -10.4815
+          }
+        }
+      ],
+      "slot": [
+        {
+          "name": "banche01",
+          "parent": "banche01"
+        },
+        {
+          "name": "banche03",
+          "parent": "banche021"
+        },
+        {
+          "name": "banche02",
+          "parent": "banche02"
+        }
+      ],
+      "skin": [
+        {
+          "slot": [
+            {
+              "name": "banche01",
+              "display": [
+                {
+                  "name": "banche01",
+                  "transform": {
+                    "x": 25.32,
+                    "y": 6.43,
+                    "skX": 18.42,
+                    "skY": 18.42
+                  }
+                }
+              ]
+            },
+            {
+              "name": "banche03",
+              "display": [
+                {
+                  "name": "banche03",
+                  "transform": {
+                    "x": -4.8,
+                    "y": 1.38,
+                    "skX": 29.03,
+                    "skY": 29.03
+                  }
+                }
+              ]
+            },
+            {
+              "name": "banche02",
+              "display": [
+                {
+                  "name": "banche02",
+                  "transform": {
+                    "x": -2.67,
+                    "y": 0.66
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "animation": [
+        {
+          "duration": 12,
+          "playTimes": 0,
+          "name": "gongji",
+          "bone": [
+            {
+              "name": "root",
+              "translateFrame": [
+                {
+                  "duration": 6,
+                  "tweenEasing": 0,
+                  "y": 1.38
+                },
+                {
+                  "duration": 6,
+                  "tweenEasing": 0,
+                  "y": -4.4
+                },
+                {
+                  "duration": 0,
+                  "y": 1.38
+                }
+              ]
+            },
+            {
+              "name": "banche01",
+              "rotateFrame": [
+                {
+                  "duration": 6,
+                  "tweenEasing": 0
+                },
+                {
+                  "duration": 6,
+                  "tweenEasing": 0,
+                  "rotate": 11.73
+                },
+                {
+                  "duration": 0
+                }
+              ]
+            },
+            {
+              "name": "banche02",
+              "rotateFrame": [
+                {
+                  "duration": 12,
+                  "tweenEasing": 0
+                },
+                {
+                  "duration": 0,
+                  "rotate": -110
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "duration": 0,
+          "playTimes": 0,
+          "name": "daiji"
+        },
+        {
+          "duration": 6,
+          "playTimes": 0,
+          "name": "daiji2",
+          "bone": [
+            {
+              "name": "banche02",
+              "translateFrame": [
+                {
+                  "duration": 6,
+                  "tweenEasing": 0
+                },
+                {
+                  "duration": 0,
+                  "x": 8.46,
+                  "y": 48.66
+                }
+              ]
+            },
+            {
+              "name": "banche021",
+              "translateFrame": [
+                {
+                  "duration": 6,
+                  "tweenEasing": 0
+                },
+                {
+                  "duration": 0,
+                  "x": 37.22,
+                  "y": 82.06
+                }
+              ],
+              "rotateFrame": [
+                {
+                  "duration": 6,
+                  "tweenEasing": 0
+                },
+                {
+                  "duration": 0,
+                  "rotate": 10.19
+                }
+              ]
+            }
+          ],
+          "zOrder": {
+            "frame": [
+              {
+                "duration": 6
+              },
+              {
+                "duration": 0,
+                "zOrder": [
+                  1,
+                  1
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "duration": 0,
+          "playTimes": 0,
+          "name": "over",
+          "bone": [
+            {
+              "name": "banche02",
+              "translateFrame": [
+                {
+                  "duration": 0,
+                  "x": 8.46,
+                  "y": 48.66
+                }
+              ]
+            },
+            {
+              "name": "banche021",
+              "translateFrame": [
+                {
+                  "duration": 0,
+                  "x": 37.22,
+                  "y": 82.06
+                }
+              ],
+              "rotateFrame": [
+                {
+                  "duration": 0,
+                  "rotate": 10.19
+                }
+              ]
+            }
+          ],
+          "zOrder": {
+            "frame": [
+              {
+                "duration": 0,
+                "zOrder": [
+                  1,
+                  1
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "defaultActions": [
+        {
+          "gotoAndPlay": "gongji"
+        }
+      ]
+    }
+  ]
+}

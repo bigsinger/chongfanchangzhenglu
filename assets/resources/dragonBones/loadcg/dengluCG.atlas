@@ -1,0 +1,254 @@
+
+dengluCG.png
+size: 2912,2876
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+10
+  rotate: false
+  xy: 2, 152
+  size: 817, 786
+  orig: 817, 786
+  offset: 0, 0
+  index: -1
+1650_750
+  rotate: false
+  xy: 1200, 754
+  size: 1650, 750
+  orig: 1650, 750
+  offset: 0, 0
+  index: -1
+bg
+  rotate: false
+  xy: 821, 2
+  size: 1280, 750
+  orig: 1280, 750
+  offset: 0, 0
+  index: -1
+chuanxia
+  rotate: true
+  xy: 217, 2830
+  size: 44, 52
+  orig: 46, 54
+  offset: 1, 1
+  index: -1
+dian
+  rotate: false
+  xy: 2, 2850
+  size: 24, 24
+  orig: 26, 26
+  offset: 1, 1
+  index: -1
+guomingdang
+  rotate: true
+  xy: 620, 2732
+  size: 142, 301
+  orig: 186, 303
+  offset: 16, 2
+  index: -1
+hongsequyu
+  rotate: false
+  xy: 2, 2438
+  size: 494, 328
+  orig: 496, 331
+  offset: 1, 2
+  index: -1
+jz_g1
+  rotate: false
+  xy: 2150, 2124
+  size: 467, 467
+  orig: 484, 484
+  offset: 8, 10
+  index: -1
+jz_g3
+  rotate: false
+  xy: 1914, 1506
+  size: 996, 616
+  orig: 1089, 741
+  offset: 1, 66
+  index: -1
+miezhegan
+  rotate: true
+  xy: 271, 2830
+  size: 44, 79
+  orig: 46, 81
+  offset: 1, 1
+  index: -1
+qinvzhangzheng
+  rotate: false
+  xy: 1155, 2625
+  size: 1047, 249
+  orig: 1047, 249
+  offset: 0, 0
+  index: -1
+rj001
+  rotate: true
+  xy: 28, 2848
+  size: 26, 50
+  orig: 26, 50
+  offset: 0, 0
+  index: -1
+rj2
+  rotate: true
+  xy: 2204, 2593
+  size: 281, 620
+  orig: 281, 620
+  offset: 0, 0
+  index: -1
+shangan
+  rotate: true
+  xy: 352, 2830
+  size: 44, 53
+  orig: 46, 55
+  offset: 1, 1
+  index: -1
+xiangechuan
+  rotate: true
+  xy: 407, 2829
+  size: 45, 79
+  orig: 47, 81
+  offset: 1, 1
+  index: -1
+xiangegan
+  rotate: true
+  xy: 136, 2831
+  size: 43, 79
+  orig: 45, 81
+  offset: 1, 1
+  index: -1
+xx
+  rotate: false
+  xy: 1277, 1632
+  size: 635, 605
+  orig: 635, 605
+  offset: 0, 0
+  index: -1
+z1
+  rotate: false
+  xy: 2, 940
+  size: 1196, 741
+  orig: 1196, 741
+  offset: 0, 0
+  index: -1
+z4
+  rotate: false
+  xy: 2, 1683
+  size: 1273, 554
+  orig: 1273, 554
+  offset: 0, 0
+  index: -1
+z5
+  rotate: false
+  xy: 498, 2239
+  size: 1650, 384
+  orig: 1650, 384
+  offset: 0, 0
+  index: -1
+zhongyan
+  rotate: true
+  xy: 80, 2835
+  size: 39, 54
+  orig: 39, 54
+  offset: 0, 0
+  index: -1
+zhongyanhongsequyu
+  rotate: false
+  xy: 488, 2768
+  size: 130, 106
+  orig: 132, 108
+  offset: 1, 1
+  index: -1
+zhongyanhongsequyu_lanxian
+  rotate: false
+  xy: 923, 2687
+  size: 230, 187
+  orig: 431, 348
+  offset: 94, 69
+  index: -1
+
+dengluCG2.png
+size: 2369,2519
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+cz
+  rotate: false
+  xy: 2, 1221
+  size: 2365, 1296
+  orig: 2388, 1400
+  offset: 0, 73
+  index: -1
+gm
+  rotate: false
+  xy: 2, 2
+  size: 2359, 1217
+  orig: 2388, 1400
+  offset: 14, 130
+  index: -1
+
+dengluCG3.png
+size: 2632,2322
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+ditu
+  rotate: false
+  xy: 1202, 2
+  size: 1428, 1177
+  orig: 1430, 1181
+  offset: 1, 2
+  index: -1
+jz_g2
+  rotate: false
+  xy: 2, 379
+  size: 1198, 1189
+  orig: 1453, 1246
+  offset: 126, 15
+  index: -1
+z1_1
+  rotate: false
+  xy: 2, 1570
+  size: 1213, 750
+  orig: 1280, 750
+  offset: 0, 0
+  index: -1
+z4_2
+  rotate: true
+  xy: 1217, 1181
+  size: 1139, 1263
+  orig: 1175, 1299
+  offset: 7, 34
+  index: -1
+
+dengluCG4.png
+size: 2026,2379
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+di
+  rotate: false
+  xy: 2, 2
+  size: 1449, 1190
+  orig: 1451, 1192
+  offset: 1, 1
+  index: -1
+z3
+  rotate: false
+  xy: 2, 1194
+  size: 2022, 1183
+  orig: 2326, 1393
+  offset: 160, 90
+  index: -1
+
+dengluCG5.png
+size: 2150,1251
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+z2
+  rotate: false
+  xy: 2, 2
+  size: 2146, 1247
+  orig: 2560, 1500
+  offset: 140, 99
+  index: -1

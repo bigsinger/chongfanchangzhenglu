@@ -1,0 +1,139 @@
+
+batata1.png
+size: 159,535
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+glow_0035
+  rotate: true
+  xy: 2, 392
+  size: 96, 97
+  orig: 96, 97
+  offset: 0, 0
+  index: -1
+prop_cooked1
+  rotate: true
+  xy: 121, 481
+  size: 52, 36
+  orig: 53, 37
+  offset: 0, 1
+  index: -1
+prop_cooked2
+  rotate: false
+  xy: 101, 443
+  size: 52, 36
+  orig: 53, 37
+  offset: 0, 1
+  index: -1
+prop_cooked3
+  rotate: false
+  xy: 101, 405
+  size: 52, 36
+  orig: 53, 37
+  offset: 0, 1
+  index: -1
+tu
+  rotate: false
+  xy: 2, 490
+  size: 117, 43
+  orig: 121, 49
+  offset: 2, 2
+  index: -1
+yan_0000
+  rotate: true
+  xy: 83, 329
+  size: 61, 74
+  orig: 72, 79
+  offset: 4, 1
+  index: -1
+yan_0001
+  rotate: false
+  xy: 82, 2
+  size: 62, 77
+  orig: 72, 79
+  offset: 4, 0
+  index: -1
+yan_0002
+  rotate: true
+  xy: 2, 261
+  size: 63, 78
+  orig: 72, 79
+  offset: 3, 0
+  index: -1
+yan_0003
+  rotate: true
+  xy: 2, 261
+  size: 63, 78
+  orig: 72, 79
+  offset: 3, 0
+  index: -1
+yan_0004
+  rotate: true
+  xy: 2, 326
+  size: 64, 79
+  orig: 72, 79
+  offset: 3, 0
+  index: -1
+yan_0005
+  rotate: true
+  xy: 2, 197
+  size: 62, 78
+  orig: 72, 79
+  offset: 4, 1
+  index: -1
+yan_0006
+  rotate: true
+  xy: 2, 133
+  size: 62, 78
+  orig: 72, 79
+  offset: 4, 1
+  index: -1
+yan_0007
+  rotate: true
+  xy: 2, 69
+  size: 62, 78
+  orig: 72, 79
+  offset: 4, 1
+  index: -1
+yan_0008
+  rotate: true
+  xy: 2, 7
+  size: 60, 77
+  orig: 72, 79
+  offset: 5, 2
+  index: -1
+yan_0009
+  rotate: true
+  xy: 82, 204
+  size: 60, 75
+  orig: 72, 79
+  offset: 5, 2
+  index: -1
+yan_0010
+  rotate: true
+  xy: 82, 81
+  size: 59, 69
+  orig: 72, 79
+  offset: 5, 2
+  index: -1
+yan_0011
+  rotate: true
+  xy: 82, 142
+  size: 60, 70
+  orig: 72, 79
+  offset: 5, 2
+  index: -1
+yan_0012
+  rotate: true
+  xy: 83, 266
+  size: 61, 73
+  orig: 72, 79
+  offset: 4, 1
+  index: -1
+yan_0013
+  rotate: true
+  xy: 83, 266
+  size: 61, 73
+  orig: 72, 79
+  offset: 4, 1
+  index: -1
