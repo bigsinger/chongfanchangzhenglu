@@ -25,7 +25,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
         Object.defineProperty(o, "__esModule", {
             value: !0
         });
-        var s = require("./BaseView"), r = require("./ConfManager"), c = require("./GameData"), l = require("./SoundManage"), h = require("./externalGame"), d = cc._decorator, p = d.ccclass, u = d.property, m = function (t) {
+        var s = require("./BaseView"), r = require("./ConfManager"), c = require("./GameData"), l = require("./SoundManage"), h = require("./externalGame"), v = require("./SaveManager"), y = require("./ResourceManager"), b = require("./Logger"), d = cc._decorator, p = d.ccclass, u = d.property, m = function (t) {
             n(e, t);
             function e() {
                 var e = null !== t && t.apply(this, arguments) || this;
@@ -47,17 +47,11 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 return e;
             }
             e.prototype.onLoad = function () {
-                var t = this, e = cc.sys.localStorage.getItem("longmarch");
-                if (e) try {
-                    var o = JSON.parse(e);
-                    if (o && "object" == typeof o && !Array.isArray(o)) {
-                        var i = c.default.playData;
-                        for (var n in i) null == o[n] && (o[n] = i[n]);
-                        c.default.playData = o;
-                    }
-                } catch (a) {
-                    console.warn("------------ 主存档损坏，已恢复默认进度", a);
-                    cc.sys.localStorage.removeItem("longmarch");
+                b.default.install();
+                var t = this, e = v.default.restoreOrMigrate(c.default.playData, "gameScene" == cc.sys.localStorage.getItem("codex_direct_scene")), o = c.default.playData;
+                if (e && "object" == typeof e && !Array.isArray(e)) {
+                    for (var i in o) null == e[i] && (e[i] = o[i]);
+                    c.default.playData = e;
                 }
                 cc.sys.localStorage.getItem("longmarch_first") && (this.m_isFirst = !0);
                 this.btn_skip.active = this.m_isFirst;
@@ -85,7 +79,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     t.m_titleData = c.default.cgtitleData[0];
                     t.schedule(t.execute, 1);
                 };
-                cc.resources.loadDir("sound/effect/ui", function () { });
+                y.default.loadDir("sound/effect/ui", function () { }, function () { }, "core:ui-sound");
                 this.loadGameConfig();
             };
             e.prototype.execute = function () {
@@ -107,12 +101,12 @@ var i, n = this && this.__extends || (i = function (t, e) {
             };
             e.prototype.loads = function (t) {
                 var e = this;
-                cc.resources.loadDir(t, function (t, o) {
+                y.default.loadDir(t, function (t, o) {
                     e.onProgress(t / o, "加载游戏资源");
                 }, function () {
                     e.loadtip.string = "资源加载完成";
                     e.onComplete();
-                });
+                }, "core:" + t);
             };
             e.prototype.onProgress = function (t, e) {
                 t = (t = Number((t + "").replace("%", ""))) || 0;
@@ -142,7 +136,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
             };
             e.prototype.loadGameConfig = function () {
                 var t = this;
-                cc.resources.loadDir("gameConf", function (e, o) {
+                y.default.loadDir("gameConf", function (e, o) {
                     t.onProgress(e / o, "游戏配置加载");
                 }, function (e, o) {
                     if (e || !Array.isArray(o) || !o.length) {
@@ -239,7 +233,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     }
                     t.m_callBack();
                     t.onComplete();
-                });
+                }, "core:game-conf");
             };
             e.prototype.gotoLoginScene = function () {
                 if (!(this.m_loadIndex < 2)) {

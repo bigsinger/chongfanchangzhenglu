@@ -25,7 +25,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
         Object.defineProperty(o, "__esModule", {
             value: !0
         });
-        var s = require("./ConfManager"), r = require("./GameData"), c = require("./PopupView"), l = require("./SoundManage"), h = require("./ToolsManager"), d = require("./ViewManager"), p = cc._decorator, u = p.ccclass, m = p.property, _ = function (t) {
+        var s = require("./ConfManager"), r = require("./GameData"), c = require("./PopupView"), l = require("./SoundManage"), h = require("./ToolsManager"), d = require("./ViewManager"), p = require("./CompletionTracker"), u = cc._decorator, m = u.ccclass, _ = u.property, f = function (t) {
             n(e, t);
             function e() {
                 var e = null !== t && t.apply(this, arguments) || this;
@@ -156,7 +156,9 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 var t = r.default.chapterUiConf[this.touchChapter];
                 if (t) {
                     this.label_name_r.string = t.chapter_name;
-                    this.label_info_r.string = "      " + t.chapter_txt;
+                    this.label_info_r.string = "      " + t.chapter_txt + "\n\n" + p.default.shortText(this.touchChapter);
+                    this.label_info_r.enableWrapText = !0;
+                    this.label_info_r.overflow = cc.Label.Overflow.SHRINK;
                     var e = t.chapterid.split("_");
                     this.label_num_r.string = e[0] + ":" + e[1];
                     var o = t.chapter_prop.split("|");
@@ -183,15 +185,15 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     });
                 }]);
             };
-            a([m(cc.Node)], e.prototype, "pan_chapter", void 0);
-            a([m(cc.Node)], e.prototype, "node_right", void 0);
-            a([m(cc.Node)], e.prototype, "node_bg", void 0);
-            a([m(cc.Node)], e.prototype, "scroll_chapter", void 0);
-            a([m(cc.Label)], e.prototype, "label_name_r", void 0);
-            a([m(cc.Label)], e.prototype, "label_info_r", void 0);
-            a([m(cc.RichText)], e.prototype, "rich_story_r", void 0);
-            a([m(cc.RichText)], e.prototype, "rich_item_r", void 0);
-            a([m(cc.Label)], e.prototype, "label_num_r", void 0);
-            return a([u], e);
+            a([_(cc.Node)], e.prototype, "pan_chapter", void 0);
+            a([_(cc.Node)], e.prototype, "node_right", void 0);
+            a([_(cc.Node)], e.prototype, "node_bg", void 0);
+            a([_(cc.Node)], e.prototype, "scroll_chapter", void 0);
+            a([_(cc.Label)], e.prototype, "label_name_r", void 0);
+            a([_(cc.Label)], e.prototype, "label_info_r", void 0);
+            a([_(cc.RichText)], e.prototype, "rich_story_r", void 0);
+            a([_(cc.RichText)], e.prototype, "rich_item_r", void 0);
+            a([_(cc.Label)], e.prototype, "label_num_r", void 0);
+            return a([m], e);
         }(c.default);
-        o.default = _;
+        o.default = f;

@@ -21,7 +21,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
         Object.defineProperty(o, "__esModule", {
             value: !0
         });
-        var a = require("./GameData"), s = function (t) {
+        var a = require("./GameData"), s = require("./SaveManager"), c = require("./ConfigRepair"), r = function (t) {
             n(e, t);
             function e() {
                 return null !== t && t.apply(this, arguments) || this;
@@ -42,10 +42,13 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 }
             };
             e.loadMapConf = function (t) {
+                var n = 0;
                 for (var e = 0, o = t; e < o.length; e++) {
                     var i = o[e];
                     this.confData[i.name] = JSON.parse(i.content);
+                    n += c.default.repairScene(i.name, this.confData[i.name]);
                 }
+                n && console.warn("------------ 已修复失效事件跳转 " + n + " 处");
                 console.log("------------ loadMapConf ", this.confData);
             };
             e.setPointConf = function (t, e) {
@@ -75,6 +78,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 null != o && (this.tempData[t].heroPos = o);
                 this.tempData[t].gomod = i;
                 cc.sys.localStorage.setItem("tempData", JSON.stringify(this.tempData));
+                s.default.scheduleCommit("temp-data", a.default.playData);
             };
             e.getTempData = function (t) {
                 var e = this.readJSON("tempData", {});
@@ -86,39 +90,47 @@ var i, n = this && this.__extends || (i = function (t, e) {
             };
             e.saveCrossData = function (t) {
                 cc.sys.localStorage.setItem("cross", JSON.stringify(t));
+                s.default.scheduleCommit("cross-data", a.default.playData);
             };
             e.getCorssData = function () {
                 return this.readJSON("cross", null);
             };
             e.cleanCorssData = function () {
                 cc.sys.localStorage.removeItem("cross");
+                s.default.scheduleCommit("clear-cross", a.default.playData);
             };
             e.saveHeroItem = function (t) {
                 cc.sys.localStorage.setItem("heroItem", JSON.stringify(t));
+                s.default.scheduleCommit("hero-item", a.default.playData);
             };
             e.getHeroItem = function () {
                 return this.readJSON("heroItem", null);
             };
             e.cleanHeroItem = function () {
                 cc.sys.localStorage.removeItem("heroItem");
+                s.default.scheduleCommit("clear-hero-item", a.default.playData);
             };
             e.saveHeroFollow = function (t) {
                 cc.sys.localStorage.setItem("heroFollow", JSON.stringify(t));
+                s.default.scheduleCommit("hero-follow", a.default.playData);
             };
             e.getHeroFollow = function () {
                 return this.readJSON("heroFollow", null);
             };
             e.cleanHeroFollow = function () {
                 cc.sys.localStorage.removeItem("heroFollow");
+                s.default.scheduleCommit("clear-hero-follow", a.default.playData);
             };
             e.saveHeroSpine = function (t) {
                 cc.sys.localStorage.setItem("heroSpine", t);
+                s.default.scheduleCommit("hero-spine", a.default.playData);
             };
             e.getHeroSpine = function () {
                 return cc.sys.localStorage.getItem("heroSpine");
             };
             e.cleanHeroSpine = function () {
                 cc.sys.localStorage.removeItem("heroSpine");
+                s.default.scheduleCommit("clear-hero-spine", a.default.playData);
             };
             e.clearRunState = function () {
                 cc.sys.localStorage.setItem("tempData", "");
@@ -127,12 +139,14 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 this.cleanHeroItem();
                 this.cleanHeroFollow();
                 this.cleanHeroSpine();
+                s.default.scheduleCommit("clear-run-state", a.default.playData);
             };
             e.cleanAllSave = function () {
                 this.clearRunState();
                 // Only the explicit "reset all progress" action should erase
                 // permanent collections, story records and unlocks.
                 cc.sys.localStorage.removeItem("longmarch");
+                s.default.clearSnapshots();
             };
             e.getLoadDragonBones = function (t) {
                 for (var e = "scenes_d" + t + "_", o = 1, i = {}, n = []; ;) {
@@ -152,4 +166,4 @@ var i, n = this && this.__extends || (i = function (t, e) {
             e.tempData = {};
             return e;
         }(cc.Component);
-        o.default = s;
+        o.default = r;

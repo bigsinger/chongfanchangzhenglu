@@ -6,7 +6,8 @@ param(
     [string]$NdkPath = 'D:\Android\Sdk\ndk\20.1.5948944',
     [ValidatePattern('^[A-Z]$')]
     [string]$DriveLetter = 'R',
-    [switch]$SkipGenerate
+    [switch]$SkipGenerate,
+    [switch]$IncrementalGenerate
 )
 
 $ErrorActionPreference = 'Stop'
@@ -53,6 +54,10 @@ $androidProject = Join-Path $runtimeSource 'proj.android-studio'
 $packageName = 'com.game.longmarch.creator243'
 $expectedAbis = @('arm64-v8a', 'armeabi-v7a')
 
+if ($SkipGenerate -and $IncrementalGenerate) {
+    throw '-SkipGenerate and -IncrementalGenerate cannot be used together.'
+}
+
 Assert-File -Path $CreatorPath -Description 'Cocos Creator 2.4.3'
 Assert-File -Path (Join-Path $JavaHome 'bin\java.exe') -Description 'JDK 8 java.exe'
 Assert-File -Path (Join-Path $AndroidSdk 'build-tools\28.0.3\aapt.exe') -Description 'Android Build Tools 28.0.3'
@@ -74,6 +79,22 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 if (-not $SkipGenerate) {
+    # The release pipeline modernizes the generated Android project in place.
+    # Creator only refreshes assets on a later incremental build. The default
+    # therefore recreates the exact generated subtree; maintainers may opt into
+    # an incremental Creator refresh when the existing tree is known to be the
+    # unmodified debug project.
+    if (-not $IncrementalGenerate -and (Test-Path -LiteralPath $buildRoot)) {
+        $resolvedGeneratedBuild = [System.IO.Path]::GetFullPath($buildRoot)
+        $resolvedProject = [System.IO.Path]::GetFullPath($projectRoot)
+        if (-not $resolvedGeneratedBuild.StartsWith($resolvedProject + [System.IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase) -or
+            [System.IO.Path]::GetFileName($resolvedGeneratedBuild) -ne 'jsb-link' -or
+            [System.IO.Path]::GetFileName([System.IO.Path]::GetDirectoryName($resolvedGeneratedBuild)) -ne 'build') {
+            throw "Refusing to remove unexpected generated path: $resolvedGeneratedBuild"
+        }
+        Remove-Item -LiteralPath $resolvedGeneratedBuild -Recurse -Force
+    }
+
     $buildOptions = 'platform=android;template=link;debug=true;md5Cache=false;buildPath=' +
         $projectRoot.Replace('\', '/') +
         '/build;autoCompile=false;packageName=' +
@@ -114,6 +135,15 @@ if (-not $SkipGenerate) {
     if (-not $creatorCompleted) {
         throw "Timed out waiting for Cocos Creator to finish generating $buildRoot"
     }
+}
+
+& node (Join-Path $projectRoot 'tools\prune-production-bundle.js')
+if ($LASTEXITCODE -ne 0) {
+    throw 'Production bundle pruning failed.'
+}
+& node (Join-Path $projectRoot 'tools\verify-production-bundle.js')
+if ($LASTEXITCODE -ne 0) {
+    throw 'Production bundle verification failed.'
 }
 
 Assert-File -Path (Join-Path $androidProject 'gradlew.bat') -Description 'Generated Gradle wrapper'

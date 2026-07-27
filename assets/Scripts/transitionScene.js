@@ -25,7 +25,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
         Object.defineProperty(o, "__esModule", {
             value: !0
         });
-        var s = require("./BaseView"), r = require("./GameData"), c = require("./DragonBonesManager"), l = require("./SoundManage"), h = require("./ConfManager"), d = require("./externalGame"), p = require("./spineManager"), u = cc._decorator, m = u.ccclass, _ = u.property, f = function (t) {
+        var s = require("./BaseView"), r = require("./GameData"), c = require("./DragonBonesManager"), l = require("./SoundManage"), h = require("./ConfManager"), d = require("./externalGame"), p = require("./spineManager"), y = require("./ResourceManager"), u = cc._decorator, m = u.ccclass, _ = u.property, f = function (t) {
             n(e, t);
             function e() {
                 var e = null !== t && t.apply(this, arguments) || this;
@@ -361,7 +361,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
             e.prototype.loads = function (t, o) {
                 var e = this;
                 void 0 === o && (o = 0);
-                cc.resources.loadDir(t, function (t, o) {
+                y.default.loadDir(t, function (t, o) {
                     e.onProgress(t / o, "加载游戏资源");
                 }, function (i, n) {
                     if (i || !n || !n.length) {
@@ -381,7 +381,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                         return;
                     }
                     e.onComplete();
-                });
+                }, "chapter:" + t);
             };
             e.prototype.onProgress = function (t) {
                 t = (t = Number((t + "").replace("%", ""))) || 0;
@@ -442,7 +442,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
             };
             e.prototype.setrelease = function (t) {
                 console.log("=11==释放资源=" + t);
-                cc.resources.release(t);
+                y.default.releaseDirectory(t);
             };
             e.prototype.onVideoPlayerEvent = function (t, e) {
                 if (e === cc.VideoPlayer.EventType.COMPLETED) this.videoEnd(!0); else if (e === cc.VideoPlayer.EventType.READY_TO_PLAY) {

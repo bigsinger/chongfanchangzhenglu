@@ -295,7 +295,10 @@ var i, n = this && this.__extends || (i = function (t, e) {
                                     l = Number(h) == this.hero_ts.heroState;
                                 } else if (o.includes("prop")) {
                                     var d = this.hero_ts.goods;
-                                    d && (l = o == d.nameid) && 3 != d.isthrow && "keepgoods" != i && this.hero_ts.setGoods(null);
+                                    if (d && (l = o == d.nameid) && 3 != d.isthrow && "keepgoods" != i) {
+                                        this.hero_ts.setGoods(null);
+                                        this.gameManager.onRequiredItemDelivered && this.gameManager.onRequiredItemDelivered(o);
+                                    }
                                 } else "left" == o ? l = !this.hero_ts.heroDir : "right" == o && (l = this.hero_ts.heroDir);
                                 l || (r.default.processConf[o] ? this.setExpression(r.default.processConf[o].hintmode, o) : o.includes("prop") ? this.showRequirementHint(o) : console.log("---------------- 配置表找不到提示数据 " + o));
                                 l || null == i || "" == i || "keepgoods" == i || this.checkNext(i, 1);
@@ -344,6 +347,9 @@ var i, n = this && this.__extends || (i = function (t, e) {
                         }
                         var u = a.getEvent(o);
                         if (null != u) {
+                            require("./Logger").default.setContext({
+                                event: s.index + "|" + u.index + ":" + u.key
+                            });
                             console.log("----------- eventData ", u);
                             var m = u.key, _ = r.default.eventConf[m];
                             if (_) {

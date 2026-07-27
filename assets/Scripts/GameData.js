@@ -21,7 +21,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
         Object.defineProperty(o, "__esModule", {
             value: !0
         });
-        var a = function (t) {
+        var a = require("./SaveManager"), s = function (t) {
             n(e, t);
             function e() {
                 return null !== t && t.apply(this, arguments) || this;
@@ -68,6 +68,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 set: function (t) {
                     this.playData.onlinetm = t;
                     cc.sys.localStorage.setItem("longmarch", JSON.stringify(this.playData));
+                    a.default.scheduleCommit("play-data", this.playData);
                 },
                 enumerable: !1,
                 configurable: !0
@@ -325,6 +326,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 cc.sys.localStorage.setItem("chapter", this.chapter);
                 cc.sys.localStorage.setItem("mapIndex", this.mapIndex);
                 cc.sys.localStorage.setItem("unlockchapters", this.unlockchapters);
+                a.default.scheduleCommit("map-info", this.playData);
             };
             e.loadMapInfo = function () {
                 var t = Number(cc.sys.localStorage.getItem("chapter") || this.playData.chapter || 1), e = Number(cc.sys.localStorage.getItem("mapIndex") || this.playData.mapIndex || 1), o = Number(cc.sys.localStorage.getItem("unlockchapters") || this.playData.unlockchapters || 0);
@@ -339,6 +341,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
             };
             e.saveUnlockChapter = function () {
                 cc.sys.localStorage.setItem("unlockchapters", this.unlockchapters);
+                a.default.scheduleCommit("unlock-chapter", this.playData);
             };
             e.initMapInfo = function (t) {
                 void 0 === t && (t = 1);
@@ -508,4 +511,4 @@ var i, n = this && this.__extends || (i = function (t, e) {
             e.chapterName = ["第一节 ", "第二节 ", "第三节 ", "第四节 ", "第五节 "];
             return e;
         }(cc.Component);
-        o.default = a;
+        o.default = s;

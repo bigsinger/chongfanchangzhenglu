@@ -12,6 +12,7 @@ dist/
 *.jks
 *.keystore
 signing.properties
+*.properties.local
 .env
 .env.*
 __pycache__/

@@ -25,7 +25,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
         Object.defineProperty(o, "__esModule", {
             value: !0
         });
-        var s = require("./GameData"), r = require("./SoundManage"), c = cc._decorator, l = c.ccclass, h = (c.property,
+        var s = require("./GameData"), r = require("./SoundManage"), v = require("./ResourceManager"), c = cc._decorator, l = c.ccclass, h = (c.property,
             function (t) {
                 n(e, t);
                 function e() {
@@ -35,14 +35,16 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     e.m_parentNode = null;
                     e.m_specialParm = !1;
                     e.m_loadAry = ["before", "centre", "after"];
+                    e.m_resourceScope = "";
                     return e;
                 }
                 e.prototype.onLoad = function () {
                     this.m_armatureName = "Armature";
                     this.m_timeScale = 1;
+                    this.m_resourceScope = v.default.createScope("spine");
                 };
                 e.prototype.onDestroy = function () {
-                    cc.resources.release(this.m_path);
+                    v.default.releaseScope(this.m_resourceScope);
                 };
                 e.prototype.start = function () {
                     this.m_parentNode && this.addDragonBones(this.m_parentNode, this.m_path, this._onLoadComplete.bind(this));
@@ -86,7 +88,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 e.prototype.addDragonBones = function (t, e, o) {
                     void 0 === o && (o = null);
                     var i = e, n = this;
-                    cc.resources.loadDir(i, sp.SkeletonData, function (e, i) {
+                    v.default.loadDirTyped(i, sp.SkeletonData, function () { }, function (e, i) {
                         if (e) console.log("========骨骼动画加载错误==请检查==" + e); else if (t && cc.isValid(t) && t.parent) {
                             t.getComponent(sp.Skeleton) && t.removeComponent(sp.Skeleton);
                             var a = t.addComponent(sp.Skeleton);
@@ -94,7 +96,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                             a.skeletonData = i[0];
                             o && o(a);
                         }
-                    });
+                    }, n.m_resourceScope);
                 };
                 e.prototype._onLoadComplete = function (t) {
                     var e = this;

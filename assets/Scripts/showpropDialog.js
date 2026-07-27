@@ -25,7 +25,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
         Object.defineProperty(o, "__esModule", {
             value: !0
         });
-        var s = require("./GameData"), r = require("./PopupView"), c = require("./SoundManage"), l = cc._decorator, h = l.ccclass, d = l.property, p = function (t) {
+        var s = require("./GameData"), r = require("./PopupView"), c = require("./SoundManage"), l = require("./CompletionTracker"), h = cc._decorator, d = h.ccclass, p = h.property, u = function (t) {
             n(e, t);
             function e() {
                 var e = null !== t && t.apply(this, arguments) || this;
@@ -101,6 +101,20 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 this.setSpriteFrame(l, c);
                 this.magnify_name.string = this._magnify_name;
                 this.magnify_ms.string = this._magnify_ms;
+                this.updateWhere(r.ID, !!s.default.itemData[r.ID]);
+            };
+            e.prototype.updateWhere = function (t, e) {
+                if (!this.magnify_where) return;
+                var o = s.default.goodsConf[t];
+                this.magnify_where.string = o ? e ? "发现于：" + l.default.clue({
+                    key: t,
+                    data: o
+                }) : "线索：" + l.default.clue({
+                    key: t,
+                    data: o
+                }) : "";
+                this.magnify_where.enableWrapText = !0;
+                this.magnify_where.overflow = cc.Label.Overflow.SHRINK;
             };
             e.prototype.itemCallBack = function (t) {
                 // Native touch dispatch can report the slot's icon/selection
@@ -128,6 +142,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     this.setSpriteFrame(r, a);
                     this.magnify_name.string = n ? n.name : this._magnify_name;
                     this.magnify_ms.string = n ? n.ms : this._magnify_ms;
+                    this.updateWhere(i, !!n);
                 }
             };
             e.prototype.rightBack = function () {
@@ -161,20 +176,20 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 this.m_xzChapterId = 1;
                 this.start();
             };
-            a([d(cc.Node)], e.prototype, "itemcontent", void 0);
-            a([d(cc.Node)], e.prototype, "item_sp", void 0);
-            a([d(cc.Node)], e.prototype, "magnify_sp", void 0);
-            a([d(cc.Label)], e.prototype, "magnify_name", void 0);
-            a([d(cc.Label)], e.prototype, "magnify_ms", void 0);
-            a([d(cc.Label)], e.prototype, "magnify_where", void 0);
-            a([d(cc.ScrollView)], e.prototype, "scrollview_item", void 0);
-            a([d(cc.Label)], e.prototype, "label_tag", void 0);
-            a([d(cc.Label)], e.prototype, "label_chapterName", void 0);
-            a([d(cc.Node)], e.prototype, "node_chapter1", void 0);
-            a([d(cc.Node)], e.prototype, "node_chapter2", void 0);
-            a([d(cc.Node)], e.prototype, "node_chapter3", void 0);
-            a([d(cc.Node)], e.prototype, "node_bg", void 0);
-            a([d(cc.Node)], e.prototype, "node_bg2", void 0);
-            return a([h], e);
+            a([p(cc.Node)], e.prototype, "itemcontent", void 0);
+            a([p(cc.Node)], e.prototype, "item_sp", void 0);
+            a([p(cc.Node)], e.prototype, "magnify_sp", void 0);
+            a([p(cc.Label)], e.prototype, "magnify_name", void 0);
+            a([p(cc.Label)], e.prototype, "magnify_ms", void 0);
+            a([p(cc.Label)], e.prototype, "magnify_where", void 0);
+            a([p(cc.ScrollView)], e.prototype, "scrollview_item", void 0);
+            a([p(cc.Label)], e.prototype, "label_tag", void 0);
+            a([p(cc.Label)], e.prototype, "label_chapterName", void 0);
+            a([p(cc.Node)], e.prototype, "node_chapter1", void 0);
+            a([p(cc.Node)], e.prototype, "node_chapter2", void 0);
+            a([p(cc.Node)], e.prototype, "node_chapter3", void 0);
+            a([p(cc.Node)], e.prototype, "node_bg", void 0);
+            a([p(cc.Node)], e.prototype, "node_bg2", void 0);
+            return a([d], e);
         }(r.default);
-        o.default = p;
+        o.default = u;

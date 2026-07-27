@@ -25,7 +25,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
         Object.defineProperty(o, "__esModule", {
             value: !0
         });
-        var s = require("./BaseView"), r = require("./ConfManager"), c = require("./GameData"), l = require("./SoundManage"), h = require("./ToolsManager"), d = require("./ViewManager"), p = require("./spineManager"), u = require("./gameEvent"), m = cc._decorator, _ = m.ccclass, f = m.property, g = function (t) {
+        var s = require("./BaseView"), r = require("./ConfManager"), c = require("./GameData"), l = require("./SoundManage"), h = require("./ToolsManager"), d = require("./ViewManager"), p = require("./spineManager"), u = require("./gameEvent"), v = require("./SaveManager"), w = require("./ObjectiveManager"), m = cc._decorator, _ = m.ccclass, f = m.property, g = function (t) {
             n(e, t);
             function e() {
                 var e = null !== t && t.apply(this, arguments) || this;
@@ -114,6 +114,11 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 e.m_progressSavePending = !1;
                 e.m_progressSaveFrames = 0;
                 e.m_gameReady = !1;
+                e.m_objectiveFrame = 0;
+                e.m_objectiveNode = null;
+                e.m_objectiveLabel = null;
+                e.m_actionTargetNode = null;
+                e.m_actionTargetLabel = null;
                 e.m_onGameHide = null;
                 e.m_canvasNode = null;
                 e.m_canvasTouchStart = null;
@@ -259,6 +264,11 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 this.m_lastParallaxX = null;
                 this.m_lastParallaxY = null;
                 var o = t[0], i = t[1];
+                require("./Logger").default.setContext({
+                    chapter: c.default.chapter,
+                    map: o,
+                    event: null
+                });
                 this.camera_master_ts = this.camera_master.getComponent("camera_master");
                 this.m_throwAry = [];
                 this.m_ThrowPos = [];
@@ -493,6 +503,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 r.default.saveHeroFollow(this.hero_ts.followMap);
                 r.default.saveHeroSpine(this.hero_ts.m_path);
                 c.default.saveMapInfo();
+                v.default.commit("game-scene", c.default.playData);
             };
             e.prototype.changeMap = function (t, e) {
                 var o = this;
@@ -553,7 +564,8 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 var e = t.split("_");
                 if (!t || "" == t) {
                     this.openEffect(.01, function () {
-                        d.default.open("dialog/tipsDialog", ["<b><size=28>后续关卡正在开发中，敬请期待!</>", "", function () {
+                        var t = require("./CompletionTracker").default.endingText();
+                        d.default.open("dialog/tipsDialog", ["<b><size=26>" + t + "</>", "", function () {
                             console.log("==确定=回调=");
                             r.default.clearRunState();
                             c.default.chapter = 1;
@@ -667,6 +679,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                         h.default.setSpriteFrame(o, "ui/interact_" + t);
                     }
                 }
+                w.default.update(this, u.default);
             };
             Object.defineProperty(e.prototype, "interact", {
                 get: function () {
@@ -733,6 +746,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     y: this.hero.y
                 }, this.hero_ts.walkingMode);
                 this.m_gameReady = !0;
+                w.default.init(this, u.default);
                 this.btnShield = null != this.initCameraData && "" != this.initCameraData.time ? 60 * this.initCameraData.time : 90;
                 this.schedule(this.upGame, 0);
                 this.gameOperate = !1;
@@ -1082,14 +1096,20 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 this.m_globalTouchListener = null;
                 this.m_onGameHide && cc.game.off(cc.game.EVENT_HIDE, this.m_onGameHide, this);
                 this.m_onGameHide = null;
-                if (this.camera_part) {
+                w.default.destroy(this);
+                // Cocos invokes component onDestroy after its node hierarchy has
+                // started teardown. Serialized child references can therefore
+                // still be truthy while their internal component arrays are
+                // already gone. Guard every engine-object access so rapid scene
+                // switches cannot query or destroy an invalid native object.
+                if (this.camera_part && cc.isValid(this.camera_part, !0)) {
                     var t = this.camera_part.getComponent(cc.Camera);
-                    t && (t.targetTexture = null);
+                    t && cc.isValid(t, !0) && (t.targetTexture = null);
                 }
-                this.texture_sp && (this.texture_sp.spriteFrame = null);
-                this.m_partSpriteFrame && this.m_partSpriteFrame.destroy();
+                this.texture_sp && cc.isValid(this.texture_sp, !0) && (this.texture_sp.spriteFrame = null);
+                this.m_partSpriteFrame && cc.isValid(this.m_partSpriteFrame, !0) && this.m_partSpriteFrame.destroy();
                 this.m_partSpriteFrame = null;
-                this.m_partTexture && this.m_partTexture.destroy();
+                this.m_partTexture && cc.isValid(this.m_partTexture, !0) && this.m_partTexture.destroy();
                 this.m_partTexture = null;
             };
             e.prototype.isGameSurfaceTouch = function (t) {
@@ -1157,6 +1177,10 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 if (++this.m_touchProximityFrame >= 12) {
                     this.m_touchProximityFrame = 0;
                     this.scanTouchProximity();
+                }
+                if (++this.m_objectiveFrame >= 15) {
+                    this.m_objectiveFrame = 0;
+                    w.default.update(this, u.default);
                 }
                 if (this.gestureCount < 2 * c.default.G_COUNT) {
                     this.gestureCount++;
@@ -1424,7 +1448,28 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 if (this.m_gameReady) {
                     this.m_progressSavePending = !0;
                     this.m_progressSaveFrames = 0;
+                    w.default.update(this, u.default);
                 }
+            };
+            e.prototype.onRequiredItemDelivered = function () {
+                var t = this;
+                if ("scenes_d3_2" === this.mapName) this.delayHold(1.1, function () {
+                    var e = w.default._distributionProgress(t);
+                    if (e && e.done >= 2 && e.done < e.total && !t.gameOperate && t.hero_ts && !t.hero_ts.goods) {
+                        t.hero_ts.setRoleTips(!0, "label", {
+                            txt: "分发进度 " + e.done + "/" + e.total + "\n自动返回物资箱区"
+                        }, {
+                            num: 0,
+                            times: 0,
+                            interval: 0,
+                            pos: "56|340"
+                        });
+                        t.delayHold(1.8, function () {
+                            t.hero_ts && t.hero_ts.setRoleTips(!1);
+                        });
+                        t.beginHeroMove(4380, t.hero.y);
+                    }
+                });
             };
             e.prototype.dirCall = function (t) {
                 if (this.isCheck) this.operateDir = 0; else {

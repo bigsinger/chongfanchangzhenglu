@@ -25,20 +25,34 @@ var i, n = this && this.__extends || (i = function (t, e) {
         Object.defineProperty(o, "__esModule", {
             value: !0
         });
-        var s = require("./PopupView"), r = require("./SoundManage"), c = cc._decorator, l = c.ccclass, h = (c.property,
+        var s = require("./PopupView"), r = require("./SoundManage"), c = require("./CompletionTracker"), l = cc._decorator, h = l.ccclass, d = (l.property,
             function (t) {
                 n(e, t);
                 function e() {
                     return null !== t && t.apply(this, arguments) || this;
                 }
                 e.prototype.initData = function () { };
-                e.prototype.start = function () { };
+                e.prototype.start = function () {
+                    var t = this.node.getChildByName("tipis_label");
+                    if (t) {
+                        var e = t.getComponent(cc.Label);
+                        if (e && e.string.length > 20) {
+                            e.string = c.default.endingText();
+                            e.enableWrapText = !0;
+                            e.overflow = cc.Label.Overflow.SHRINK;
+                        }
+                    }
+                    for (var o = 0; o < this.node.children.length; o++) {
+                        var i = this.node.children[o], n = i.getComponent(cc.Label);
+                        n && n.string.length > 20 && (n.string = c.default.endingText(), n.enableWrapText = !0, n.overflow = cc.Label.Overflow.SHRINK);
+                    }
+                };
                 e.prototype.sureBack = function () {
                     r.default.stopBGM();
                     setTimeout(function () {
                         cc.game.restart();
                     }, 500);
                 };
-                return a([l], e);
+                return a([h], e);
             }(s.default));
-        o.default = h;
+        o.default = d;

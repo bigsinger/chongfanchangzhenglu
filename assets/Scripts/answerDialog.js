@@ -40,7 +40,11 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 this.m_Data = t[0].split("|");
                 this.m_callBack = t[1];
             };
-            e.prototype.onLoad = function () { };
+            e.prototype.onLoad = function () {
+                this.label_question.overflow = cc.Label.Overflow.SHRINK;
+                this.label_question.enableWrapText = !0;
+                this.label_question.node.height = Math.max(92, this.label_question.node.height);
+            };
             e.prototype.start = function () {
                 this.m_nowData = s.default.answerConf[this.m_Data[0]];
                 this.label_question.string = this.m_questionIndex + "." + this.m_nowData.question;
@@ -65,9 +69,15 @@ var i, n = this && this.__extends || (i = function (t, e) {
                             this.m_isChick = !1;
                         }
                     } else {
-                        this.m_callBack(!1);
-                        this._onClose();
-                        this.m_isChick = !1;
+                        var o = this.m_nowData["answer" + this.m_nowData.right], i = this.m_nowData.explanation || "请结合本章史实线索再试一次。", n = this.label_question.color;
+                        this.label_question.color = cc.color(255, 214, 126);
+                        this.label_question.string = "回答错误，正确答案：" + o + "\n" + i;
+                        var a = this;
+                        this.scheduleOnce(function () {
+                            a.label_question.color = n;
+                            a.label_question.string = a.m_questionIndex - 1 + "." + a.m_nowData.question;
+                            a.m_isChick = !1;
+                        }, 3.2);
                         console.log("==回答错误=");
                     }
                 }

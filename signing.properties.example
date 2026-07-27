@@ -1,0 +1,5 @@
+# Copy outside the repository and keep the real values private.
+storeFile=E:/secure/longmarch-upload.jks
+storePassword=change-me
+keyAlias=longmarch-upload
+keyPassword=change-me

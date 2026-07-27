@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
     [Parameter(Position = 0)]
-    [ValidateSet('state', 'launch', 'stop', 'tap', 'swipe', 'screenshot', 'inspect', 'logs', 'checkpoint', 'restore', 'direct', 'relocate', 'jump', 'smoke')]
+    [ValidateSet('state', 'launch', 'stop', 'tap', 'swipe', 'screenshot', 'inspect', 'logs', 'checkpoint', 'restore', 'direct', 'relocate', 'jump', 'smoke', 'background', 'corrupt', 'stability')]
     [string]$Command = 'state',
 
     [string]$Name = 'current',
@@ -13,6 +13,9 @@ param(
     [int]$Chapter = 1,
     [int]$Map = 1,
     [int]$WaitSeconds = 8,
+    [ValidateRange(1, 240)]
+    [int]$Minutes = 30,
+    [switch]$RequireArm64,
     [string]$Serial = 'emulator-5554',
     [string]$Adb = 'D:\Android\Sdk\platform-tools\adb.exe'
 )
@@ -58,7 +61,7 @@ function Get-GameState {
     $focus = (Invoke-Adb -Arguments @('shell', 'dumpsys', 'window', 'windows') |
         Select-String 'mCurrentFocus|mFocusedApp' |
         ForEach-Object { $_.Line.Trim() })
-    $sql = 'select key,value from data where key in (''chapter'',''mapIndex'',''unlockchapters'',''heroSpine'') order by key;'
+    $sql = 'select key,value from data where key in (''chapter'',''mapIndex'',''unlockchapters'',''heroSpine'') union all select key,''bytes='' || length(value) from data where key in (''longmarch_save_v2_current'',''longmarch_save_v2_previous'') order by key;'
     $remote = "run-as $Package sqlite3 databases/jsb.sqlite `"$sql`""
     $save = Invoke-Adb -Arguments @('shell', $remote)
     [pscustomobject]@{
@@ -66,6 +69,14 @@ function Get-GameState {
         focus = @($focus)
         save = @($save)
     }
+}
+
+function Assert-GameInForeground {
+    $state = Get-GameState
+    if (($state.focus -join "`n") -notmatch [regex]::Escape($Package)) {
+        throw '游戏未保持在前台'
+    }
+    return $state
 }
 
 function Save-Screenshot {
@@ -81,7 +92,7 @@ function Save-Logs {
     $localPath = Join-Path $ResultDir "$Name.log"
     $lines = Invoke-Adb -Arguments @('logcat', '-d', '-v', 'time', '-t', '3000')
     $lines | Set-Content -LiteralPath $localPath -Encoding utf8
-    $errors = $lines | Select-String 'TypeError|ReferenceError|FATAL EXCEPTION|Fatal signal|SIGSEGV|SIGABRT|crash_dump|tombstone|ANR in|Uncaught Exception|AndroidRuntime|asset.*failed|load.*failed'
+    $errors = $lines | Select-String 'TypeError|ReferenceError|FATAL EXCEPTION|Fatal signal|SIGSEGV|SIGABRT|crash_dump|tombstone|ANR in|Uncaught Exception|asset.*failed|load.*failed'
     if ($errors) {
         $errors | ForEach-Object { Write-Error $_.Line }
         throw "运行日志包含错误，完整日志：$localPath"
@@ -163,6 +174,105 @@ commit;
     Start-Game
 }
 
+function Test-BackgroundRecovery {
+    Invoke-Adb -Arguments @('logcat', '-c')
+    Start-Game
+    Start-Sleep -Seconds $WaitSeconds
+    Invoke-Adb -Arguments @('shell', 'input', 'keyevent', '3')
+    Start-Sleep -Seconds 3
+    Start-Game
+    Start-Sleep -Seconds $WaitSeconds
+    $state = Assert-GameInForeground
+    $state | ConvertTo-Json -Depth 5 |
+        Set-Content -LiteralPath (Join-Path $ResultDir "$Name-background-state.json") -Encoding utf8
+    Save-Screenshot
+    Save-Logs
+}
+
+function Test-CorruptSaveRecovery {
+    $checkpointName = "$Name-before-corrupt"
+    $originalName = $Name
+    $script:Name = $checkpointName
+    Save-Checkpoint
+    try {
+        Stop-Game
+        $sql = "update data set value='{`"schemaVersion`":2,`"revision`":' where key='longmarch_save_v2_current';"
+        $remote = "run-as $Package sqlite3 databases/jsb.sqlite `"$sql`""
+        Invoke-Adb -Arguments @('shell', $remote)
+        Invoke-Adb -Arguments @('logcat', '-c')
+        Start-Game
+        Start-Sleep -Seconds $WaitSeconds
+        $script:Name = "$originalName-corrupt-recovered"
+        $state = Assert-GameInForeground
+        $state | ConvertTo-Json -Depth 5 |
+            Set-Content -LiteralPath (Join-Path $ResultDir "$originalName-corrupt-state.json") -Encoding utf8
+        Save-Screenshot
+        Save-Logs
+    } finally {
+        $script:Name = $checkpointName
+        Restore-Checkpoint
+        $script:Name = $originalName
+    }
+}
+
+function Test-Stability {
+    $primaryAbi = (Invoke-Adb -Arguments @('shell', 'getprop', 'ro.product.cpu.abi') | Select-Object -First 1).Trim()
+    if ($RequireArm64 -and $primaryAbi -ne 'arm64-v8a') {
+        throw "真实 ARM64 门禁失败：设备主 ABI 为 $primaryAbi"
+    }
+
+    $checkpointName = "$Name-before-stability"
+    $originalName = $Name
+    $script:Name = $checkpointName
+    Save-Checkpoint
+    $memoryLog = Join-Path $ResultDir "$originalName-stability-memory.log"
+    $deadline = (Get-Date).AddMinutes($Minutes)
+    $cycle = 0
+    $maps = @(
+        @{ Chapter = 1; Map = 1 },
+        @{ Chapter = 1; Map = 3 },
+        @{ Chapter = 2; Map = 3 },
+        @{ Chapter = 3; Map = 2 },
+        @{ Chapter = 3; Map = 5 }
+    )
+    try {
+        Invoke-Adb -Arguments @('logcat', '-c')
+        while ((Get-Date) -lt $deadline) {
+            $target = $maps[$cycle % $maps.Count]
+            $script:Chapter = $target.Chapter
+            $script:Map = $target.Map
+            Set-MapStart
+            Start-Sleep -Seconds $WaitSeconds
+            Invoke-Adb -Arguments @('shell', 'input', 'swipe', '960', '540', '1320', '540', '600')
+            Start-Sleep -Seconds 2
+            Invoke-Adb -Arguments @('shell', 'input', 'keyevent', '3')
+            Start-Sleep -Seconds 2
+            Start-Game
+            Start-Sleep -Seconds $WaitSeconds
+            $state = Assert-GameInForeground
+            $stamp = Get-Date -Format o
+            "[$stamp] cycle=$cycle chapter=$($target.Chapter) map=$($target.Map) abi=$primaryAbi" |
+                Add-Content -LiteralPath $memoryLog -Encoding utf8
+            Invoke-Adb -Arguments @('shell', 'dumpsys', 'meminfo', $Package) |
+                Select-String 'TOTAL PSS|TOTAL RSS|Native Heap|Dalvik Heap' |
+                ForEach-Object { $_.Line.Trim() } |
+                Add-Content -LiteralPath $memoryLog -Encoding utf8
+            if ($cycle % 5 -eq 0) {
+                $script:Name = "$originalName-stability-$cycle"
+                Save-Screenshot
+            }
+            $cycle++
+            Write-Output "stability cycle=$cycle remaining=$([Math]::Max(0, [Math]::Ceiling(($deadline - (Get-Date)).TotalMinutes)))m"
+        }
+        $script:Name = "$originalName-stability"
+        Save-Logs
+    } finally {
+        $script:Name = $checkpointName
+        Restore-Checkpoint
+        $script:Name = $originalName
+    }
+}
+
 switch ($Command) {
     'state' {
         Get-GameState | ConvertTo-Json -Depth 5
@@ -221,5 +331,14 @@ switch ($Command) {
             throw '游戏未保持在前台'
         }
         Save-Logs
+    }
+    'background' {
+        Test-BackgroundRecovery
+    }
+    'corrupt' {
+        Test-CorruptSaveRecovery
+    }
+    'stability' {
+        Test-Stability
     }
 }

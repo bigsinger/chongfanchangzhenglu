@@ -25,21 +25,23 @@ var i, n = this && this.__extends || (i = function (t, e) {
         Object.defineProperty(o, "__esModule", {
             value: !0
         });
-        var s = cc._decorator, r = s.ccclass, c = (s.property, function (t) {
+        var v = require("./ResourceManager"), s = cc._decorator, r = s.ccclass, c = (s.property, function (t) {
             n(e, t);
             function e() {
                 var e = null !== t && t.apply(this, arguments) || this;
                 e.m_timeScale = 1;
                 e.m_path = "dragonBones/";
+                e.m_resourceScope = "";
                 return e;
             }
             e.prototype.onLoad = function () {
                 this.m_armatureName = "Armature";
                 this.m_playTimes = 0;
                 this.m_timeScale = 1;
+                this.m_resourceScope = v.default.createScope("dragon-bones");
             };
             e.prototype.onDestroy = function () {
-                cc.resources.release(this.m_path);
+                v.default.releaseScope(this.m_resourceScope);
             };
             e.prototype.start = function () {
                 this.addDragonBones(this.m_Node, this.m_path, this._onLoadComplete.bind(this));
@@ -78,8 +80,8 @@ var i, n = this && this.__extends || (i = function (t, e) {
             };
             e.prototype.addDragonBones = function (t, e, o) {
                 void 0 === o && (o = null);
-                var i = e;
-                cc.resources.loadDir(i, function (e, i) {
+                var i = e, n = this;
+                v.default.loadDir(i, function () { }, function (e, i) {
                     if (e) console.log("========龙骨动画加载错误==请检查==" + e); else if (!(i.length <= 0) && t && cc.isValid(t) && t.parent) {
                         t.getComponent(dragonBones.ArmatureDisplay) && t.removeComponent(dragonBones.ArmatureDisplay);
                         var n = t.addComponent(dragonBones.ArmatureDisplay);
@@ -89,7 +91,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                         });
                         o && o(n);
                     }
-                });
+                }, n.m_resourceScope);
             };
             e.prototype._onLoadComplete = function (t) {
                 this.m_dragonDisplay = t;

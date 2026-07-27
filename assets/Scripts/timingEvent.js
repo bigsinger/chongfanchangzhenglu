@@ -36,6 +36,9 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 e.itemTs = null;
                 e.resultFrame = "";
                 e.resultDelay = 0;
+                e.m_timingHud = null;
+                e.m_timingGraphics = null;
+                e.m_timingLabel = null;
                 return e;
             }
             e.prototype.start = function () { };
@@ -53,11 +56,33 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 if (this.isTiming) {
                     this.isTiming = !1;
                     this.unscheduleAllCallbacks();
-                    return this.second < this.minTime ? 1 : this.second > this.maxTime ? 3 : 2;
+                    var e = this.second < this.minTime ? 1 : this.second > this.maxTime ? 3 : 2;
+                    this.drawTimingHud(e);
+                    this.scheduleOnce(function () {
+                        t.destroyTimingHud();
+                    }, 1.2);
+                    return e;
                 }
                 this.itemTs.setBubble(!1, 0, !1);
                 this.isTiming = !0;
                 this.second = 0;
+                this.ensureTimingHud();
+                this.drawTimingHud(0);
+                if (!cc.sys.localStorage.getItem("tutorial_cooking_v1")) {
+                    cc.sys.localStorage.setItem("tutorial_cooking_v1", "1");
+                    var e = this.itemTs.gameManager, o = e && e.hero_ts;
+                    o && o.setRoleTips(!0, "label", {
+                        txt: "烤制计时开始\n蓝色=生  绿色=熟  红色=焦\n指针进入绿色区间后再次点击"
+                    }, {
+                        num: 0,
+                        times: 0,
+                        interval: 0,
+                        pos: "56|340"
+                    });
+                    e && e.delayHold(4, function () {
+                        o && o.setRoleTips(!1);
+                    });
+                }
                 this.scheduleOnce(function () {
                     t.itemTs.setBubble(!0, 0, !1);
                     t.itemTs.setPaoSprite(t.resultFrame + "_1");
@@ -69,9 +94,66 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 this.second++;
                 console.log("------------- timing second " + this.second);
                 this.second > this.maxTime ? this.itemTs.setPaoSprite(this.resultFrame + "_3") : this.second >= this.minTime && this.itemTs.setPaoSprite(this.resultFrame + "_2");
+                this.drawTimingHud(0);
+            };
+            e.prototype.ensureTimingHud = function () {
+                if (this.m_timingHud && cc.isValid(this.m_timingHud)) return;
+                var t = this.itemTs && this.itemTs.gameManager, e = t && t.camera_ui && t.camera_ui.node;
+                if (e) {
+                    var o = new cc.Node("cookingTimingHud");
+                    o.group = "ui";
+                    o.y = cc.winSize.height / 2 - 105;
+                    o.zIndex = 9999;
+                    var i = o.addComponent(cc.Graphics);
+                    i.lineCap = cc.Graphics.LineCap.ROUND;
+                    var n = new cc.Node("timingText"), a = n.addComponent(cc.Label);
+                    a.fontSize = 18;
+                    a.lineHeight = 22;
+                    a.horizontalAlign = cc.Label.HorizontalAlign.CENTER;
+                    n.width = 190;
+                    n.height = 48;
+                    n.x = 105;
+                    var s = n.addComponent(cc.LabelOutline);
+                    s.color = cc.color(60, 20, 18);
+                    s.width = 2;
+                    o.addChild(n);
+                    e.addChild(o);
+                    this.m_timingHud = o;
+                    this.m_timingGraphics = i;
+                    this.m_timingLabel = a;
+                }
+            };
+            e.prototype.drawTimingHud = function (t) {
+                if (!this.m_timingGraphics) return;
+                var e = this.m_timingGraphics, o = Math.max(this.maxTime + 3, 1), i = Math.min(1, this.minTime / o), n = Math.min(1, this.maxTime / o), a = -Math.PI / 2;
+                e.clear();
+                e.lineWidth = 10;
+                e.strokeColor = cc.color(80, 160, 255);
+                e.arc(0, 0, 32, a, a + 2 * Math.PI * i, !1);
+                e.stroke();
+                e.strokeColor = cc.color(72, 210, 118);
+                e.arc(0, 0, 32, a + 2 * Math.PI * i, a + 2 * Math.PI * n, !1);
+                e.stroke();
+                e.strokeColor = cc.color(242, 83, 72);
+                e.arc(0, 0, 32, a + 2 * Math.PI * n, a + 2 * Math.PI, !1);
+                e.stroke();
+                var s = a + 2 * Math.PI * Math.min(1, this.second / o);
+                e.fillColor = cc.color(255, 255, 255);
+                e.circle(32 * Math.cos(s), 32 * Math.sin(s), 5);
+                e.fill();
+                var r = this.second < this.minTime ? "生" : this.second > this.maxTime ? "焦" : "熟";
+                1 === t ? r = "生：还需烤制" : 2 === t ? r = "熟：恰到好处" : 3 === t && (r = "焦：时间过长");
+                this.m_timingLabel.string = r + "\n" + this.second + " 秒";
+            };
+            e.prototype.destroyTimingHud = function () {
+                this.m_timingHud && cc.isValid(this.m_timingHud) && this.m_timingHud.destroy();
+                this.m_timingHud = null;
+                this.m_timingGraphics = null;
+                this.m_timingLabel = null;
             };
             e.prototype.onDestroy = function () {
                 this.unscheduleAllCallbacks();
+                this.destroyTimingHud();
             };
             return a([r], e);
         }(cc.Component));

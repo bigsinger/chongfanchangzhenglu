@@ -1,97 +1,97 @@
 
 ui_ditu.png
-size: 2302,1464
+size: 1151, 732
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
 image_bgcj
   rotate: false
-  xy: 2, 414
-  size: 1048, 1048
+  xy: 1, 207
+  size: 524, 524
   orig: 1048, 1048
   offset: 0, 0
   index: -1
 image_db
   rotate: true
-  xy: 1650, 293
-  size: 51, 29
+  xy: 825, 147
+  size: 26, 15
   orig: 51, 29
   offset: 0, 0
   index: -1
 image_dbd
   rotate: true
-  xy: 1687, 355
-  size: 1107, 608
+  xy: 844, 178
+  size: 554, 304
   orig: 1188, 670
   offset: 81, 62
   index: -1
 image_dbd1
   rotate: true
-  xy: 1052, 346
-  size: 1116, 633
+  xy: 526, 173
+  size: 558, 317
   orig: 1188, 670
   offset: 72, 37
   index: -1
 image_dbk
   rotate: true
-  xy: 2, 2
-  size: 117, 157
+  xy: 1, 1
+  size: 59, 79
   orig: 117, 158
   offset: 0, 1
   index: -1
 image_dbkt
   rotate: true
-  xy: 161, 40
-  size: 79, 111
+  xy: 81, 20
+  size: 40, 56
   orig: 128, 149
   offset: 25, 21
   index: -1
 image_dbkt01
   rotate: true
-  xy: 274, 44
-  size: 75, 107
+  xy: 137, 22
+  size: 38, 54
   orig: 128, 149
   offset: 25, 21
   index: -1
 image_f1
   rotate: false
-  xy: 2, 121
-  size: 520, 291
+  xy: 1, 61
+  size: 260, 146
   orig: 520, 297
   offset: 0, 0
   index: -1
 image_f2
   rotate: false
-  xy: 1100, 76
-  size: 548, 268
+  xy: 550, 38
+  size: 274, 134
   orig: 548, 268
   offset: 0, 0
   index: -1
 image_f3
   rotate: false
-  xy: 524, 74
-  size: 574, 270
+  xy: 262, 37
+  size: 287, 135
   orig: 574, 270
   offset: 0, 0
   index: -1
 image_f4
   rotate: false
-  xy: 1687, 98
-  size: 613, 255
+  xy: 844, 49
+  size: 307, 128
   orig: 613, 255
   offset: 0, 0
   index: -1
 image_x
   rotate: false
-  xy: 1650, 247
-  size: 6, 17
+  xy: 825, 124
+  size: 3, 9
   orig: 6, 17
   offset: 0, 0
   index: -1
 image_x2
   rotate: false
-  xy: 1650, 266
-  size: 25, 25
+  xy: 825, 133
+  size: 13, 13
   orig: 25, 25
   offset: 0, 0
   index: -1
