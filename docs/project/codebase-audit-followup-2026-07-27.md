@@ -90,6 +90,9 @@
 | `npm test` | 67 个脚本、12 场景/1218 事件/802 跳转、发布内容、契约、命名和纹理预算全部通过 |
 | 配置增量门禁 | 0 error；历史 440 warning 被设为上限，新增 warning 会失败 |
 | Android 调试构建 | 双 ABI 成功；SHA-256 `C999D32309349DFBD6388BE5C9AE299AF129032474056911AE4E52470814C4C7` |
+| Android 正式构建 | `lintRelease`、APK/AAB、zipalign、v1/v2/v3 签名、API 36、minSdk 21 和双 ABI 全部通过 |
+| 正式包安全检查 | 系统权限 0；`Cocos2dxDownloader`/OkHttp/Okio DEX 匹配 0；构建来源为干净提交 `20216bc` |
+| 正式包产物 | 测试签名 APK SHA-256 `A29F4D92A53A784B97111C5B53C22DC9E07EDD8E0AD5C8DE222C60EDA1985FB9`；AAB SHA-256 `F55EC6C7526E196E57BD54682EDF7DB1BD4227A1AC2338DE7399D1E7B0D1F71A` |
 | 旧档设备迁移 | 测试前删除 `prop113`，启动后精确恢复 1 个；不会重复注入 |
 | 收藏品交互 | ADB 重定位后显示“拾取（收藏品-红星报）”；点击打开可读卡片，关闭后物件从场景存档删除并写入永久收藏 |
 | 后台恢复 | HOME 后恢复，前台状态与快照均有效，日志无 JS/Native 崩溃 |
@@ -108,10 +111,19 @@
    下一阶段应按“发布入口、剧情内部跳转、明确保留的编辑分支”建立精确基线。
 4. **真实 ARM64 设备。** 雷电模拟器主 ABI 为 x86_64，虽运行双 ARM 包但不能代替
    Adreno/Mali 真机。发布前仍需至少两台真实 ARM64 设备完成 30 分钟轮转和后台矩阵。
-5. **正式签名验收。** 构建脚本与本地测试签名配置可执行，但最终对外包仍应使用项目正式
-   密钥，并在不清除用户数据的条件下完成正式签名包验收。
+5. **正式签名验收。** 本轮 release 使用 `LongMarch Test / Automated QA` 本地测试签名完成
+   构建和静态验收。最终对外包仍应使用项目正式密钥，并在不清除用户数据的条件下完成
+   正式签名包验收；测试签名包不能冒充生产发布包。
 
 当前 Cocos 2.4 文档说明该产品线已结束更新并建议新项目使用 3.x；Asset Bundle 仍是
 2.4 资源隔离的官方机制。Android 发布要求和性能验收应持续以官方 target API、
 内存分配与 Android vitals 指南为准。
 
+官方基线：
+
+- [Cocos Creator 2.4 产品线状态](https://docs.cocos.com/creator/2.4/manual/en/)
+- [Cocos Creator 2.4 Asset Bundle](https://docs.cocos.com/creator/2.4/manual/en/asset-manager/bundle.html)
+- [Gradle 发布校验和](https://gradle.org/release-checksums/)
+- [Google Play target API 要求](https://developer.android.com/google/play/requirements/target-sdk)
+- [Android 游戏内存分配](https://developer.android.com/games/optimize/memory-allocation)
+- [Android vitals](https://developer.android.com/topic/performance/vitals)

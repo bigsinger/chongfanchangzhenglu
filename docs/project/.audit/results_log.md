@@ -28,9 +28,12 @@ Runtime evidence:
 - pickup/card/close/permanent-save device path: PASS
 - background recovery: PASS
 - four-cycle map/background stability rerun after `STATE_DRAG` fix: PASS
+- clean-commit test-signed release, `lintRelease`, APK/AAB and build manifest: PASS
+- release permissions: 0
+- release `Cocos2dxDownloader`/OkHttp/Okio DEX matches: 0
+- release source commit: `20216bc728430ff08f1d5c0d10cdceef4e470d62`
 
 The installed coordinator package did not include its referenced shared
 `audit-common-contract.md`, `scoring.md`, `severity.md`, `audit-report.md`, or
 `results-log.md` template files. Equivalent evidence tables and a persistent log
 were used without inventing missing template contents.
-
