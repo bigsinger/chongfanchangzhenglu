@@ -16,6 +16,7 @@ const forbidden = [
   'LegacyItemEventModel',
   'LegacyItemModel',
   'LegacyNetworkTip',
+  'RoadLayer',
 ];
 const found = forbidden.filter((name) => new RegExp(`cc\\._RF\\.push\\([^\\n]+, "${name}"\\)`).test(source));
 if (found.length) throw new Error(`生产包含禁用模块：${found.join(', ')}`);

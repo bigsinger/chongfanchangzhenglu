@@ -16,7 +16,8 @@ const remove = new Set([
   'LegacySceneEditor',
   'LegacyItemEventModel',
   'LegacyItemModel',
-  'LegacyNetworkTip'
+  'LegacyNetworkTip',
+  'RoadLayer'
 ]);
 
 if (!bundle || !fs.existsSync(bundle)) throw new Error(`生产脚本包不存在：${mainDir}`);
