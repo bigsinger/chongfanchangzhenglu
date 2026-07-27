@@ -79,6 +79,7 @@ assert.equal(SaveManager.isValid(semanticCorruption), false);
 // Gameplay source-level contracts guard the integration points that are hard
 // to instantiate without a running JSB engine.
 const scene = source('GameplaySceneController.js');
+const chapterTransition = source('ChapterTransitionController.js');
 const event = source('GameplayEventController.js');
 const interactionQuery = source('GameplayInteractionQuery.js');
 const interactiveObject = source('InteractiveObject.js');
@@ -87,8 +88,11 @@ const popup = source('PopupView.js');
 const resourceManagerSource = source('ResourceManager.js');
 const saveManagerSource = source('SaveManager.js');
 const menu = source('MainMenuController.js');
+const gameInfo = source('GameInfo.js');
+const gameStateSource = source('GameState.js');
 const cloudSources = source('CloudSpawner.js') + source('AmbientCloudSpawner.js');
 const fireMiniGame = source('FireExtinguishMiniGame.js');
+const timingMiniGame = source('timingEvent.js');
 assert(
   /KEY_DOWN/.test(scene) &&
     /keyDirections/.test(scene) &&
@@ -108,7 +112,35 @@ assert(
 assert(/showRequirementHint/.test(event) && /onRequiredItemDelivered/.test(event), 'wrong/right delivery contract');
 assert(/require\("\.\/baseEvent"\)/.test(fireMiniGame), 'fire mini-game must use the case-correct BaseEvent module path');
 assert(/pauseGame|gameOperate/.test(popup + scene), 'modal input blocking contract');
+assert(
+  /this\.btn_story = this\.btn_story \|\| this\.node\.getChildByName\("btn_story"\)/.test(scene) &&
+    /\[this\.btn_pass, this\.btn_tips, this\.btn_story, this\.btn_goods\]/.test(scene),
+  'collection and history controls must use visible-area HUD placement and touch routing'
+);
+assert(
+  /this\.isCheck && !o/.test(scene) &&
+    /this\.second > this\.maxTime \+ 2/.test(timingMiniGame),
+  'cooking timer action and bounded-time contract'
+);
 assert(/changeMap/.test(scene) && /saveItemConf/.test(scene), 'map transition save contract');
+assert(
+  /prototype\.stopNodeRuntime/.test(scene) &&
+    /this\.stopNodeRuntime\(this\.gameNode\)/.test(scene) &&
+    /this\.gameNode\.active = !1;\s*u\.default\.resetTransientState\(\)/.test(scene) &&
+    /m_chapterTransitionPending/.test(scene) &&
+    /e\.goTransitionScene\(t\);\s*\}, \.05\)/.test(scene),
+  'scene teardown must stop actions and detach physics before chapter transitions'
+);
+assert(
+  /var transitionHost = this;/.test(scene) &&
+    /transitionHost\.delayHold\(\.2/.test(scene),
+  'chapter preload callbacks must retain the gameplay controller instance'
+);
+assert(
+  /t\.node\.active = !1/.test(chapterTransition) &&
+    /cc\.Director\.EVENT_AFTER_DRAW/.test(chapterTransition),
+  'chapter transition renderers must detach for a full frame before gameplay loads'
+);
 assert(/EVENT_HIDE/.test(scene) && /应用进入后台/.test(scene), 'background persistence contract');
 assert(/EVENT_SHOW/.test(scene) && /resetActiveInput/.test(scene), 'background input reset contract');
 assert(/installLifecycle/.test(saveManagerSource) && /gameplay-hide/.test(scene), 'pending save flush contract');
@@ -117,7 +149,16 @@ assert(
   'async dialog generation and alias contract'
 );
 assert(/releasePrefix\("gk\/d"\)/.test(menu), 'menu must release the active chapter scope');
+assert(
+  /V_S_1\.1\.0/.test(gameInfo) && /V_S_1\.1\.0/.test(gameStateSource),
+  'main-menu display version must match the Android/package release version'
+);
 assert(/_releasedEpochs/.test(resourceManagerSource) && /_bundleInflight/.test(resourceManagerSource), 'late resource load cancellation contract');
+assert(
+  /releaseScopeDeferred/.test(resourceManagerSource) &&
+    /releaseScopeDeferred\(this\.m_resourceScope\)/.test(source('SpineAnimationManager.js')),
+  'shared Spine resources must receive a release grace period across scene switches'
+);
 assert(!/removeFromParent\(\)/.test(cloudSources) && /resetCloud/.test(cloudSources), 'cloud nodes must be recycled');
 assert(
   /addComponent\(assetCatalog\.default\.componentName\(c\.param\)\)/.test(interactiveObject),

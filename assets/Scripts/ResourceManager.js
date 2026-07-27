@@ -24,6 +24,7 @@ var i = {
     _releasedEpochs: {},
     _scopePending: {},
     _bundleInflight: {},
+    _deferredReleases: {},
 
     createScope: function (t) {
         this._scopeSeed++;
@@ -215,6 +216,10 @@ var i = {
     },
 
     releaseScope: function (t) {
+        if (this._deferredReleases[t]) {
+            clearTimeout(this._deferredReleases[t]);
+            delete this._deferredReleases[t];
+        }
         var e = this._scopes[t];
         if (!e) return 0;
         this._releasedEpochs[t] = e.epoch;
@@ -247,6 +252,15 @@ var i = {
             delete this._scopeEpochs[t];
         }
         return o;
+    },
+
+    releaseScopeDeferred: function (t, e) {
+        if (!t || !this._scopes[t] || this._deferredReleases[t]) return;
+        var o = this;
+        this._deferredReleases[t] = setTimeout(function () {
+            delete o._deferredReleases[t];
+            o.releaseScope(t);
+        }, null == e ? 3e3 : e);
     },
 
     releaseDirectory: function (t) {

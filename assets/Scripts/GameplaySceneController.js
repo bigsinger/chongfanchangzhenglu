@@ -25,7 +25,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
         Object.defineProperty(o, "__esModule", {
             value: !0
         });
-        var s = require("./BaseView"), r = require("./GameConfigManager"), c = require("./GameState"), l = require("./AudioManager"), h = require("./GameUtilities"), d = require("./DialogManager"), p = require("./SpineAnimationManager"), u = require("./GameplayEventController"), v = require("./SaveManager"), w = require("./ObjectiveManager"), interactionQuery = require("./GameplayInteractionQuery"), gameplayPersistence = require("./GameplayPersistence"), m = cc._decorator, _ = m.ccclass, f = m.property, g = function (t) {
+        var s = require("./BaseView"), r = require("./GameConfigManager"), c = require("./GameState"), l = require("./AudioManager"), h = require("./GameUtilities"), d = require("./DialogManager"), p = require("./SpineAnimationManager"), u = require("./GameplayEventController"), v = require("./SaveManager"), w = require("./ObjectiveManager"), timingEvent = require("./timingEvent"), interactionQuery = require("./GameplayInteractionQuery"), gameplayPersistence = require("./GameplayPersistence"), m = cc._decorator, _ = m.ccclass, f = m.property, g = function (t) {
             n(e, t);
             function e() {
                 var e = null !== t && t.apply(this, arguments) || this;
@@ -38,6 +38,8 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 e.btn_throw = null;
                 e.btn_pass = null;
                 e.btn_tips = null;
+                e.btn_story = null;
+                e.btn_goods = null;
                 e.node_control = null;
                 e.pan_control = null;
                 e.btn_control = null;
@@ -127,6 +129,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 e.m_touchProximityActive = {};
                 e.m_lastParallaxX = null;
                 e.m_lastParallaxY = null;
+                e.m_chapterTransitionPending = !1;
                 e.m_cameraTrackPosition = {
                     x: 0,
                     y: 0
@@ -439,12 +442,30 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 }, n = this;
                 for (var a in e) i();
             };
+            e.prototype.stopNodeRuntime = function (t) {
+                if (!t || !cc.isValid(t, !0)) return;
+                t.stopAllActions();
+                var e = t.getComponents(cc.Component);
+                for (var o = 0; o < e.length; o++) e[o].unscheduleAllCallbacks && e[o].unscheduleAllCallbacks();
+                var s = t.children.slice();
+                for (var r = 0; r < s.length; r++) this.stopNodeRuntime(s[r]);
+            };
             e.prototype.cleanGame = function () {
                 this.unschedule(this.upGame);
                 this.m_gameReady = !1;
                 this.m_progressSavePending = !1;
                 this.m_progressSaveFrames = 0;
                 this.operateDir = 0;
+                // A chapter transition can be requested from inside an event
+                // callback while legacy move actions are still active. Stop
+                // them and deactivate the scene before destroying its nodes;
+                // otherwise Creator 2.4.15 may tick a stale action once more
+                // and call SetTransform on an already released native body.
+                this.stopNodeRuntime(this.gameNode);
+                // Deactivation is the Creator-supported way to detach all
+                // rigid bodies. It emits final contact callbacks, so retain
+                // GameplayEventController's hero references until afterwards.
+                this.gameNode.active = !1;
                 u.default.resetTransientState();
                 this.itemMap = {};
                 this.gameNode.removeAllChildren();
@@ -560,6 +581,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
             };
             e.prototype.goTransitionScene = function (t) {
                 void 0 === t && (t = "");
+                var transitionHost = this;
                 this.cleanGame();
                 r.default.cleanHeroItem();
                 r.default.cleanCorssData();
@@ -576,7 +598,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                             c.default.Smallplot = "0_1";
                             l.default.stopBGM();
                             c.default.initMapInfo();
-                            o.delayHold(.2, function () {
+                            transitionHost.delayHold(.2, function () {
                                 cc.director.loadScene("mainScene", function () {
                                     console.log("==1111== mainScene==success=====");
                                 });
@@ -598,7 +620,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 this.layer_black.active = !0;
                 this.layer_black.runAction(cc.fadeIn(1.5));
                 cc.director.preloadScene("transitionScene", function () { }, function () {
-                    o.delayHold(.2, function () {
+                    transitionHost.delayHold(.2, function () {
                         cc.director.loadScene("transitionScene", function () {
                             console.log("==1111== gameScene==success=====");
                         });
@@ -770,7 +792,19 @@ var i, n = this && this.__extends || (i = function (t, e) {
             };
             e.prototype.chapterOver = function (t) {
                 console.log("-------- chapterOver !!", t);
-                this.goTransitionScene(t);
+                if (this.m_chapterTransitionPending) return;
+                this.m_chapterTransitionPending = !0;
+                this.operateDir = 0;
+                this.gameOperate = !0;
+                // The event that ends a chapter may itself be running from a
+                // cc.Action callback. Destroying its physics target inside the
+                // same ActionManager tick leaves that callback with one stale
+                // update. Defer teardown to a scheduler tick after the current
+                // action frame has completed.
+                var e = this;
+                this.scheduleOnce(function () {
+                    e.goTransitionScene(t);
+                }, .05);
             };
             e.prototype.alignLayer = function () {
                 var t = this.camera_master.node.x, e = this.camera_master.node.y;
@@ -904,6 +938,8 @@ var i, n = this && this.__extends || (i = function (t, e) {
             e.prototype.fitFixedHud = function () {
                 var e = cc.view.getVisibleSize(), o = this.camera_ui, i = cc.game.groupList ? cc.game.groupList.indexOf("ui") : 2;
                 i < 0 && (i = 2);
+                this.btn_story = this.btn_story || this.node.getChildByName("btn_story");
+                this.btn_goods = this.btn_goods || this.node.getChildByName("btn_goods");
                 var n = function (t) {
                     if (!t) return;
                     t.groupIndex = i;
@@ -920,11 +956,15 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 };
                 n(this.btn_pass);
                 n(this.btn_tips);
+                n(this.btn_story);
+                n(this.btn_goods);
                 a(this.btn_pass, 58, e.height - 58);
                 a(this.btn_tips, e.width - 70, e.height - 105);
+                a(this.btn_goods, e.width - 70, e.height - 70);
+                a(this.btn_story, e.width - 70, e.height - 190);
             };
             e.prototype.getFixedUiTouch = function (t) {
-                var e = t.getLocation(), o = this.camera_ui, i = [this.btn_pass, this.btn_tips], n = null, a = Number.MAX_VALUE;
+                var e = t.getLocation(), o = this.camera_ui, i = [this.btn_pass, this.btn_tips, this.btn_story, this.btn_goods], n = null, a = Number.MAX_VALUE;
                 for (var s = 0; s < i.length; s++) {
                     var r = i[s];
                     if (r && r.activeInHierarchy) {
@@ -954,7 +994,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                         }
                         var o = t.getFixedUiTouch(e);
                         if (o) {
-                            o == t.btn_pass ? t.passBack() : o == t.btn_tips && t.tipsBack();
+                            o == t.btn_pass ? t.passBack() : o == t.btn_tips ? t.tipsBack() : o == t.btn_story ? t.storyBack() : o == t.btn_goods && t.propBack();
                             return !1;
                         }
                         o = t.getUiControlTouch(e);
@@ -1078,7 +1118,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
             };
             e.prototype.isUiControlTouch = function (t) {
                 if (this.getUiControlTouch(t)) return !0;
-                var e = t.getLocation(), o = [this.btn_user, this.btn_throw, this.btn_climb, this.btn_pass, this.btn_tips];
+                var e = t.getLocation(), o = [this.btn_user, this.btn_throw, this.btn_climb, this.btn_pass, this.btn_tips, this.btn_story, this.btn_goods];
                 for (var i = 0; i < o.length; i++) {
                     var n = o[i];
                     if (n && n.activeInHierarchy && n.getBoundingBoxToWorld().contains(e)) return !0;
@@ -1590,7 +1630,12 @@ var i, n = this && this.__extends || (i = function (t, e) {
             };
             e.prototype.startBack = function () {
                 if (d.default.hasOpenPopup && d.default.hasOpenPopup()) return;
-                if (!(this.isCheck || this.isToucheLong || this.btnShield > 0)) {
+                // Timing mini-games intentionally keep the scene locked while
+                // the meter is running. The visible action button must still
+                // be able to submit the second press; otherwise only the small
+                // world-space bubble works and the HUD appears broken.
+                var t = u.default.cItem, e = t && t.getComponent(timingEvent.default), o = !!(e && e.isTiming);
+                if (!((this.isCheck && !o) || this.isToucheLong || this.btnShield > 0)) {
                     this.btnShield = 25;
                     u.default.analysisEvent(this.interactMod);
                 }

@@ -41,11 +41,25 @@ function receiverPriority(component, heldGoods) {
     return event.limit == heldGoods.nameid ? 2 : 1;
 }
 
+function operationPriority(component, heldGoods) {
+    var receiver = receiverPriority(component, heldGoods);
+    if (receiver) return receiver + 2;
+    var conf = component && typeof component.getConf === 'function' ? component.getConf() : component && component.itemConf;
+    var event = unfinishedEvent(component);
+    // Authored transfer triggers are sometimes unnamed after save repair, so
+    // recognise doors by both their readable name and their event contract.
+    var isDoor = conf && /门/.test(conf.name || "") ||
+        event && (Number(event.trigger) === 10 || Number(event.key) === 13);
+    return isDoor ? 0 : 1;
+}
+
 function selectClosestOperation(options) {
     var hero = options.hero;
     var reachSquared = options.reachSquared;
     var resolveComponent = options.resolveComponent;
+    var preferredNode = options.preferredNode;
     var candidates = collectCandidates(options.stack, options.nearby);
+    appendUnique(candidates, preferredNode);
     var selectedNode = null;
     var selectedOperation = null;
     var selectedDistance = reachSquared;
@@ -59,9 +73,14 @@ function selectClosestOperation(options) {
         var node = candidates[index];
         var component = node && node.activeInHierarchy && resolveComponent(node);
         var operation = component && component.getOpType();
+        // ObjectiveManager derives its target from the repaired authored
+        // event configuration. A legacy component can temporarily expose a
+        // stale eventArr after restoring a save, so allow that already
+        // validated objective operation to bridge the one-frame mismatch.
+        node === preferredNode && !operation && (operation = options.preferredOperation);
         if (!operation) continue;
         var candidateDistance = distanceSquared(node, hero);
-        var candidatePriority = receiverPriority(component, options.heldGoods);
+        var candidatePriority = operationPriority(component, options.heldGoods) + (node === preferredNode ? 100 : 0);
         if (candidateDistance < reachSquared &&
             (candidatePriority > selectedPriority ||
                 candidatePriority === selectedPriority && candidateDistance < selectedDistance)) {
@@ -116,6 +135,7 @@ function scanProximity(options) {
 module.exports = {
     collectCandidates: collectCandidates,
     distanceSquared: distanceSquared,
+    operationPriority: operationPriority,
     selectClosestOperation: selectClosestOperation,
     scanProximity: scanProximity
 };

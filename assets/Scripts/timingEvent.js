@@ -95,6 +95,10 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 console.log("------------- timing second " + this.second);
                 this.second > this.maxTime ? this.itemTs.setPaoSprite(this.resultFrame + "_3") : this.second >= this.minTime && this.itemTs.setPaoSprite(this.resultFrame + "_2");
                 this.drawTimingHud(0);
+                // Do not leave a missed timing window scheduling callbacks and
+                // logging forever. Resolve it as overcooked shortly after the
+                // red segment is reached so play can continue.
+                this.second > this.maxTime + 2 && this.itemTs.bubbleBack();
             };
             e.prototype.ensureTimingHud = function () {
                 if (this.m_timingHud && cc.isValid(this.m_timingHud)) return;

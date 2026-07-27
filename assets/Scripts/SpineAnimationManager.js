@@ -44,7 +44,15 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     this.m_resourceScope = v.default.createScope("spine");
                 };
                 e.prototype.onDestroy = function () {
-                    v.default.releaseScope(this.m_resourceScope);
+                    // Scene changes can destroy the outgoing Spine component
+                    // immediately before the incoming scene requests the same
+                    // cached SkeletonData (notably role_erwa1 between chapters
+                    // 2 and 3). Creator 2.4.15 clears SkeletonData.textures on
+                    // release, so a same-frame reload can receive a poisoned
+                    // cached asset and fail in isTexturesLoaded every frame.
+                    // A short grace period lets the next owner register its
+                    // reference while keeping abandoned assets bounded.
+                    v.default.releaseScopeDeferred(this.m_resourceScope);
                 };
                 e.prototype.start = function () {
                     this.m_parentNode && this.addDragonBones(this.m_parentNode, this.m_path, this._onLoadComplete.bind(this));

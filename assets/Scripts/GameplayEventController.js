@@ -49,6 +49,8 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     this.isGround = !0;
                     this.isDrop = !1;
                     this.tempHeroLeft = !1;
+                    this.preferredNode = null;
+                    this.preferredOperation = null;
                     this.hero = null;
                     this.hero_ts = null;
                 };
@@ -84,7 +86,10 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     // Some authored blockers stop the hero just outside the
                     // legacy collider of an intended prop (the chapter-3
                     // supply box is about 368 units from the nearest reachable
-                    // point). Use a slightly larger manual-operation reach.
+                    // point, while the chapter-3 newspaper is about 447 units
+                    // from the closest saved walk position). Use a slightly
+                    // larger manual-operation reach that remains below the
+                    // 520-unit navigation/scan radius.
                     // When carrying supplies, a matching task receiver wins
                     // over nearby boxes; distance breaks ties deterministically.
                     var e = interactionQuery.selectClosestOperation({
@@ -92,7 +97,9 @@ var i, n = this && this.__extends || (i = function (t, e) {
                         heldGoods: this.hero_ts.goods,
                         stack: this.itemStack,
                         nearby: Array.isArray(t) ? t : this.gameManager.itemMap,
-                        reachSquared: 420 * 420,
+                        preferredNode: this.preferredNode,
+                        preferredOperation: this.preferredOperation,
+                        reachSquared: 460 * 460,
                         resolveComponent: function (t) {
                             return t.getComponent("InteractiveObject");
                         }

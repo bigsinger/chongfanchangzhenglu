@@ -55,6 +55,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 e.m_cgTsAry = [];
                 e.m_cgNameIndex = 2;
                 e.m_nowCgIndex = 0;
+                e.m_gameSceneTransitionPending = !1;
                 return e;
             }
             e.prototype.onLoad = function () {
@@ -423,12 +424,28 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     o.m_specialParm = !0;
                     o.initData(this.yun_node, "daiji", "effect/transition", function () { }, 1);
                     cc.director.preloadScene("gameScene", function () { }, function () {
-                        setTimeout(function () {
+                        t.scheduleOnce(function () {
+                            if (t.m_gameSceneTransitionPending) return;
+                            t.m_gameSceneTransitionPending = !0;
                             l.default.stopBGM();
-                            cc.director.loadScene("gameScene", function () {
-                                console.log("==== gameScene==success=====");
-                            });
-                        }, 1200);
+                            cc.director.getScheduler().setTimeScale(1);
+                            // Creator 2.4.15 releases Spine textures while
+                            // destroying a scene. If a transition renderer is
+                            // still registered for the current frame,
+                            // SkeletonData.isTexturesLoaded() reads the already
+                            // cleared texture list on the next render pass and
+                            // prevents the new gameplay scene from appearing.
+                            // Detach all transition renderers first, let one
+                            // complete frame flush RenderFlow, then switch.
+                            t.node.stopAllActions();
+                            t.node.active = !1;
+                            var e = function () {
+                                cc.director.loadScene("gameScene", function () {
+                                    console.log("==== gameScene==success=====");
+                                });
+                            };
+                            cc.Director && cc.Director.EVENT_AFTER_DRAW ? cc.director.once(cc.Director.EVENT_AFTER_DRAW, e) : setTimeout(e, 80);
+                        }, 1.2);
                     });
                 }
             };
