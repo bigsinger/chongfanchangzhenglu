@@ -1,0 +1,36 @@
+{
+  "ver": "2.3.5",
+  "uuid": "811cce58-5fba-4720-8fc4-c8a0c3869ea0",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "width": 705,
+  "height": 187,
+  "platformSettings": {},
+  "subMetas": {
+    "chapter-3-houses-1-12": {
+      "ver": "1.0.4",
+      "uuid": "bef1b8ea-65ce-4c95-8e52-622d1fcdf1c0",
+      "rawTextureUuid": "811cce58-5fba-4720-8fc4-c8a0c3869ea0",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 0,
+      "trimY": 0,
+      "width": 705,
+      "height": 187,
+      "rawWidth": 705,
+      "rawHeight": 187,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

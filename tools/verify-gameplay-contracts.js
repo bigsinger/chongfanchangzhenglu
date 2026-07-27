@@ -69,8 +69,10 @@ assert(SaveManager.isValid(JSON.parse(storage.getItem(SaveManager.CURRENT_KEY)))
 
 // Gameplay source-level contracts guard the integration points that are hard
 // to instantiate without a running JSB engine.
-const scene = source('gameScene.js');
-const event = source('gameEvent.js');
+const scene = source('GameplaySceneController.js');
+const event = source('GameplayEventController.js');
+const interactiveObject = source('InteractiveObject.js');
+const dialogManager = source('DialogManager.js');
 const popup = source('PopupView.js');
 assert(/KEY_DOWN/.test(scene) && /keyDirections/.test(scene), 'A/D keyboard movement contract');
 assert(/manual-operation reach/.test(event) && /pickEvent/.test(event), 'nearby pickup contract');
@@ -78,6 +80,27 @@ assert(/showRequirementHint/.test(event) && /onRequiredItemDelivered/.test(event
 assert(/pauseGame|gameOperate/.test(popup + scene), 'modal input blocking contract');
 assert(/changeMap/.test(scene) && /saveItemConf/.test(scene), 'map transition save contract');
 assert(/EVENT_HIDE/.test(scene) && /应用进入后台/.test(scene), 'background persistence contract');
+assert(
+  /addComponent\(assetCatalog\.default\.componentName\(c\.param\)\)/.test(interactiveObject),
+  'dynamic event components must resolve renamed class IDs'
+);
+assert(
+  /getComponent\(assetCatalog\.default\.componentName\(/.test(dialogManager) &&
+    !/var r = require\("\.\/ResourceManager"\), c = require\("\.\/AssetCatalog"\)/.test(dialogManager),
+  'dialog components must resolve aliases without minified variable shadowing'
+);
+
+const AssetCatalog = require(path.join(root, 'assets', 'Scripts', 'AssetCatalog.js')).default;
+assert.equal(
+  AssetCatalog.componentName('putOutFire'),
+  'FireExtinguishMiniGame',
+  'legacy event component alias must remain available'
+);
+assert.equal(
+  AssetCatalog.resolve('gk\\d1\\scenes_d1_1').logical,
+  'chapters/chapter-1/maps/scenes_d1_1',
+  'Windows-style legacy asset paths must resolve after naming migration'
+);
 
 const ObjectiveManager = require(path.join(root, 'assets', 'Scripts', 'ObjectiveManager.js')).default;
 const objective = ObjectiveManager.describe({

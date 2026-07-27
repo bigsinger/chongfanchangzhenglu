@@ -12,7 +12,8 @@ param(
     [string]$VersionName = '1.1.0',
     [ValidatePattern('^[A-Z]$')]
     [string]$DriveLetter = 'S',
-    [switch]$SkipGenerate
+    [switch]$SkipGenerate,
+    [switch]$SkipNative
 )
 
 $ErrorActionPreference = 'Stop'
@@ -119,7 +120,6 @@ if ($LASTEXITCODE -ne 0) { throw 'Android 现代化迁移失败' }
 
 $localProperties = Join-Path $androidProject 'local.properties'
 Set-Utf8Text -Path $localProperties -Text (
-    'ndk.dir=' + (Convert-ToPropertiesPath $NdkPath) + [Environment]::NewLine +
     'sdk.dir=' + (Convert-ToPropertiesPath $AndroidSdk) + [Environment]::NewLine
 )
 
@@ -141,11 +141,15 @@ $nativeArguments = @(
     'NDK_DEBUG=0'
 )
 $ndkBuild = Join-Path $NdkPath 'ndk-build.cmd'
-& $ndkBuild @nativeArguments clean
-if ($LASTEXITCODE -ne 0) { throw "NDK 正式清理失败：$LASTEXITCODE" }
-$nativeJobs = [Math]::Max(2, [Math]::Floor([Environment]::ProcessorCount / 2))
-& $ndkBuild @nativeArguments "-j$nativeJobs" cocos2djs
-if ($LASTEXITCODE -ne 0) { throw "NDK 双 ABI 正式构建失败：$LASTEXITCODE" }
+if (-not $SkipNative) {
+    & $ndkBuild @nativeArguments clean
+    if ($LASTEXITCODE -ne 0) { throw "NDK 正式清理失败：$LASTEXITCODE" }
+    $nativeJobs = [Math]::Max(2, [Math]::Floor([Environment]::ProcessorCount / 2))
+    & $ndkBuild @nativeArguments "-j$nativeJobs" cocos2djs
+    if ($LASTEXITCODE -ne 0) { throw "NDK 双 ABI 正式构建失败：$LASTEXITCODE" }
+} else {
+    Write-Host '复用已验证的双 ABI release 原生库'
+}
 foreach ($abi in $expectedAbis) {
     $linkedLibrary = Join-Path $nativeObjectRoot "local\$abi\libcocos2djs.so"
     Assert-File -Path $linkedLibrary -Description "$abi 链接产物"

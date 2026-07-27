@@ -34,6 +34,12 @@ function Replace-Required {
 
     $text = [System.IO.File]::ReadAllText($Path)
     if (-not [System.Text.RegularExpressions.Regex]::IsMatch($text, $Pattern)) {
+        # Incremental Creator builds preserve some of our previous generated
+        # project patches. Treat an already-applied replacement as success so
+        # the debug build remains repeatable.
+        if ($text.Contains($Replacement)) {
+            return
+        }
         throw "Expected generated setting was not found in: $Path"
     }
     $updated = [System.Text.RegularExpressions.Regex]::Replace($text, $Pattern, $Replacement)
@@ -170,6 +176,9 @@ Replace-Required -Path $appManifest -Pattern 'package="[^"]+"' -Replacement ('pa
 $sourceDirLine = '        def sourceDir = System.getenv("COCOS_JSB_SOURCE_DIR") ?: "${buildDir}/../../../../.."'
 Replace-Required -Path $appBuildGradle -Pattern '(?m)^\s*def sourceDir = .*$' -Replacement $sourceDirLine
 Replace-Required -Path $gameBuildGradle -Pattern '(?m)^\s*def sourceDir = .*$' -Replacement $sourceDirLine
+$nativeJobsLine = "                    arguments '-j' + Math.min(8, Runtime.runtime.availableProcessors())"
+Replace-Required -Path $appBuildGradle -Pattern "(?m)^\s*arguments '-j' \+ Runtime\.runtime\.availableProcessors\(\)\s*$" -Replacement $nativeJobsLine
+Replace-Required -Path $gameBuildGradle -Pattern "(?m)^\s*arguments '-j' \+ Runtime\.runtime\.availableProcessors\(\)\s*$" -Replacement $nativeJobsLine
 
 $appProjectLine = Get-Content -LiteralPath $settingsGradle | Where-Object {
     $_ -match "project\(':.*'\)\.projectDir = new File\(settingsDir, 'app'\)"

@@ -32,28 +32,28 @@
       "spriteUuid": "c4a3b77c-aae2-447d-af23-36da8179e423",
       "textureUuid": "1a1547a2-be46-402d-a2e2-f45309df93a1",
       "name": "image_gl",
-      "destination": "F:\\bigsinger\\chongfanchangzhenglu\\assets\\recovered\\resources\\c4a3b77c-aae2-447d-af23-36da8179e423\\image_gl.png"
+      "destination": "F:\\bigsinger\\chongfanchangzhenglu\\assets\\recovered\\resources\\c4a3b77c-aae2-447d-af23-36da8179e423\\illustration-gl.png"
     },
     {
       "bundle": "resources",
       "spriteUuid": "8e4dd5dc-71d2-4898-9ede-f1cd4a6af860",
       "textureUuid": "7fdf8159-4078-4261-95f6-be88d8514f39",
       "name": "k1",
-      "destination": "F:\\bigsinger\\chongfanchangzhenglu\\assets\\recovered\\resources\\8e4dd5dc-71d2-4898-9ede-f1cd4a6af860\\k1.png"
+      "destination": "F:\\bigsinger\\chongfanchangzhenglu\\assets\\recovered\\resources\\8e4dd5dc-71d2-4898-9ede-f1cd4a6af860\\k-1.png"
     },
     {
       "bundle": "main",
       "spriteUuid": "40d3380d-1b46-497f-8298-e948be4e2825",
       "textureUuid": "d5bdac5c-1dc1-4592-8dbb-278071467f5f",
       "name": "btn_lp1",
-      "destination": "F:\\bigsinger\\chongfanchangzhenglu\\assets\\recovered\\main\\40d3380d-1b46-497f-8298-e948be4e2825\\btn_lp1.png"
+      "destination": "F:\\bigsinger\\chongfanchangzhenglu\\assets\\recovered\\main\\40d3380d-1b46-497f-8298-e948be4e2825\\button-lp-1.png"
     },
     {
       "bundle": "main",
       "spriteUuid": "69268cae-c428-49e0-9bda-522fbe428254",
       "textureUuid": "c3e95554-71c0-41cd-9196-f42f2ab25775",
       "name": "fangxia_1",
-      "destination": "F:\\bigsinger\\chongfanchangzhenglu\\assets\\recovered\\main\\69268cae-c428-49e0-9bda-522fbe428254\\fangxia_1.png"
+      "destination": "F:\\bigsinger\\chongfanchangzhenglu\\assets\\recovered\\main\\69268cae-c428-49e0-9bda-522fbe428254\\fangxia-1.png"
     },
     {
       "bundle": "main",
@@ -67,21 +67,21 @@
       "spriteUuid": "810c6a2a-bdff-49bb-ba18-95830b3b8bc0",
       "textureUuid": "233c8b7c-a03d-4cab-b0e2-3e84cd3e9e45",
       "name": "fangxia_4",
-      "destination": "F:\\bigsinger\\chongfanchangzhenglu\\assets\\recovered\\main\\810c6a2a-bdff-49bb-ba18-95830b3b8bc0\\fangxia_4.png"
+      "destination": "F:\\bigsinger\\chongfanchangzhenglu\\assets\\recovered\\main\\810c6a2a-bdff-49bb-ba18-95830b3b8bc0\\fangxia-4.png"
     },
     {
       "bundle": "main",
       "spriteUuid": "8e54956d-a3b0-419b-82d3-c9d4222470e2",
       "textureUuid": "3e02dfd7-24a7-472c-b573-b5ca4a20ac85",
       "name": "fangxia_3",
-      "destination": "F:\\bigsinger\\chongfanchangzhenglu\\assets\\recovered\\main\\8e54956d-a3b0-419b-82d3-c9d4222470e2\\fangxia_3.png"
+      "destination": "F:\\bigsinger\\chongfanchangzhenglu\\assets\\recovered\\main\\8e54956d-a3b0-419b-82d3-c9d4222470e2\\fangxia-3.png"
     },
     {
       "bundle": "main",
       "spriteUuid": "98a29561-785e-4478-a4ca-d0c43c0e52d3",
       "textureUuid": "5d630f39-d517-4f1c-a5f6-648f0bf74603",
       "name": "btn_lp2",
-      "destination": "F:\\bigsinger\\chongfanchangzhenglu\\assets\\recovered\\main\\98a29561-785e-4478-a4ca-d0c43c0e52d3\\btn_lp2.png"
+      "destination": "F:\\bigsinger\\chongfanchangzhenglu\\assets\\recovered\\main\\98a29561-785e-4478-a4ca-d0c43c0e52d3\\button-lp-2.png"
     },
     {
       "bundle": "main",
@@ -95,21 +95,21 @@
       "spriteUuid": "e75714fd-f463-49f8-b8ba-c4b9d9391790",
       "textureUuid": "da493965-2d80-4ae9-96cb-402d25031cf9",
       "name": "btn_ck",
-      "destination": "F:\\bigsinger\\chongfanchangzhenglu\\assets\\recovered\\main\\e75714fd-f463-49f8-b8ba-c4b9d9391790\\btn_ck.png"
+      "destination": "F:\\bigsinger\\chongfanchangzhenglu\\assets\\recovered\\main\\e75714fd-f463-49f8-b8ba-c4b9d9391790\\button-ck.png"
     },
     {
       "bundle": "main",
       "spriteUuid": "e9d6a222-5fe7-4ed0-a078-a2c56de5202f",
       "textureUuid": "2c1dbee0-8b69-4ba1-8229-6f1dc7910cf8",
       "name": "fangxia_2",
-      "destination": "F:\\bigsinger\\chongfanchangzhenglu\\assets\\recovered\\main\\e9d6a222-5fe7-4ed0-a078-a2c56de5202f\\fangxia_2.png"
+      "destination": "F:\\bigsinger\\chongfanchangzhenglu\\assets\\recovered\\main\\e9d6a222-5fe7-4ed0-a078-a2c56de5202f\\fangxia-2.png"
     },
     {
       "bundle": "main",
       "spriteUuid": "fa552bee-ff3d-400f-bc4d-9869a71ee0f4",
       "textureUuid": "ca375869-51bc-4ab0-95b6-ef5e7c9de422",
       "name": "btn_ckd",
-      "destination": "F:\\bigsinger\\chongfanchangzhenglu\\assets\\recovered\\main\\fa552bee-ff3d-400f-bc4d-9869a71ee0f4\\btn_ckd.png"
+      "destination": "F:\\bigsinger\\chongfanchangzhenglu\\assets\\recovered\\main\\fa552bee-ff3d-400f-bc4d-9869a71ee0f4\\button-ckd.png"
     }
   ],
   "skippedCreatorBuiltins": [

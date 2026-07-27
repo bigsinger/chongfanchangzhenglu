@@ -1,0 +1,36 @@
+{
+  "ver": "2.3.5",
+  "uuid": "b502cdc8-cbd0-40b3-808a-f0dcb7cfd992",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "width": 750,
+  "height": 374,
+  "platformSettings": {},
+  "subMetas": {
+    "houses-wall-1-1": {
+      "ver": "1.0.4",
+      "uuid": "1788e6fc-312c-4bfe-98a3-24552d150bbe",
+      "rawTextureUuid": "b502cdc8-cbd0-40b3-808a-f0dcb7cfd992",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 0,
+      "trimY": 0,
+      "width": 750,
+      "height": 374,
+      "rawWidth": 750,
+      "rawHeight": 374,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "ver": "2.3.5",
+  "uuid": "72140901-5c76-469c-8dd2-6cb8d94030c3",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "width": 367,
+  "height": 117,
+  "platformSettings": {},
+  "subMetas": {
+    "houses-grounchapter-1-2": {
+      "ver": "1.0.4",
+      "uuid": "b221cc16-90b5-48e4-badc-27e7ed038f88",
+      "rawTextureUuid": "72140901-5c76-469c-8dd2-6cb8d94030c3",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 0,
+      "trimY": 0,
+      "width": 367,
+      "height": 117,
+      "rawWidth": 367,
+      "rawHeight": 117,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

@@ -7,7 +7,8 @@
     "check:syntax": "node tools/check-syntax.js",
     "check:config": "node tools/validate-game-config.js",
     "check:contracts": "node tools/verify-gameplay-contracts.js",
+    "check:naming": "node tools/apply-readable-names.js --verify",
     "check:textures": "node tools/verify-texture-budget.js",
-    "test": "npm run check:syntax && npm run check:config && npm run check:contracts && npm run check:textures"
+    "test": "npm run check:syntax && npm run check:config && npm run check:contracts && npm run check:naming && npm run check:textures"
   }
 }

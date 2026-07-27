@@ -5,7 +5,7 @@ const path = require('path');
 const { spawnSync } = require('child_process');
 
 const root = path.resolve(__dirname, '..');
-const dragonRoot = path.join(root, 'assets', 'resources', 'dragonBones');
+const dragonRoot = path.join(root, 'assets', 'resources', 'skeletons');
 const maxDimension = 2048;
 const changedImages = new Set();
 

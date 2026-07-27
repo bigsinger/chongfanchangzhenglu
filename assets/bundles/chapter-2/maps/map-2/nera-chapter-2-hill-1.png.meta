@@ -1,0 +1,36 @@
+{
+  "ver": "2.3.5",
+  "uuid": "d934b957-9b42-46ec-8068-6f07e74dbaa7",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "width": 622,
+  "height": 513,
+  "platformSettings": {},
+  "subMetas": {
+    "nera-chapter-2-hill-1": {
+      "ver": "1.0.4",
+      "uuid": "ef7f9f1b-2ff0-45b9-b953-6bd2fd0daa17",
+      "rawTextureUuid": "d934b957-9b42-46ec-8068-6f07e74dbaa7",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 0,
+      "trimY": 0,
+      "width": 622,
+      "height": 513,
+      "rawWidth": 622,
+      "rawHeight": 513,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

@@ -7,7 +7,7 @@ Object.defineProperty(o, "__esModule", {
     value: !0
 });
 
-var i = require("./GameData"), n = {
+var i = require("./GameState"), n = {
     prop101: "第一节·村落废墟",
     prop102: "第一节·村落水井附近",
     prop103: "第一节·战场沿途",

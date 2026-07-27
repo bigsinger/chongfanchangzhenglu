@@ -48,8 +48,8 @@ project(":libcocos2dx").projectDir = new File(settingsDir, "libcocos2dx")
 `);
 
 write(path.join(androidProject, 'build.gradle'), `plugins {
-    id "com.android.application" version "8.6.1" apply false
-    id "com.android.library" version "8.6.1" apply false
+    id "com.android.application" version "8.9.2" apply false
+    id "com.android.library" version "8.9.2" apply false
 }
 
 allprojects {
@@ -67,7 +67,7 @@ tasks.register("clean", Delete) {
 
 write(path.join(androidProject, 'gradle', 'wrapper', 'gradle-wrapper.properties'), `distributionBase=GRADLE_USER_HOME
 distributionPath=wrapper/dists
-distributionUrl=https\\://services.gradle.org/distributions/gradle-8.7-bin.zip
+distributionUrl=https\\://services.gradle.org/distributions/gradle-8.11.1-bin.zip
 networkTimeout=120000
 validateDistributionUrl=true
 zipStoreBase=GRADLE_USER_HOME
@@ -229,6 +229,7 @@ write(path.join(localLib, 'build.gradle'), `plugins {
 android {
     namespace "org.cocos2dx.lib"
     compileSdk 36
+    ndkVersion "20.1.5948944"
 
     defaultConfig {
         minSdk 21
@@ -274,4 +275,4 @@ const libManifestFile = path.join(localLib, 'AndroidManifest.xml');
 let libManifest = read(libManifestFile).replace(/\s+package="[^"]+"/, '');
 write(libManifestFile, libManifest);
 
-console.log(`Android 正式工程：AGP 8.6.1 / Gradle 8.7 / API 36 / ${versionName} (${versionCode})`);
+console.log(`Android 正式工程：AGP 8.9.2 / Gradle 8.11.1 / API 36 / ${versionName} (${versionCode})`);

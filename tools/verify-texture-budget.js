@@ -35,7 +35,7 @@ const pngs = walk(assetRoot).filter((file) => file.endsWith('.png')).map((file) 
 }).sort((a, b) => b.decodedBytes - a.decodedBytes);
 
 const atlasPages = new Set();
-for (const file of walk(path.join(assetRoot, 'resources', 'dragonBones')).filter((entry) => entry.endsWith('.atlas'))) {
+for (const file of walk(path.join(assetRoot, 'resources', 'skeletons')).filter((entry) => entry.endsWith('.atlas'))) {
   const lines = fs.readFileSync(file, 'utf8').split(/\r?\n/);
   for (let index = 0; index < lines.length; index++) {
     if (/^\S.*\.png$/.test(lines[index]) && /^size:\s*\d+,\d+$/.test(lines[index + 1] || '')) {
@@ -43,7 +43,7 @@ for (const file of walk(path.join(assetRoot, 'resources', 'dragonBones')).filter
     }
   }
 }
-for (const file of walk(path.join(assetRoot, 'resources', 'dragonBones')).filter((entry) => entry.endsWith('_tex.json'))) {
+for (const file of walk(path.join(assetRoot, 'resources', 'skeletons')).filter((entry) => entry.endsWith('_tex.json'))) {
   const data = JSON.parse(fs.readFileSync(file, 'utf8'));
   if (data.imagePath) atlasPages.add(path.resolve(path.dirname(file), data.imagePath));
 }

@@ -432,7 +432,7 @@ function patchGameScene(source) {
 }
 
 function applyRuntimeFixes(projectRoot = path.resolve(__dirname, '..')) {
-  const gameScenePath = path.join(projectRoot, 'assets', 'Scripts', 'gameScene.js');
+  const gameScenePath = path.join(projectRoot, 'assets', 'Scripts', 'GameplaySceneController.js');
   const original = fs.readFileSync(gameScenePath, 'utf8');
   const updated = patchGameScene(original);
   if (updated !== original) fs.writeFileSync(gameScenePath, updated, 'utf8');

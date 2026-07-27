@@ -25,7 +25,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
         Object.defineProperty(o, "__esModule", {
             value: !0
         });
-        var s = require("./GameData"), r = require("./PopupView"), c = require("./ToolsManager"), l = require("./gameEvent"), h = cc._decorator, d = h.ccclass, p = h.property, u = function (t) {
+        var s = require("./GameState"), r = require("./PopupView"), c = require("./GameUtilities"), l = require("./GameplayEventController"), h = cc._decorator, d = h.ccclass, p = h.property, u = function (t) {
             n(e, t);
             function e() {
                 var e = null !== t && t.apply(this, arguments) || this;

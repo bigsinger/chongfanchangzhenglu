@@ -11,7 +11,7 @@ for (const file of files) {
   const text = fs.readFileSync(path.join(scriptDir, file), 'utf8');
   new vm.Script(text, { filename: file });
 }
-for (const file of fs.readdirSync(path.join(root, 'assets', 'resources', 'gameConf')).filter((name) => name.endsWith('.json'))) {
-  JSON.parse(fs.readFileSync(path.join(root, 'assets', 'resources', 'gameConf', file), 'utf8'));
+for (const file of fs.readdirSync(path.join(root, 'assets', 'resources', 'config')).filter((name) => name.endsWith('.json'))) {
+  JSON.parse(fs.readFileSync(path.join(root, 'assets', 'resources', 'config', file), 'utf8'));
 }
 console.log(`语法检查：${files.length} 个脚本、全部游戏配置通过`);

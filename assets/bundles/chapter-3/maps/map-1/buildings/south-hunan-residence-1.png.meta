@@ -1,0 +1,36 @@
+{
+  "ver": "2.3.5",
+  "uuid": "6a18ad86-422a-48a5-8e9b-96e54b149e37",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "width": 974,
+  "height": 545,
+  "platformSettings": {},
+  "subMetas": {
+    "south-hunan-residence-1": {
+      "ver": "1.0.4",
+      "uuid": "fa10f5bc-85ae-496e-9639-4ed1974c01aa",
+      "rawTextureUuid": "6a18ad86-422a-48a5-8e9b-96e54b149e37",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 0,
+      "trimY": 0,
+      "width": 974,
+      "height": 545,
+      "rawWidth": 974,
+      "rawHeight": 545,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

@@ -56,7 +56,7 @@ var i = {
         if (!t || !t.hero || !t.itemMap) return null;
         var o = this._heldGoods(t), i = o && o.nameid, n = null, a = Number.MAX_VALUE;
         for (var s in t.itemMap) {
-            var r = t.itemMap[s], c = r && r.activeInHierarchy && r.getComponent("itemBox"), l = c && c.getConf();
+            var r = t.itemMap[s], c = r && r.activeInHierarchy && r.getComponent("InteractiveObject"), l = c && c.getConf();
             if (l && !(Number(l.lockCount) > 0) && l.eventTrigger) {
                 for (var h = 0; h < l.eventTrigger.length; h++) {
                     var d = l.eventTrigger[h], p = Number(d.trigger);
@@ -87,7 +87,7 @@ var i = {
         if (!t || "scenes_d3_2" !== t.mapName) return null;
         var e = 0, o = 0;
         for (var i in t.itemMap) {
-            var n = t.itemMap[i], a = n && n.getComponent("itemBox"), s = a && a.getConf();
+            var n = t.itemMap[i], a = n && n.getComponent("InteractiveObject"), s = a && a.getConf();
             if (s && s.eventTrigger) for (var r = 0; r < s.eventTrigger.length; r++) {
                 var c = s.eventTrigger[r];
                 c.limit && Number(c.trigger) === 3 && (o++, c.isFinish && e++);

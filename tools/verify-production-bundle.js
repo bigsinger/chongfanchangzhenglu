@@ -9,7 +9,14 @@ const bundleName = fs.existsSync(mainDir) && fs.readdirSync(mainDir)
 const bundle = bundleName && path.join(mainDir, bundleName);
 if (!bundle || !fs.existsSync(bundle)) throw new Error(`生产脚本包不存在：${mainDir}`);
 const source = fs.readFileSync(bundle, 'utf8');
-const forbidden = ['GameUpdata', 'HttpGame', 'editorScene', 'itemEventObj', 'itemObj', 'node_netTip'];
+const forbidden = [
+  'LegacyHotUpdate',
+  'LegacyHttpClient',
+  'LegacySceneEditor',
+  'LegacyItemEventModel',
+  'LegacyItemModel',
+  'LegacyNetworkTip',
+];
 const found = forbidden.filter((name) => new RegExp(`cc\\._RF\\.push\\([^\\n]+, "${name}"\\)`).test(source));
 if (found.length) throw new Error(`生产包含禁用模块：${found.join(', ')}`);
 const entryStart = source.lastIndexOf('}, {}, [');

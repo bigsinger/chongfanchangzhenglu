@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 
 const root = path.resolve(__dirname, '..');
-const confDir = path.join(root, 'assets', 'resources', 'gameConf');
+const confDir = path.join(root, 'assets', 'resources', 'config');
 const read = (name) => JSON.parse(fs.readFileSync(path.join(confDir, name), 'utf8'));
 const by = (rows, key) => new Map(rows.map((row) => [String(row[key]), row]));
 const issues = [];

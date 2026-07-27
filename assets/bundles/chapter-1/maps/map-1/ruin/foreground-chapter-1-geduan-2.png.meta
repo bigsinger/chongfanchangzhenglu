@@ -1,0 +1,36 @@
+{
+  "ver": "2.3.5",
+  "uuid": "26454e47-384a-4a03-8f79-4045bdb3bf9e",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "width": 159,
+  "height": 248,
+  "platformSettings": {},
+  "subMetas": {
+    "foreground-chapter-1-geduan-2": {
+      "ver": "1.0.4",
+      "uuid": "334e66c1-767c-44b5-b473-a18cd6b74e94",
+      "rawTextureUuid": "26454e47-384a-4a03-8f79-4045bdb3bf9e",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 0,
+      "trimY": 0,
+      "width": 159,
+      "height": 248,
+      "rawWidth": 159,
+      "rawHeight": 248,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

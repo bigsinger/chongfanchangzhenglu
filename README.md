@@ -8,10 +8,12 @@
 
 - Cocos Creator：`E:\temp\CocosCreator-2.4.3\CocosCreator.exe`
 - 原始引擎版本：2.4.3
-- JDK：Temurin 8u492，`E:\temp\jdk8u492-b09`
+- 调试构建 JDK：Temurin 8u492，`E:\temp\jdk8u492-b09`
+- 发布构建 JDK：17，`E:\temp\jdk17`
 - Android NDK：r20b / 20.1.5948944
-- Android SDK：API 28 / Build Tools 28.0.3
-- 业务逻辑：JavaScript（60 个从 APK 原始 Browserify 包恢复的模块）
+- 调试 Android SDK：API 28 / Build Tools 28.0.3
+- 发布 Android SDK：API/target 36 / Build Tools 35.0.0
+- 业务逻辑：JavaScript（恢复模块已改为描述职责的 PascalCase 名称）
 - 目标 ABI：`armeabi-v7a`、`arm64-v8a`
 - Android 包名：`com.game.longmarch.creator243`（避免覆盖模拟器中的原始 APK）
 
@@ -23,7 +25,9 @@
 node .\tools\recover-original-scripts.js
 ```
 
-脚本会拆出 60 个 JavaScript 模块，使用 APK 中的 `cc._RF` 类 ID 还原 `.meta` UUID，并校验场景、预制体引用的全部自定义组件都有对应脚本。
+脚本会拆出原始 JavaScript 模块，使用 APK 中的 `cc._RF` 类 ID 还原 `.meta` UUID。日常
+开发使用可读命名后的文件；完整旧名/新名映射由
+[`docs/project/naming-migration.json`](docs/project/naming-migration.json)记录。
 
 资源恢复与完整性校验：
 
@@ -47,15 +51,36 @@ node .\tools\restore-original-resources.js --verify
 .\tools\build-android.ps1 -SkipGenerate
 ```
 
-脚本会固定 JDK 8、NDK r20b、API 28，通过临时短盘符规避 Windows 路径长度限制，并在复制 APK 前解包验证 ABI。最终产物：
+源代码或资源有变化、希望保留原生中间产物时：
+
+```powershell
+.\tools\build-android.ps1 -IncrementalGenerate
+```
+
+正式签名 APK/AAB：
+
+```powershell
+.\tools\build-android-release.ps1 `
+  -SigningProperties E:\安全目录\longmarch-signing.properties `
+  -VersionCode 2026072701 `
+  -VersionName 1.1.0
+```
+
+发布流程使用 AGP 8.9.2、Gradle 8.11.1、JDK 17、targetSdk 36，执行 R8、签名、
+`zipalign`、`apksigner` 和双 ABI 核验。调试产物：
 
 `dist/chongfanchangzhenglu-armv7-arm64-debug.apk`
 
-当前调试包大小为 161,838,753 字节，SHA-256：
-
-`C6A3F53367A250C29E53794009907A8717B307016701051B0750B80ED203E094`
-
 APK/AAB 属于可重复生成的构建产物，不提交到 Git；本地最终 APK 仍输出到 `dist/`。
+
+## 可读命名与资源结构
+
+- 55 个历史脚本已经改为描述职责的 PascalCase 名称。
+- 1179 个资源路径按领域整理；章节地图拆分为 `chapter-1`、`chapter-2`、`chapter-3`
+  Asset Bundle。
+- `AssetCatalog` 保留旧配置路径和旧组件名兼容；`.meta` UUID、场景/事件 ID 和存档键不变。
+- 新增或重命名前请阅读
+  [`docs/project/naming-conventions.md`](docs/project/naming-conventions.md)，并执行 `npm test`。
 
 ## 操作方法
 

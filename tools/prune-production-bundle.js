@@ -11,12 +11,12 @@ const bundle = bundleName && path.join(mainDir, bundleName);
 const remove = new Set([
   'BaseScene',
   'GameInfo',
-  'GameUpdata',
-  'HttpGame',
-  'editorScene',
-  'itemEventObj',
-  'itemObj',
-  'node_netTip'
+  'LegacyHotUpdate',
+  'LegacyHttpClient',
+  'LegacySceneEditor',
+  'LegacyItemEventModel',
+  'LegacyItemModel',
+  'LegacyNetworkTip'
 ]);
 
 if (!bundle || !fs.existsSync(bundle)) throw new Error(`生产脚本包不存在：${mainDir}`);

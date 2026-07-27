@@ -21,7 +21,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
         Object.defineProperty(o, "__esModule", {
             value: !0
         });
-        var a = require("./SoundManage"), s = require("./ViewManager"), r = require("./spineManager"), c = function (t) {
+        var a = require("./AudioManager"), s = require("./DialogManager"), r = require("./SpineAnimationManager"), l = require("./ResourceManager"), c = function (t) {
             n(e, t);
             function e() {
                 var e = null !== t && t.apply(this, arguments) || this;
@@ -63,7 +63,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
             };
             e.prototype.createPrefab = function (t, e) {
                 void 0 === e && (e = null);
-                cc.resources.load("prefab/" + t, cc.Prefab, function (t, o) {
+                l.default.load("prefab/" + t, cc.Prefab, function (t, o) {
                     if (t) {
                         console.log("--- err", t);
                         if (!e) return null;
@@ -74,7 +74,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 });
             };
             e.prototype.setSpriteFrame = function (t, e) {
-                cc.resources.load(e, cc.SpriteFrame, function (e, o) {
+                l.default.load(e, cc.SpriteFrame, function (e, o) {
                     e || (t.spriteFrame = o);
                 });
             };

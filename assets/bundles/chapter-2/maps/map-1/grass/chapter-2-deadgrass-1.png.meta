@@ -1,0 +1,36 @@
+{
+  "ver": "2.3.5",
+  "uuid": "d087b15f-fd9f-4ef7-888c-9219acc47125",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "width": 206,
+  "height": 147,
+  "platformSettings": {},
+  "subMetas": {
+    "chapter-2-deadgrass-1": {
+      "ver": "1.0.4",
+      "uuid": "fcc95794-d96c-4cac-a0dd-27fa1d181caf",
+      "rawTextureUuid": "d087b15f-fd9f-4ef7-888c-9219acc47125",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 0,
+      "trimY": 0,
+      "width": 206,
+      "height": 147,
+      "rawWidth": 206,
+      "rawHeight": 147,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}
