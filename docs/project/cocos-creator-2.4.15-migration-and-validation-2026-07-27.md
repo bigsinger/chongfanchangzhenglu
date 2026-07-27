@@ -120,8 +120,47 @@ Adreno/Mali 的真实 ARM64 硬件兼容认证。
 
 ## 正式构建结果
 
-本节在干净源码提交上执行 `tools/build-android-release.ps1` 后补充。APK/AAB、签名配置、
-keystore 和构建目录均在 Git 之外。
+在干净源码提交 `b999c7751d7d0575946bd2702d7b383b9408b122` 上执行：
+
+```powershell
+.\tools\build-android-release.ps1 `
+  -SigningProperties E:\temp\longmarch-signing-test.properties `
+  -VersionCode 2026072703 `
+  -VersionName 1.1.0
+```
+
+结果：
+
+| 检查 | 结果 |
+|---|---|
+| Creator Release 资源 | 成功，业务 bundle SHA-256 `13DC1BCC7A6F916313CAF750E558A29261EBF973381187B53FED76DF84FF5FEE` |
+| 原生库 | NDK Release 全量构建成功，`armeabi-v7a`、`arm64-v8a` 均生成 `libcocos2djs.so` |
+| Gradle | 8.11.1，98 个任务，`BUILD SUCCESSFUL` |
+| Android lint | `lintRelease` 通过 |
+| 优化 | R8、资源收缩和压缩通过 |
+| APK 签名 | zipalign 通过；v1/v2/v3 签名验证通过，单一 QA 测试证书 |
+| AAB 签名 | JAR 签名验证通过 |
+| 平台 | versionCode `2026072703`、versionName `1.1.0`、targetSdk 36、minSdk 21 |
+| ABI | 仅 `arm64-v8a`、`armeabi-v7a` |
+| 权限/网络 | 系统权限 0；OkHttp/Okio DEX 匹配 0；离线 `Cocos2dxDownloader` 兼容桩存在 |
+| 源码状态 | `dirtySource=false` |
+
+产物：
+
+- `dist/chongfanchangzhenglu-1.1.0-2026072703-release.apk`：
+  127,690,802 字节，SHA-256
+  `E0639D29BA21F0F5ED985469DD2783EECB095E5459BE3C0790DDBA5AA7ADEE2C`
+- `dist/chongfanchangzhenglu-1.1.0-2026072703-release.aab`：
+  146,921,928 字节，SHA-256
+  `2F2F2363557B45C1A2B951BA98C5C846777F35C5FDB3F5FABC525CEFB66A2C4E`
+- `dist/chongfanchangzhenglu-1.1.0-2026072703-build-manifest.json`：
+  记录源码提交、工具链、ABI、bundle/APK/AAB 哈希及洁净状态。
+
+正式包使用 `LongMarch Test / Automated QA` 隔离测试证书，因此不覆盖模拟器中现有的其他
+签名安装。运行态测试使用同一提交、同一 2.4.15 JS/资源和同一 Android 现代化生成逻辑的
+debug 包；正式包另行完成 Release、R8、签名和静态产物验证。
+
+APK/AAB、构建清单、签名配置、keystore、截图和构建目录均在 Git 之外。
 
 ## 剩余外部发布门禁
 
