@@ -80,6 +80,7 @@ assert.equal(SaveManager.isValid(semanticCorruption), false);
 // to instantiate without a running JSB engine.
 const scene = source('GameplaySceneController.js');
 const event = source('GameplayEventController.js');
+const interactionQuery = source('GameplayInteractionQuery.js');
 const interactiveObject = source('InteractiveObject.js');
 const dialogManager = source('DialogManager.js');
 const popup = source('PopupView.js');
@@ -87,15 +88,17 @@ const resourceManagerSource = source('ResourceManager.js');
 const saveManagerSource = source('SaveManager.js');
 const menu = source('MainMenuController.js');
 const cloudSources = source('CloudSpawner.js') + source('AmbientCloudSpawner.js');
-const closestItemBlock = event.match(/selectClosestItem = function \(t\) \{([\s\S]*?)\n\s*\};\n\s*e\.outStack/);
+const fireMiniGame = source('FireExtinguishMiniGame.js');
 assert(/KEY_DOWN/.test(scene) && /keyDirections/.test(scene), 'A/D keyboard movement contract');
 assert(/manual-operation reach/.test(event) && /pickEvent/.test(event), 'nearby pickup contract');
 assert(
-  closestItemBlock && /candidateIndex/.test(closestItemBlock[1]) &&
-    /itemKey/.test(closestItemBlock[1]) && !/for \(var r =/.test(closestItemBlock[1]),
-  'nearby scan loop must not shadow the imported GameState module'
+  /GameplayInteractionQuery/.test(event + scene) &&
+    /selectClosestOperation/.test(interactionQuery) &&
+    /scanProximity/.test(interactionQuery),
+  'nearby scan and operation selection must use the isolated query module'
 );
 assert(/showRequirementHint/.test(event) && /onRequiredItemDelivered/.test(event), 'wrong/right delivery contract');
+assert(/require\("\.\/baseEvent"\)/.test(fireMiniGame), 'fire mini-game must use the case-correct BaseEvent module path');
 assert(/pauseGame|gameOperate/.test(popup + scene), 'modal input blocking contract');
 assert(/changeMap/.test(scene) && /saveItemConf/.test(scene), 'map transition save contract');
 assert(/EVENT_HIDE/.test(scene) && /应用进入后台/.test(scene), 'background persistence contract');

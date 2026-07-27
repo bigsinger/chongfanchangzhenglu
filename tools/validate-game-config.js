@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 
 const root = path.resolve(__dirname, '..');
 const confDir = path.join(root, 'assets', 'resources', 'config');
@@ -164,6 +165,7 @@ const report = {
 
 const reportArg = process.argv.find((arg) => arg.startsWith('--report='));
 const maxWarningsArg = process.argv.find((arg) => arg.startsWith('--max-warnings='));
+const warningBaselineArg = process.argv.find((arg) => arg.startsWith('--warning-baseline='));
 const maxWarnings = maxWarningsArg ? Number(maxWarningsArg.slice('--max-warnings='.length)) : null;
 if (reportArg) {
   const reportPath = path.resolve(root, reportArg.slice('--report='.length));
@@ -181,4 +183,27 @@ if (errors.length) process.exitCode = 1;
 if (Number.isFinite(maxWarnings) && warnings.length > maxWarnings) {
   console.error(`警告数 ${warnings.length} 超过已审核基线 ${maxWarnings}，请检查新增配置断链`);
   process.exitCode = 1;
+}
+if (warningBaselineArg) {
+  const baselinePath = path.resolve(root, warningBaselineArg.slice('--warning-baseline='.length));
+  const baseline = JSON.parse(fs.readFileSync(baselinePath, 'utf8'));
+  const warningSignatures = warnings
+    .map((entry) => [entry.code, entry.scene, entry.detail].join('\0'))
+    .sort();
+  const actualSignature = crypto
+    .createHash('sha256')
+    .update(warningSignatures.join('\n'), 'utf8')
+    .digest('hex');
+  if (baseline.schemaVersion !== 1 ||
+      baseline.warningCount !== warnings.length ||
+      baseline.signatureSha256 !== actualSignature) {
+    console.error(
+      `历史警告精确基线不匹配：当前 ${warnings.length}/${actualSignature}，` +
+      `基线 ${baseline.warningCount}/${baseline.signatureSha256}`
+    );
+    console.error('请用 --report=... 审核 code/scene/detail 差异；确认是有意变更后再替换基线');
+    process.exitCode = 1;
+  } else {
+    console.log(`历史警告精确基线：${warnings.length} 项，SHA-256 ${actualSignature}`);
+  }
 }

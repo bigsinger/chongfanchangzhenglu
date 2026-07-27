@@ -25,7 +25,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
         Object.defineProperty(o, "__esModule", {
             value: !0
         });
-        var s = require("./BaseView"), r = require("./GameConfigManager"), c = require("./GameState"), l = require("./AudioManager"), h = require("./GameUtilities"), d = require("./DialogManager"), p = require("./SpineAnimationManager"), u = require("./GameplayEventController"), v = require("./SaveManager"), w = require("./ObjectiveManager"), m = cc._decorator, _ = m.ccclass, f = m.property, g = function (t) {
+        var s = require("./BaseView"), r = require("./GameConfigManager"), c = require("./GameState"), l = require("./AudioManager"), h = require("./GameUtilities"), d = require("./DialogManager"), p = require("./SpineAnimationManager"), u = require("./GameplayEventController"), v = require("./SaveManager"), w = require("./ObjectiveManager"), interactionQuery = require("./GameplayInteractionQuery"), gameplayPersistence = require("./GameplayPersistence"), m = cc._decorator, _ = m.ccclass, f = m.property, g = function (t) {
             n(e, t);
             function e() {
                 var e = null !== t && t.apply(this, arguments) || this;
@@ -495,26 +495,18 @@ var i, n = this && this.__extends || (i = function (t, e) {
             e.prototype.saveItemConf = function (t, e) {
                 void 0 === t && (t = null);
                 void 0 === e && (e = "walk");
-                c.default.onlinetm = new Date().getTime();
-                var o = this.hero_ts.followMap, i = [];
-                for (var n in this.itemMap) {
-                    var a = this.itemMap[n];
-                    if (null != a) {
-                        var s = a.getComponent("InteractiveObject").getTempConf();
-                        if (null == o[s.index]) {
-                            "initPos" == s.key && (s = this.hero_ts.getTempConf());
-                            i.push(s);
-                        }
-                    }
-                }
                 console.log("------------ 保存地图信息 " + this.mapName);
                 console.log("------------ 保存主角坐标 ", t);
-                r.default.saveTempData(this.mapName, i, t, e);
-                r.default.saveHeroItem(this.hero_ts.goods);
-                r.default.saveHeroFollow(this.hero_ts.followMap);
-                r.default.saveHeroSpine(this.hero_ts.m_path);
-                c.default.saveMapInfo();
-                v.default.commit("game-scene", c.default.playData);
+                gameplayPersistence.saveScene({
+                    mapName: this.mapName,
+                    itemMap: this.itemMap,
+                    heroPosition: t,
+                    walkingMode: e,
+                    heroController: this.hero_ts,
+                    configManager: r.default,
+                    gameState: c.default,
+                    saveManager: v.default
+                });
             };
             e.prototype.changeMap = function (t, e) {
                 var o = this;
@@ -584,11 +576,11 @@ var i, n = this && this.__extends || (i = function (t, e) {
                             c.default.Smallplot = "0_1";
                             l.default.stopBGM();
                             c.default.initMapInfo();
-                            setTimeout(function () {
+                            o.delayHold(.2, function () {
                                 cc.director.loadScene("mainScene", function () {
                                     console.log("==1111== mainScene==success=====");
                                 });
-                            }, 200);
+                            });
                         }, null, null, !0]);
                     });
                     return console.log("111关卡结束未配置参数");
@@ -606,11 +598,11 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 this.layer_black.active = !0;
                 this.layer_black.runAction(cc.fadeIn(1.5));
                 cc.director.preloadScene("transitionScene", function () { }, function () {
-                    setTimeout(function () {
+                    o.delayHold(.2, function () {
                         cc.director.loadScene("transitionScene", function () {
                             console.log("==1111== gameScene==success=====");
                         });
-                    }, 200);
+                    });
                 });
             };
             Object.defineProperty(e.prototype, "gameOperate", {
@@ -1177,35 +1169,30 @@ var i, n = this && this.__extends || (i = function (t, e) {
             };
             e.prototype.scanTouchProximity = function () {
                 if (!this.hero || !this.itemMap || this.isCheck || this.gameOperate || d.default.hasOpenPopup && d.default.hasOpenPopup()) return;
-                var t = {}, e = 320 * 320, o = 520 * 520, i = [];
-                for (var n in this.itemMap) {
-                    var a = this.itemMap[n], s = a && a.activeInHierarchy && a.getComponent("InteractiveObject");
-                    if (s && s.itemConf && !(s.itemConf.lockCount > 0) && s.eventArr) {
-                        var r = a.x - this.hero.x, l = a.y - this.hero.y, h = r * r + l * l;
-                        h <= o && i.push(a);
-                        for (var p = null, m = 0; m < s.eventArr.length; m++) if (!s.eventArr[m].isFinish) {
-                            p = s.eventArr[m];
-                            break;
-                        }
-                        if (p && Number(p.key) <= 1e3 && Number(p.trigger) == c.default.OP_TOUCH) {
-                            if (h <= e) {
-                                t[n] = !0;
-                                if (!this.m_touchProximityActive[n]) {
-                                    console.log("------------ 近场补偿触发剧情物 " + n);
-                                    u.default.triggerEvent(a, c.default.OP_TOUCH);
-                                }
-                            }
-                        }
+                var t = interactionQuery.scanProximity({
+                    hero: this.hero,
+                    itemMap: this.itemMap,
+                    previousTouchActive: this.m_touchProximityActive,
+                    touchOperation: c.default.OP_TOUCH,
+                    touchReachSquared: 320 * 320,
+                    operationReachSquared: 520 * 520,
+                    resolveComponent: function (t) {
+                        return t.getComponent("InteractiveObject");
                     }
+                });
+                for (var e = 0; e < t.touchEntries.length; e++) {
+                    var o = t.touchEntries[e];
+                    console.log("------------ 近场补偿触发剧情物 " + o.key);
+                    u.default.triggerEvent(o.node, c.default.OP_TOUCH);
                 }
-                this.m_touchProximityActive = t;
+                this.m_touchProximityActive = t.touchActive;
                 // Re-evaluate normal operations as well.  Legacy small props can
                 // be visually beside the hero while their high collider never
                 // enters the physics contact stack (the dug potato is about 205
                 // units above the hero's feet).  selectClosestItem uses a
                 // bounded manual-operation search and picks one deterministic
                 // target.
-                u.default.selectClosestItem(i);
+                u.default.selectClosestItem(t.nearby);
             };
             e.prototype.upGame = function () {
                 this.m_isTimeTouch++;

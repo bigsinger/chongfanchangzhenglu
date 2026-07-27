@@ -25,7 +25,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
         Object.defineProperty(o, "__esModule", {
             value: !0
         });
-        var s = require("./GameConfigManager"), r = require("./GameState"), c = require("./AudioManager"), l = require("./DialogManager"), h = require("./DroppedItem"), d = require("./LoopingDropEffect"), p = require("./TimingEvent"), u = cc._decorator, m = u.ccclass, _ = (u.property,
+        var s = require("./GameConfigManager"), r = require("./GameState"), c = require("./AudioManager"), l = require("./DialogManager"), h = require("./DroppedItem"), d = require("./LoopingDropEffect"), p = require("./timingEvent"), interactionQuery = require("./GameplayInteractionQuery"), u = cc._decorator, m = u.ccclass, _ = (u.property,
             function (t) {
                 n(e, t);
                 function e() {
@@ -87,36 +87,24 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     // point). Use a slightly larger manual-operation reach.
                     // When carrying supplies, a matching task receiver wins
                     // over nearby boxes; distance breaks ties deterministically.
-                    var e = null, o = null, i = 420 * 420, n = this.itemStack.slice(), a = this.hero_ts.goods, s = -1;
+                    var e = interactionQuery.selectClosestOperation({
+                        hero: this.hero,
+                        heldGoods: this.hero_ts.goods,
+                        stack: this.itemStack,
+                        nearby: Array.isArray(t) ? t : this.gameManager.itemMap,
+                        reachSquared: 420 * 420,
+                        resolveComponent: function (t) {
+                            return t.getComponent("InteractiveObject");
+                        }
+                    });
                     // Several legacy props use a small collider centered high
                     // above the walkable ground (for example the rescue shovel
                     // is about 200 units above the hero).  They are visibly in
                     // reach but never enter the physics contact stack in the
                     // migrated runtime. Include nearby map items and keep the
                     // closest valid operation.
-                    if (Array.isArray(t)) for (var candidateIndex = 0; candidateIndex < t.length; candidateIndex++) {
-                        var candidateNode = t[candidateIndex];
-                        candidateNode && n.indexOf(candidateNode) < 0 && n.push(candidateNode);
-                    } else if (this.gameManager.itemMap) for (var itemKey in this.gameManager.itemMap) {
-                        candidateNode = this.gameManager.itemMap[itemKey];
-                        candidateNode && n.indexOf(candidateNode) < 0 && n.push(candidateNode);
-                    }
-                    for (var h = 0; h < n.length; h++) {
-                        var d = n[h], p = d && d.activeInHierarchy && d.getComponent("InteractiveObject"), u = p && p.getOpType();
-                        if (u) {
-                            var m = d.x - this.hero.x, _ = d.y - this.hero.y, f = m * m + _ * _, g = 0;
-                            if (a && p.eventArr) for (var y = 0; y < p.eventArr.length; y++) {
-                                var v = p.eventArr[y];
-                                if (!v.isFinish) {
-                                    v.limit && 0 == String(v.limit).indexOf("prop") && (g = v.limit == a.nameid ? 2 : 1);
-                                    break;
-                                }
-                            }
-                            f < 420 * 420 && (g > s || g == s && f < i) && (s = g, i = f, e = d, o = u);
-                        }
-                    }
-                    this.cItem = e;
-                    e ? this.gameManager.setInteract(o) : this.hero_ts.heroState != r.default.STATE_DRAG && this.gameManager.setInteract(0);
+                    this.cItem = e.node;
+                    e.node ? this.gameManager.setInteract(e.operation) : this.hero_ts.heroState != r.default.STATE_DRAG && this.gameManager.setInteract(0);
                 };
                 e.outStack = function (t) {
                     var e = !1;

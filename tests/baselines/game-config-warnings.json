@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "signatureAlgorithm": "sha256",
+  "signatureFields": [
+    "code",
+    "scene",
+    "detail"
+  ],
+  "separator": "\\u0000",
+  "warningCount": 440,
+  "signatureSha256": "935eddd552703f70284170dd968802e763aa9135a22e3aeeb6baa8d9aa7c2c08",
+  "byCode": {
+    "NON_PRODUCTION_SCENE": 1,
+    "UNREACHABLE_EVENT": 439
+  },
+  "byScene": {
+    "111111": 1,
+    "scenes_d1_1": 96,
+    "scenes_d1_3": 8,
+    "scenes_d2_1": 135,
+    "scenes_d2_2": 19,
+    "scenes_d2_3": 2,
+    "scenes_d3_1": 38,
+    "scenes_d3_2": 91,
+    "scenes_d3_3": 39,
+    "scenes_d3_5": 11
+  },
+  "classification": {
+    "publishedEntry": 0,
+    "legacyInternalBranch": 439,
+    "archivedEditorScene": 1
+  },
+  "reviewedAt": "2026-07-27",
+  "policy": "Any code, scene, detail, or count drift requires explicit review and baseline replacement."
+}
