@@ -48,7 +48,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     this.confData[i.name] = JSON.parse(i.content);
                     n += c.default.repairScene(i.name, this.confData[i.name]);
                 }
-                n && console.warn("------------ 已修复失效事件跳转 " + n + " 处");
+                n && console.warn("------------ 已应用兼容配置修复 " + n + " 处");
                 console.log("------------ loadMapConf ", this.confData);
             };
             e.setPointConf = function (t, e) {
@@ -77,65 +77,77 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 this.tempData[t].itemArr = e;
                 null != o && (this.tempData[t].heroPos = o);
                 this.tempData[t].gomod = i;
-                cc.sys.localStorage.setItem("tempData", JSON.stringify(this.tempData));
+                s.default.writeIfChanged("tempData", JSON.stringify(this.tempData));
                 s.default.scheduleCommit("temp-data", a.default.playData);
             };
             e.getTempData = function (t) {
                 var e = this.readJSON("tempData", {});
                 if (e && "object" == typeof e && e[t]) {
                     this.tempData[t] = e[t];
+                    if (Array.isArray(this.tempData[t].itemArr)) {
+                        var o = {
+                            confArr: this.tempData[t].itemArr
+                        }, i = c.default.repairScene(t, o, a.default.itemData || {});
+                        if (i) {
+                            this.tempData[t].itemArr = o.confArr;
+                            e[t] = this.tempData[t];
+                            s.default.writeIfChanged("tempData", JSON.stringify(e));
+                            s.default.scheduleCommit("temp-data-migration", a.default.playData);
+                            console.warn("------------ 已迁移旧关卡存档 " + t + "，修复 " + i + " 处");
+                        }
+                    }
                     return this.tempData[t];
                 }
                 return "";
             };
             e.saveCrossData = function (t) {
-                cc.sys.localStorage.setItem("cross", JSON.stringify(t));
+                s.default.writeIfChanged("cross", JSON.stringify(t));
                 s.default.scheduleCommit("cross-data", a.default.playData);
             };
             e.getCorssData = function () {
                 return this.readJSON("cross", null);
             };
             e.cleanCorssData = function () {
-                cc.sys.localStorage.removeItem("cross");
+                s.default.removeIfPresent("cross");
                 s.default.scheduleCommit("clear-cross", a.default.playData);
             };
             e.saveHeroItem = function (t) {
-                cc.sys.localStorage.setItem("heroItem", JSON.stringify(t));
+                s.default.writeIfChanged("heroItem", JSON.stringify(t));
                 s.default.scheduleCommit("hero-item", a.default.playData);
             };
             e.getHeroItem = function () {
                 return this.readJSON("heroItem", null);
             };
             e.cleanHeroItem = function () {
-                cc.sys.localStorage.removeItem("heroItem");
+                s.default.removeIfPresent("heroItem");
                 s.default.scheduleCommit("clear-hero-item", a.default.playData);
             };
             e.saveHeroFollow = function (t) {
-                cc.sys.localStorage.setItem("heroFollow", JSON.stringify(t));
+                s.default.writeIfChanged("heroFollow", JSON.stringify(t));
                 s.default.scheduleCommit("hero-follow", a.default.playData);
             };
             e.getHeroFollow = function () {
                 return this.readJSON("heroFollow", null);
             };
             e.cleanHeroFollow = function () {
-                cc.sys.localStorage.removeItem("heroFollow");
+                s.default.removeIfPresent("heroFollow");
                 s.default.scheduleCommit("clear-hero-follow", a.default.playData);
             };
             e.saveHeroSpine = function (t) {
-                cc.sys.localStorage.setItem("heroSpine", t);
+                s.default.writeIfChanged("heroSpine", t);
                 s.default.scheduleCommit("hero-spine", a.default.playData);
             };
             e.getHeroSpine = function () {
                 return cc.sys.localStorage.getItem("heroSpine");
             };
             e.cleanHeroSpine = function () {
-                cc.sys.localStorage.removeItem("heroSpine");
+                s.default.removeIfPresent("heroSpine");
                 s.default.scheduleCommit("clear-hero-spine", a.default.playData);
             };
             e.clearRunState = function () {
-                cc.sys.localStorage.setItem("tempData", "");
+                s.default.writeIfChanged("tempData", "");
                 this.tempData = {};
-                cc.sys.localStorage.removeItem("cross");
+                s.default.removeIfPresent("cross");
                 this.cleanHeroItem();
                 this.cleanHeroFollow();
                 this.cleanHeroSpine();
@@ -145,7 +157,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 this.clearRunState();
                 // Only the explicit "reset all progress" action should erase
                 // permanent collections, story records and unlocks.
-                cc.sys.localStorage.removeItem("longmarch");
+                s.default.removeIfPresent("longmarch");
                 s.default.clearSnapshots();
             };
             e.getLoadDragonBones = function (t) {

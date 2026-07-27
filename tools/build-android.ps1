@@ -74,7 +74,7 @@ if ($ndkProperties -notmatch 'Pkg\.Revision\s*=\s*20\.1\.5948944') {
     throw "Expected NDK 20.1.5948944, found a different version in $NdkPath"
 }
 
-& node (Join-Path $projectRoot 'tools\apply-runtime-fixes.js')
+& node (Join-Path $projectRoot 'tools\apply-runtime-fixes.js') --verify
 if ($LASTEXITCODE -ne 0) {
     throw 'Runtime input fix verification failed.'
 }

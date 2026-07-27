@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
     [Parameter(Position = 0)]
-    [ValidateSet('state', 'launch', 'stop', 'tap', 'swipe', 'screenshot', 'inspect', 'logs', 'checkpoint', 'restore', 'direct', 'relocate', 'jump', 'smoke', 'background', 'corrupt', 'stability')]
+    [ValidateSet('state', 'launch', 'stop', 'tap', 'swipe', 'screenshot', 'inspect', 'logs', 'checkpoint', 'restore', 'direct', 'relocate', 'jump', 'smoke', 'background', 'corrupt', 'oldsave', 'stability')]
     [string]$Command = 'state',
 
     [string]$Name = 'current',
@@ -215,6 +215,103 @@ function Test-CorruptSaveRecovery {
     }
 }
 
+function Test-OldSaveMigration {
+    $checkpointName = "$Name-before-oldsave"
+    $originalName = $Name
+    $sceneKey = 'scenes_d3_3'
+    $script:Name = $checkpointName
+    Save-Checkpoint
+    try {
+        Stop-Game
+        $tempQuery = "select value from data where key='tempData';"
+        $tempJson = $tempQuery | & $Adb -s $Serial shell run-as $Package sqlite3 databases/jsb.sqlite
+        if ($LASTEXITCODE -ne 0 -or -not $tempJson) {
+            throw '读取 tempData 失败'
+        }
+        $tempData = $tempJson | ConvertFrom-Json
+        $scene = $tempData.$sceneKey
+        if (-not $scene -or -not $scene.itemArr) {
+            throw "旧存档迁移前置场景不存在：$sceneKey"
+        }
+        $beforeCount = @($scene.itemArr | Where-Object {
+            $_.eventTrigger -and
+            @($_.eventTrigger | Where-Object { $_.param -eq 'prop113' }).Count -gt 0
+        }).Count
+        if ($beforeCount -ne 1) {
+            throw "旧存档迁移前置收藏品数量异常：$beforeCount"
+        }
+        $scene.itemArr = @($scene.itemArr | Where-Object {
+            -not ($_.eventTrigger -and
+                @($_.eventTrigger | Where-Object { $_.param -eq 'prop113' }).Count -gt 0)
+        })
+
+        $longmarchQuery = "select value from data where key='longmarch';"
+        $longmarchJson = $longmarchQuery | & $Adb -s $Serial shell run-as $Package sqlite3 databases/jsb.sqlite
+        if ($LASTEXITCODE -ne 0 -or -not $longmarchJson) {
+            throw '读取 longmarch 失败'
+        }
+        $longmarch = $longmarchJson | ConvertFrom-Json
+        if ($longmarch.itemData -and $longmarch.itemData.PSObject.Properties['prop113']) {
+            $longmarch.itemData.PSObject.Properties.Remove('prop113')
+        }
+
+        $updatedTemp = ($tempData | ConvertTo-Json -Compress -Depth 100).Replace("'", "''")
+        $updatedLongmarch = ($longmarch | ConvertTo-Json -Compress -Depth 100).Replace("'", "''")
+        $sql = @"
+begin;
+update data set value='$updatedTemp' where key='tempData';
+update data set value='$updatedLongmarch' where key='longmarch';
+delete from data where key in ('longmarch_save_v2_current','longmarch_save_v2_previous');
+insert or replace into data(key,value) values('chapter','3');
+insert or replace into data(key,value) values('mapIndex','3');
+insert or replace into data(key,value) values('codex_direct_scene','gameScene');
+commit;
+"@ -replace "`r?`n", ' '
+        $sql | & $Adb -s $Serial shell run-as $Package sqlite3 databases/jsb.sqlite
+        if ($LASTEXITCODE -ne 0) {
+            throw '构造旧版本存档失败'
+        }
+
+        Invoke-Adb -Arguments @('logcat', '-c')
+        Start-Game
+        Start-Sleep -Seconds $WaitSeconds
+        $migratedJson = $tempQuery | & $Adb -s $Serial shell run-as $Package sqlite3 databases/jsb.sqlite
+        if ($LASTEXITCODE -ne 0 -or -not $migratedJson) {
+            throw '读取迁移后 tempData 失败'
+        }
+        $migratedScene = ($migratedJson | ConvertFrom-Json).$sceneKey
+        $afterCount = @($migratedScene.itemArr | Where-Object {
+            $_.eventTrigger -and
+            @($_.eventTrigger | Where-Object { $_.param -eq 'prop113' }).Count -gt 0
+        }).Count
+        if ($afterCount -ne 1) {
+            throw "旧存档迁移失败：prop113 数量为 $afterCount"
+        }
+
+        $state = Assert-GameInForeground
+        [pscustomobject]@{
+            scene = $sceneKey
+            removedBeforeLaunch = $beforeCount
+            restoredAfterLaunch = $afterCount
+            state = $state
+        } | ConvertTo-Json -Depth 6 |
+            Set-Content -LiteralPath (Join-Path $ResultDir "$originalName-oldsave-state.json") -Encoding utf8
+        $script:Name = "$originalName-oldsave-migrated"
+        Save-Screenshot
+        $source = Join-Path $ResultDir "$script:Name.png"
+        $analyzer = Join-Path $PSScriptRoot 'analyze-screenshot.py'
+        & python $analyzer --input $source
+        if ($LASTEXITCODE -ne 0) {
+            throw '旧存档迁移截图压缩/OCR 失败'
+        }
+        Save-Logs
+    } finally {
+        $script:Name = $checkpointName
+        Restore-Checkpoint
+        $script:Name = $originalName
+    }
+}
+
 function Test-Stability {
     $primaryAbi = (Invoke-Adb -Arguments @('shell', 'getprop', 'ro.product.cpu.abi') | Select-Object -First 1).Trim()
     if ($RequireArm64 -and $primaryAbi -ne 'arm64-v8a') {
@@ -228,19 +325,13 @@ function Test-Stability {
     $memoryLog = Join-Path $ResultDir "$originalName-stability-memory.log"
     $deadline = (Get-Date).AddMinutes($Minutes)
     $cycle = 0
-    # Only rotate through the seven maps that have both a runtime config and a
-    # published view prefab.  The recovered czconfig also contains historical
-    # d1_3/d2_3/d3_4/d3_5 rows; jumping to those only tests the missing-prefab
-    # fallback and must not be counted as playable-map stability coverage.
-    $maps = @(
-        @{ Chapter = 1; Map = 1 },
-        @{ Chapter = 1; Map = 2 },
-        @{ Chapter = 2; Map = 1 },
-        @{ Chapter = 2; Map = 2 },
-        @{ Chapter = 3; Map = 1 },
-        @{ Chapter = 3; Map = 2 },
-        @{ Chapter = 3; Map = 3 }
-    )
+    # Keep runtime stability coverage aligned with the same machine-readable
+    # manifest used by the content-completeness gate.
+    $publishedMapFile = Join-Path $PSScriptRoot 'published-maps.json'
+    $maps = @(Get-Content -Raw $publishedMapFile | ConvertFrom-Json)
+    if ($maps.Count -ne 7) {
+        throw "发布地图清单异常：$publishedMapFile"
+    }
     try {
         Invoke-Adb -Arguments @('logcat', '-c')
         while ((Get-Date) -lt $deadline) {
@@ -257,7 +348,7 @@ function Test-Stability {
             Start-Sleep -Seconds $WaitSeconds
             $state = Assert-GameInForeground
             $stamp = Get-Date -Format o
-            "[$stamp] cycle=$cycle chapter=$($target.Chapter) map=$($target.Map) abi=$primaryAbi" |
+            "[$stamp] cycle=$cycle chapter=$($target.chapter) map=$($target.map) scene=$($target.scene) abi=$primaryAbi" |
                 Add-Content -LiteralPath $memoryLog -Encoding utf8
             Invoke-Adb -Arguments @('shell', 'dumpsys', 'meminfo', $Package) |
                 Select-String 'TOTAL PSS|TOTAL RSS|Native Heap|Dalvik Heap' |
@@ -343,6 +434,9 @@ switch ($Command) {
     }
     'corrupt' {
         Test-CorruptSaveRecovery
+    }
+    'oldsave' {
+        Test-OldSaveMigration
     }
     'stability' {
         Test-Stability

@@ -68,6 +68,7 @@ tasks.register("clean", Delete) {
 write(path.join(androidProject, 'gradle', 'wrapper', 'gradle-wrapper.properties'), `distributionBase=GRADLE_USER_HOME
 distributionPath=wrapper/dists
 distributionUrl=https\\://services.gradle.org/distributions/gradle-8.11.1-bin.zip
+distributionSha256Sum=f397b287023acdba1e9f6fc5ea72d22dd63669d59ed4a289a29b1a76eee151c6
 networkTimeout=120000
 validateDistributionUrl=true
 zipStoreBase=GRADLE_USER_HOME
@@ -217,7 +218,11 @@ tasks.named("preBuild").configure { dependsOn(syncCocosAssets) }
 dependencies {
     implementation fileTree(dir: "../libs", include: ["*.jar", "*.aar"])
     implementation fileTree(dir: "libs", include: ["*.jar", "*.aar"])
-    implementation fileTree(dir: "${normalizedEngine}/cocos/platform/android/java/libs", include: ["*.jar"])
+    implementation fileTree(
+        dir: "${normalizedEngine}/cocos/platform/android/java/libs",
+        include: ["*.jar"],
+        exclude: ["okhttp-*.jar", "okio-*.jar"]
+    )
     implementation project(":libcocos2dx")
 }
 `);
@@ -239,7 +244,13 @@ android {
     sourceSets {
         main {
             aidl.srcDir "${normalizedEngine}/cocos/platform/android/java/src"
-            java.srcDir "${normalizedEngine}/cocos/platform/android/java/src"
+            java {
+                srcDir "${normalizedEngine}/cocos/platform/android/java/src"
+                // This release is deliberately offline. The native downloader
+                // has no JS call site, and excluding it also removes the
+                // vulnerable shaded OkHttp/Okio stack from the APK.
+                exclude "org/cocos2dx/lib/Cocos2dxDownloader.java"
+            }
             manifest.srcFile "AndroidManifest.xml"
         }
     }
@@ -258,7 +269,11 @@ android {
 }
 
 dependencies {
-    implementation fileTree(include: ["*.jar"], dir: "${normalizedEngine}/cocos/platform/android/java/libs")
+    implementation fileTree(
+        dir: "${normalizedEngine}/cocos/platform/android/java/libs",
+        include: ["*.jar"],
+        exclude: ["okhttp-*.jar", "okio-*.jar"]
+    )
 }
 `);
 
@@ -272,7 +287,9 @@ let appManifest = read(appManifestFile)
 write(appManifestFile, appManifest);
 
 const libManifestFile = path.join(localLib, 'AndroidManifest.xml');
-let libManifest = read(libManifestFile).replace(/\s+package="[^"]+"/, '');
+let libManifest = read(libManifestFile)
+  .replace(/\s+package="[^"]+"/, '')
+  .replace(/\s*<uses-permission android:name="android\.permission\.(?:INTERNET|ACCESS_NETWORK_STATE|ACCESS_WIFI_STATE)"\/>\s*/g, '\n');
 write(libManifestFile, libManifest);
 
 console.log(`Android 正式工程：AGP 8.9.2 / Gradle 8.11.1 / API 36 / ${versionName} (${versionCode})`);

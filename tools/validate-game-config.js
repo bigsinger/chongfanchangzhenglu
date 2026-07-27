@@ -163,6 +163,8 @@ const report = {
 };
 
 const reportArg = process.argv.find((arg) => arg.startsWith('--report='));
+const maxWarningsArg = process.argv.find((arg) => arg.startsWith('--max-warnings='));
+const maxWarnings = maxWarningsArg ? Number(maxWarningsArg.slice('--max-warnings='.length)) : null;
 if (reportArg) {
   const reportPath = path.resolve(root, reportArg.slice('--report='.length));
   fs.mkdirSync(path.dirname(reportPath), { recursive: true });
@@ -176,3 +178,7 @@ for (const entry of issues.slice(0, 16)) {
 }
 if (issues.length > 16) console.log(`其余 ${issues.length - 16} 项已省略，可使用 --report=... 输出完整报告`);
 if (errors.length) process.exitCode = 1;
+if (Number.isFinite(maxWarnings) && warnings.length > maxWarnings) {
+  console.error(`警告数 ${warnings.length} 超过已审核基线 ${maxWarnings}，请检查新增配置断链`);
+  process.exitCode = 1;
+}

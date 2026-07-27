@@ -25,7 +25,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
         Object.defineProperty(o, "__esModule", {
             value: !0
         });
-        var s = require("./BaseView"), r = require("./GameState"), c = require("./AudioManager"), l = require("./DialogManager"), h = require("./SpineAnimationManager"), d = cc._decorator, p = d.ccclass, u = d.property, m = function (t) {
+        var s = require("./BaseView"), r = require("./GameState"), c = require("./AudioManager"), l = require("./DialogManager"), h = require("./SpineAnimationManager"), v = require("./ResourceManager"), d = cc._decorator, p = d.ccclass, u = d.property, m = function (t) {
             n(e, t);
             function e() {
                 var e = null !== t && t.apply(this, arguments) || this;
@@ -35,9 +35,14 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 e.eb_chapter = null;
                 e.eb_map = null;
                 e.role_node = null;
+                e.m_navigationPending = !1;
                 return e;
             }
             e.prototype.onLoad = function () {
+                // Every route back to the menu ends the active gameplay
+                // chapter, including completion/ending dialogs that bypass the
+                // normal transition controller.
+                v.default.releasePrefix("gk/d");
                 this.label_version.string = r.default._version;
                 1 == r.default.chapter && 1 == r.default.mapIndex ? this.setSpriteFrame(this.sp_state, "public/btn_xyx") : this.setSpriteFrame(this.sp_state, "public/btn_jxyx");
                 this.setClick(this.node);
@@ -87,12 +92,14 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 l.default.open("view/roadView", ["param", function () { }]);
             };
             e.prototype.gotoLoginScene = function () {
-                setTimeout(function () {
+                if (this.m_navigationPending) return;
+                this.m_navigationPending = !0;
+                this.scheduleOnce(function () {
                     c.default.stopBGM();
                     cc.director.loadScene("transitionScene", function () {
                         console.log("==1111== gameScene==success=====");
                     });
-                }, 200);
+                }, .2);
             };
             a([u(cc.Label)], e.prototype, "label_version", void 0);
             a([u(cc.Sprite)], e.prototype, "sp_state", void 0);

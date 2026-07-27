@@ -1,0 +1,50 @@
+name: Quality gates
+
+on:
+  push:
+    branches:
+      - main
+      - "codex/**"
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  source-and-content:
+    runs-on: windows-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Use Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: "22"
+
+      - name: Run source, config, content, contract and texture gates
+        shell: pwsh
+        run: npm test
+
+      - name: Verify recovered resource UUIDs
+        shell: pwsh
+        run: node .\tools\restore-original-resources.js --verify
+
+      - name: Parse PowerShell automation
+        shell: pwsh
+        run: |
+          $scripts = Get-ChildItem -Recurse -Filter *.ps1
+          foreach ($script in $scripts) {
+            $errors = $null
+            [void][System.Management.Automation.Language.Parser]::ParseFile(
+              $script.FullName,
+              [ref]$null,
+              [ref]$errors
+            )
+            if ($errors.Count) {
+              $errors | Format-List
+              throw "PowerShell syntax failed: $($script.FullName)"
+            }
+          }

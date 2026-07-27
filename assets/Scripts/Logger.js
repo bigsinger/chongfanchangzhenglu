@@ -18,6 +18,8 @@ var i = function () {
             warn: console.warn && console.warn.bind(console),
             error: console.error && console.error.bind(console)
         };
+        this.restorePreviousSession();
+        this.breadcrumb("session-start", {});
         var t = "undefined" != typeof CC_DEBUG && CC_DEBUG || "undefined" != typeof CC_DEV && CC_DEV;
         if (!t) {
             console.log = function () {};
@@ -26,14 +28,32 @@ var i = function () {
         var e = this;
         console.warn = function () {
             var t = Array.prototype.slice.call(arguments);
+            e.breadcrumb("warning", {
+                message: String(t[0] || "")
+            }, !0);
             t.unshift(e.prefix("WARN"));
             e.original.warn && e.original.warn.apply(null, t);
         };
         console.error = function () {
             var t = Array.prototype.slice.call(arguments);
+            e.breadcrumb("error", {
+                message: String(t[0] || "")
+            }, !0);
             t.unshift(e.prefix("ERROR"));
             e.original.error && e.original.error.apply(null, t);
         };
+        if ("undefined" != typeof window) {
+            this.previousOnError = window.onerror;
+            window.onerror = function (t, o, i, n) {
+                e.breadcrumb("uncaught-js", {
+                    message: String(t || ""),
+                    source: String(o || ""),
+                    line: Number(i) || 0,
+                    column: Number(n) || 0
+                }, !0);
+                return e.previousOnError ? e.previousOnError.apply(this, arguments) : !1;
+            };
+        }
     };
     t.setContext = function (t) {
         if (!t) return;
@@ -46,14 +66,42 @@ var i = function () {
         o.event && e.push("event=" + o.event);
         return "[LongMarch][" + t + "]" + (e.length ? "[" + e.join(" ") + "]" : "");
     };
+    t.restorePreviousSession = function () {
+        try {
+            var t = cc.sys.localStorage.getItem(this.STORAGE_KEY);
+            this.previousSession = t ? JSON.parse(t) : [];
+        } catch (e) {
+            this.previousSession = [];
+        }
+        this.breadcrumbs = [];
+    };
+    t.breadcrumb = function (t, e, o) {
+        var i = {
+            time: Date.now(),
+            code: String(t || "event"),
+            context: JSON.parse(JSON.stringify(this.context)),
+            fields: e || {}
+        };
+        this.breadcrumbs.push(i);
+        this.breadcrumbs.length > this.MAX_BREADCRUMBS && this.breadcrumbs.shift();
+        if (o) try {
+            cc.sys.localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.breadcrumbs));
+        } catch (n) { }
+    };
     t.diagnostic = function () {
         return {
             installed: this.installed,
-            context: JSON.parse(JSON.stringify(this.context))
+            context: JSON.parse(JSON.stringify(this.context)),
+            breadcrumbs: this.breadcrumbs.slice(),
+            previousSession: this.previousSession.slice()
         };
     };
     t.installed = !1;
     t.context = {};
+    t.breadcrumbs = [];
+    t.previousSession = [];
+    t.MAX_BREADCRUMBS = 80;
+    t.STORAGE_KEY = "longmarch_diagnostics_v1";
     return t;
 }();
 

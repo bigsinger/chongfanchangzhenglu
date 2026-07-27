@@ -34,9 +34,23 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 o = e;
                 e.prototype.start = function () { };
                 e.initGameEvent = function (t, e) {
+                    this.gameManager && this.gameManager !== t && this.resetTransientState();
                     this.gameManager = t;
                     this.hero = e;
-                    this.hero && (this.hero_ts = this.hero.getComponent("PlayerController"));
+                    this.hero_ts = this.hero ? this.hero.getComponent("PlayerController") : null;
+                };
+                e.resetTransientState = function () {
+                    this.cItem = null;
+                    this.interactNode = null;
+                    this.itemStack = [];
+                    this.blockStack = [];
+                    this.blockItem = null;
+                    this.isDoor = !1;
+                    this.isGround = !0;
+                    this.isDrop = !1;
+                    this.tempHeroLeft = !1;
+                    this.hero = null;
+                    this.hero_ts = null;
                 };
                 e.requestProgressSave = function () {
                     this.gameManager && this.gameManager.requestProgressSave && this.gameManager.requestProgressSave();
@@ -66,40 +80,43 @@ var i, n = this && this.__extends || (i = function (t, e) {
                         this.selectClosestItem();
                     }
                 };
-                e.selectClosestItem = function () {
+                e.selectClosestItem = function (t) {
                     // Some authored blockers stop the hero just outside the
                     // legacy collider of an intended prop (the chapter-3
                     // supply box is about 368 units from the nearest reachable
                     // point). Use a slightly larger manual-operation reach.
                     // When carrying supplies, a matching task receiver wins
                     // over nearby boxes; distance breaks ties deterministically.
-                    var t = null, e = null, o = 420 * 420, i = this.itemStack.slice(), n = this.hero_ts.goods, a = -1;
+                    var e = null, o = null, i = 420 * 420, n = this.itemStack.slice(), a = this.hero_ts.goods, s = -1;
                     // Several legacy props use a small collider centered high
                     // above the walkable ground (for example the rescue shovel
                     // is about 200 units above the hero).  They are visibly in
                     // reach but never enter the physics contact stack in the
                     // migrated runtime. Include nearby map items and keep the
                     // closest valid operation.
-                    if (this.gameManager.itemMap) for (var s in this.gameManager.itemMap) {
-                        var c = this.gameManager.itemMap[s];
-                        c && i.indexOf(c) < 0 && i.push(c);
+                    if (Array.isArray(t)) for (var candidateIndex = 0; candidateIndex < t.length; candidateIndex++) {
+                        var candidateNode = t[candidateIndex];
+                        candidateNode && n.indexOf(candidateNode) < 0 && n.push(candidateNode);
+                    } else if (this.gameManager.itemMap) for (var itemKey in this.gameManager.itemMap) {
+                        candidateNode = this.gameManager.itemMap[itemKey];
+                        candidateNode && n.indexOf(candidateNode) < 0 && n.push(candidateNode);
                     }
-                    for (var l = 0; l < i.length; l++) {
-                        var h = i[l], d = h && h.activeInHierarchy && h.getComponent("InteractiveObject"), p = d && d.getOpType();
-                        if (p) {
-                            var u = h.x - this.hero.x, m = h.y - this.hero.y, _ = u * u + m * m, f = 0;
-                            if (n && d.eventArr) for (var g = 0; g < d.eventArr.length; g++) {
-                                var y = d.eventArr[g];
-                                if (!y.isFinish) {
-                                    y.limit && 0 == String(y.limit).indexOf("prop") && (f = y.limit == n.nameid ? 2 : 1);
+                    for (var h = 0; h < n.length; h++) {
+                        var d = n[h], p = d && d.activeInHierarchy && d.getComponent("InteractiveObject"), u = p && p.getOpType();
+                        if (u) {
+                            var m = d.x - this.hero.x, _ = d.y - this.hero.y, f = m * m + _ * _, g = 0;
+                            if (a && p.eventArr) for (var y = 0; y < p.eventArr.length; y++) {
+                                var v = p.eventArr[y];
+                                if (!v.isFinish) {
+                                    v.limit && 0 == String(v.limit).indexOf("prop") && (g = v.limit == a.nameid ? 2 : 1);
                                     break;
                                 }
                             }
-                            _ < 420 * 420 && (f > a || f == a && _ < o) && (a = f, o = _, t = h, e = p);
+                            f < 420 * 420 && (g > s || g == s && f < i) && (s = g, i = f, e = d, o = u);
                         }
                     }
-                    this.cItem = t;
-                    t ? this.gameManager.setInteract(e) : this.hero_ts.heroState != r.default.STATE_DRAG && this.gameManager.setInteract(0);
+                    this.cItem = e;
+                    e ? this.gameManager.setInteract(o) : this.hero_ts.heroState != r.default.STATE_DRAG && this.gameManager.setInteract(0);
                 };
                 e.outStack = function (t) {
                     var e = !1;
@@ -196,7 +213,6 @@ var i, n = this && this.__extends || (i = function (t, e) {
                                 this.isGround = !1;
                                 this.dropY = this.hero.y;
                             }
-                            this.blockStack.length <= 0 && (this.gameManager.dropCount = 20);
                         }
                     } else {
                         console.log("---------- leave CO_SHOWATT !!");
@@ -207,7 +223,6 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     var e = t.getComponent("InteractiveObject").findEvent(null, "45");
                     e && this.triggerEvent(t, 0, e.index);
                 };
-                e.checkDrop = function () { };
                 e.setItemboxTips = function () {
                     if (this.cItem && this.cItem.active) {
                         var t = this.cItem.getComponent("InteractiveObject"), e = this.hero_ts.goods ? 0 : 1;
@@ -517,7 +532,6 @@ var i, n = this && this.__extends || (i = function (t, e) {
                                                 break;
 
                                             case 17:
-                                                this.hero_ts.walkingMode;
                                                 this.hero_ts.setWalkingMode(C);
                                                 break;
 

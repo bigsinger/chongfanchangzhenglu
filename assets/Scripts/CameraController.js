@@ -100,7 +100,6 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 configurable: !0
             });
             e.prototype.trackPosAct = function (t) {
-                this.camera_ts.zoomRatio;
                 this.checkCamera(t.x + this.dif_x, t.y + this.dif_y);
             };
             e.prototype.restoreHeroTracking = function (t) {

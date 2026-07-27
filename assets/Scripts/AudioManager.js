@@ -95,6 +95,14 @@ Object.defineProperty(o, "__esModule", {
                     this.nowSoundVal = 0;
                 }
             };
+            t.stopSceneSounds = function () {
+                for (var t in this.soundRequestTokens) this.soundRequestTokens[t]++;
+                for (var e in this.soundMap) if (this.soundMap[e] >= 0) {
+                    cc.audioEngine.stop(this.soundMap[e]);
+                }
+                this.soundMap = {};
+                this.nowSoundVal = 0;
+            };
             t.setSoundVolume = function (t, e) {
                 this.soundMap && this.soundMap[t] >= 0 && cc.audioEngine.setVolume(this.soundMap[t], e);
             };

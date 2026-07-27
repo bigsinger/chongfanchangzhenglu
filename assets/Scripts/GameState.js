@@ -67,7 +67,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
             Object.defineProperty(e, "onlinetm", {
                 set: function (t) {
                     this.playData.onlinetm = t;
-                    cc.sys.localStorage.setItem("longmarch", JSON.stringify(this.playData));
+                    a.default.writeIfChanged("longmarch", JSON.stringify(this.playData));
                     a.default.scheduleCommit("play-data", this.playData);
                 },
                 enumerable: !1,
@@ -320,13 +320,14 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 enumerable: !1,
                 configurable: !0
             });
-            e.saveMapInfo = function () {
+            e.saveMapInfo = function (t) {
+                void 0 === t && (t = !1);
                 console.log("------------ 小节 " + this.chapter);
                 console.log("------------ 地图 " + this.mapIndex);
-                cc.sys.localStorage.setItem("chapter", this.chapter);
-                cc.sys.localStorage.setItem("mapIndex", this.mapIndex);
-                cc.sys.localStorage.setItem("unlockchapters", this.unlockchapters);
-                a.default.scheduleCommit("map-info", this.playData);
+                a.default.writeIfChanged("chapter", this.chapter);
+                a.default.writeIfChanged("mapIndex", this.mapIndex);
+                a.default.writeIfChanged("unlockchapters", this.unlockchapters);
+                t ? a.default.commit("map-info-critical", this.playData) : a.default.scheduleCommit("map-info", this.playData);
             };
             e.loadMapInfo = function () {
                 var t = Number(cc.sys.localStorage.getItem("chapter") || this.playData.chapter || 1), e = Number(cc.sys.localStorage.getItem("mapIndex") || this.playData.mapIndex || 1), o = Number(cc.sys.localStorage.getItem("unlockchapters") || this.playData.unlockchapters || 0);
@@ -334,20 +335,23 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 Number.isFinite(e) && e >= 1 || (e = 1);
                 Number.isFinite(o) && o >= 0 || (o = 0);
                 this.maxchapterName && this.maxchapterName.length && (t = Math.min(t, this.maxchapterName.length));
+                this.maxchapterName && this.maxchapterName.length && (o = Math.min(o, this.maxchapterName.length - 1));
+                var i = this.publishedMapCounts[t] || 1;
+                e = Math.min(e, i);
                 this.chapter = Math.floor(t);
                 this.mapIndex = Math.floor(e);
                 this.Smallplot = "0_" + this.chapter;
                 this.unlockchapters = Math.floor(o);
             };
             e.saveUnlockChapter = function () {
-                cc.sys.localStorage.setItem("unlockchapters", this.unlockchapters);
-                a.default.scheduleCommit("unlock-chapter", this.playData);
+                a.default.writeIfChanged("unlockchapters", this.unlockchapters);
+                a.default.commit("unlock-chapter-critical", this.playData);
             };
             e.initMapInfo = function (t) {
                 void 0 === t && (t = 1);
                 this.chapter = Number(t);
                 this.mapIndex = 1;
-                this.saveMapInfo();
+                this.saveMapInfo(!0);
             };
             Object.defineProperty(e, "mapIndex", {
                 get: function () {
@@ -508,6 +512,11 @@ var i, n = this && this.__extends || (i = function (t, e) {
             };
             e.Smallplot = "0_1";
             e.maxchapterName = ["东方欲晓", "凤凰涅槃", "横空出世"];
+            e.publishedMapCounts = {
+                1: 2,
+                2: 2,
+                3: 3
+            };
             e.chapterName = ["第一节 ", "第二节 ", "第三节 ", "第四节 ", "第五节 "];
             return e;
         }(cc.Component);

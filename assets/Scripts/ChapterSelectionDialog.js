@@ -49,6 +49,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 e.label_num_r = null;
                 e.itemCount = {};
                 e.storyCount = {};
+                e.m_navigationPending = !1;
                 return e;
             }
             e.prototype.initData = function () { };
@@ -98,7 +99,6 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     }
                 }
             };
-            e.prototype.chapterCall = function () { };
             e.prototype.scrollCall = function (t) {
                 var e, o = t.getScrollOffset().x;
                 e = o <= this.CHAPTER_STEP_3 ? 3 : o <= this.CHAPTER_STEP_2 ? 2 : 1;
@@ -171,17 +171,19 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 var t = this;
                 l.default.playSound("ui/start.mp3");
                 d.default.open("dialog/tipsDialog", ["是否载入<size=22> <size=30><b>" + r.default.chapterUiConf[this.touchChapter].chapter_name + "?</>", "", function () {
+                    if (t.m_navigationPending) return;
+                    t.m_navigationPending = !0;
                     s.default.clearRunState();
                     console.log("==选择=" + r.default.chapterUiConf[t.touchChapter].chapter_name + "进入游戏");
                     r.default.initMapInfo(t.touchChapter);
                     r.default.Smallplot = "0_" + t.touchChapter;
                     cc.director.preloadScene("transitionScene", function () { }, function () {
-                        setTimeout(function () {
+                        t.scheduleOnce(function () {
                             l.default.stopBGM();
                             cc.director.loadScene("transitionScene", function () {
                                 console.log("==== transitionScene==success=====");
                             });
-                        }, 1200);
+                        }, 1.2);
                     });
                 }]);
             };

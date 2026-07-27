@@ -431,10 +431,13 @@ function patchGameScene(source) {
   return patchGlobalTouchListener(patchCanvasTouchReceiver(patchWakeMovementInput(patchReliableInput(updated))));
 }
 
-function applyRuntimeFixes(projectRoot = path.resolve(__dirname, '..')) {
+function applyRuntimeFixes(projectRoot = path.resolve(__dirname, '..'), options = {}) {
   const gameScenePath = path.join(projectRoot, 'assets', 'Scripts', 'GameplaySceneController.js');
   const original = fs.readFileSync(gameScenePath, 'utf8');
   const updated = patchGameScene(original);
+  if (updated !== original && options.verify) {
+    throw new Error('运行时输入修复尚未应用；请先执行 node tools/apply-runtime-fixes.js 并提交结果');
+  }
   if (updated !== original) fs.writeFileSync(gameScenePath, updated, 'utf8');
   return {
     changed: updated !== original,
@@ -443,8 +446,15 @@ function applyRuntimeFixes(projectRoot = path.resolve(__dirname, '..')) {
 }
 
 if (require.main === module) {
-  const result = applyRuntimeFixes();
-  console.log(`${result.changed ? 'Applied' : 'Verified'} runtime input fixes: ${result.files.join(', ')}`);
+  try {
+    const result = applyRuntimeFixes(path.resolve(__dirname, '..'), {
+      verify: process.argv.includes('--verify'),
+    });
+    console.log(`${result.changed ? 'Applied' : 'Verified'} runtime input fixes: ${result.files.join(', ')}`);
+  } catch (error) {
+    console.error(error.message);
+    process.exitCode = 1;
+  }
 }
 
 module.exports = { applyRuntimeFixes, patchGameScene };

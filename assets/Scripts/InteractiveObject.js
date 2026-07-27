@@ -424,7 +424,6 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 }
                 var n = this.itemConf.lastEvent;
                 this.eventArr = this.itemConf.eventTrigger;
-                this.eventArr.length;
                 for (var a = 0, r = this.eventArr; a < r.length; a++) {
                     var c = r[a], h = s.default.eventConf[c.key], d = Number(h.result);
                     if (40 == d) {

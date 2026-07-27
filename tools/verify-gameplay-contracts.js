@@ -20,16 +20,16 @@ const storage = new LocalStorage({
   longmarch: JSON.stringify({
     chapter: 2,
     chapterCur: 4,
-    mapIndex: 3,
+    mapIndex: 2,
     itemData: { prop101: { nameid: 'prop101', xjid: '1' } },
     storyData: [],
     unlockchapters: 1,
     gametips: []
   }),
-  tempData: JSON.stringify({ scenes_d2_3: { heroPos: { x: 300, y: 600 } } }),
+  tempData: JSON.stringify({ scenes_d2_2: { heroPos: { x: 300, y: 600 } } }),
   heroItem: JSON.stringify({ nameid: 'prop20' }),
   chapter: '2',
-  mapIndex: '3',
+  mapIndex: '2',
   unlockchapters: '1'
 });
 global.cc = { sys: { localStorage: storage } };
@@ -40,13 +40,13 @@ const migrated = SaveManager.restoreOrMigrate({ chapter: 1, mapIndex: 1 });
 assert.equal(migrated.chapter, 2);
 let current = JSON.parse(storage.getItem(SaveManager.CURRENT_KEY));
 assert(SaveManager.isValid(current));
-assert.deepEqual(current.state.tempData.scenes_d2_3.heroPos, { x: 300, y: 600 });
+assert.deepEqual(current.state.tempData.scenes_d2_2.heroPos, { x: 300, y: 600 });
 assert.equal(current.state.heroItem.nameid, 'prop20');
 
 // Foreground interaction then background save must advance an atomic revision.
 const beforeRevision = current.revision;
 storage.setItem('heroItem', JSON.stringify({ nameid: 'prop42' }));
-storage.setItem('tempData', JSON.stringify({ scenes_d2_3: { heroPos: { x: 880, y: 610 }, events: { '9|2': 1 } } }));
+storage.setItem('tempData', JSON.stringify({ scenes_d2_2: { heroPos: { x: 880, y: 610 }, events: { '9|2': 1 } } }));
 SaveManager.commit('background', migrated);
 current = JSON.parse(storage.getItem(SaveManager.CURRENT_KEY));
 assert(current.revision > beforeRevision);
@@ -58,7 +58,7 @@ storage.setItem('tempData', '{}');
 const restored = SaveManager.restoreOrMigrate({ chapter: 1, mapIndex: 1 });
 assert.equal(restored.chapter, 2);
 assert.equal(JSON.parse(storage.getItem('heroItem')).nameid, 'prop42');
-assert.equal(JSON.parse(storage.getItem('tempData')).scenes_d2_3.events['9|2'], 1);
+assert.equal(JSON.parse(storage.getItem('tempData')).scenes_d2_2.events['9|2'], 1);
 
 // Corrupted current generation falls back to previous and repairs current.
 const previous = storage.getItem(SaveManager.PREVIOUS_KEY);
@@ -67,6 +67,15 @@ storage.setItem(SaveManager.CURRENT_KEY, '{"truncated":');
 SaveManager.restoreOrMigrate({ chapter: 1, mapIndex: 1 });
 assert(SaveManager.isValid(JSON.parse(storage.getItem(SaveManager.CURRENT_KEY))));
 
+// A checksum-valid snapshot with impossible shapes or unpublished map numbers
+// must not be accepted as a restore source.
+const semanticCorruption = JSON.parse(storage.getItem(SaveManager.CURRENT_KEY));
+semanticCorruption.state.playData.itemData = [];
+semanticCorruption.state.chapter = 999;
+semanticCorruption.state.mapIndex = 999;
+semanticCorruption.checksum = SaveManager.checksum(JSON.stringify(semanticCorruption.state));
+assert.equal(SaveManager.isValid(semanticCorruption), false);
+
 // Gameplay source-level contracts guard the integration points that are hard
 // to instantiate without a running JSB engine.
 const scene = source('GameplaySceneController.js');
@@ -74,12 +83,31 @@ const event = source('GameplayEventController.js');
 const interactiveObject = source('InteractiveObject.js');
 const dialogManager = source('DialogManager.js');
 const popup = source('PopupView.js');
+const resourceManagerSource = source('ResourceManager.js');
+const saveManagerSource = source('SaveManager.js');
+const menu = source('MainMenuController.js');
+const cloudSources = source('CloudSpawner.js') + source('AmbientCloudSpawner.js');
+const closestItemBlock = event.match(/selectClosestItem = function \(t\) \{([\s\S]*?)\n\s*\};\n\s*e\.outStack/);
 assert(/KEY_DOWN/.test(scene) && /keyDirections/.test(scene), 'A/D keyboard movement contract');
 assert(/manual-operation reach/.test(event) && /pickEvent/.test(event), 'nearby pickup contract');
+assert(
+  closestItemBlock && /candidateIndex/.test(closestItemBlock[1]) &&
+    /itemKey/.test(closestItemBlock[1]) && !/for \(var r =/.test(closestItemBlock[1]),
+  'nearby scan loop must not shadow the imported GameState module'
+);
 assert(/showRequirementHint/.test(event) && /onRequiredItemDelivered/.test(event), 'wrong/right delivery contract');
 assert(/pauseGame|gameOperate/.test(popup + scene), 'modal input blocking contract');
 assert(/changeMap/.test(scene) && /saveItemConf/.test(scene), 'map transition save contract');
 assert(/EVENT_HIDE/.test(scene) && /应用进入后台/.test(scene), 'background persistence contract');
+assert(/EVENT_SHOW/.test(scene) && /resetActiveInput/.test(scene), 'background input reset contract');
+assert(/installLifecycle/.test(saveManagerSource) && /gameplay-hide/.test(scene), 'pending save flush contract');
+assert(
+  /_pendingMap/.test(dialogManager) && /_nodeKeyMap/.test(dialogManager) && /getScene/.test(dialogManager),
+  'async dialog generation and alias contract'
+);
+assert(/releasePrefix\("gk\/d"\)/.test(menu), 'menu must release the active chapter scope');
+assert(/_releasedEpochs/.test(resourceManagerSource) && /_bundleInflight/.test(resourceManagerSource), 'late resource load cancellation contract');
+assert(!/removeFromParent\(\)/.test(cloudSources) && /resetCloud/.test(cloudSources), 'cloud nodes must be recycled');
 assert(
   /addComponent\(assetCatalog\.default\.componentName\(c\.param\)\)/.test(interactiveObject),
   'dynamic event components must resolve renamed class IDs'
@@ -96,6 +124,38 @@ assert.equal(
   'FireExtinguishMiniGame',
   'legacy event component alias must remain available'
 );
+
+// A loadDir callback arriving after its owner was destroyed must release its
+// unclaimed assets instead of recreating a permanently retained scope.
+const releasedAssets = [];
+const removedBundles = [];
+global.cc.isValid = () => true;
+global.cc.assetManager = {
+  releaseAsset(asset) { releasedAssets.push(asset._uuid); },
+  removeBundle(bundle) { removedBundles.push(bundle.name); }
+};
+global.cc.resources = { release() {} };
+const ResourceManager = require(path.join(root, 'assets', 'Scripts', 'ResourceManager.js')).default;
+const scope = ResourceManager.createScope('contract');
+const epoch = ResourceManager.trackScopeRequest(scope, 'gk/d1', 'chapters/chapter-1', 'chapter-1');
+ResourceManager.releaseScope(scope);
+let releasedBundleCount = 0;
+const lateBundle = { name: 'chapter-1', releaseAll() { releasedBundleCount++; } };
+ResourceManager.register(
+  scope,
+  [{ _uuid: 'late-asset' }],
+  'gk/d1',
+  'chapter-1',
+  lateBundle,
+  'chapters/chapter-1',
+  epoch
+);
+ResourceManager.finishScopeRequest(scope, epoch, 'chapter-1');
+assert.deepEqual(releasedAssets, ['late-asset']);
+assert.equal(releasedBundleCount, 1);
+assert.deepEqual(removedBundles, ['chapter-1']);
+assert.equal(ResourceManager._scopes[scope], undefined);
+assert.equal(ResourceManager._scopeEpochs[scope], undefined);
 assert.equal(
   AssetCatalog.resolve('gk\\d1\\scenes_d1_1').logical,
   'chapters/chapter-1/maps/scenes_d1_1',

@@ -20,45 +20,99 @@ var i = {
     _assetRefs: {},
     _bundleRefs: {},
     _bundleRequests: {},
+    _scopeEpochs: {},
+    _releasedEpochs: {},
+    _scopePending: {},
+    _bundleInflight: {},
 
     createScope: function (t) {
         this._scopeSeed++;
-        return (t || "scope") + ":" + this._scopeSeed;
+        var e = (t || "scope") + ":" + this._scopeSeed;
+        this.beginScope(e);
+        return e;
+    },
+
+    beginScope: function (t, e, o) {
+        var i = this._scopes[t];
+        if (!i) {
+            var n = (this._scopeEpochs[t] || 0) + 1;
+            this._scopeEpochs[t] = n;
+            delete this._releasedEpochs[t];
+            i = this._scopes[t] = {
+                epoch: n,
+                directories: {},
+                assets: {},
+                bundles: {}
+            };
+        }
+        e && (i.directories[e] = !0);
+        o && (i.directories[o] = !0);
+        return i.epoch;
+    },
+
+    trackScopeRequest: function (t, e, o, i) {
+        var n = this.beginScope(t, e, o), a = t + "@" + n;
+        this._scopePending[a] = (this._scopePending[a] || 0) + 1;
+        i && (this._bundleInflight[i] = (this._bundleInflight[i] || 0) + 1);
+        return n;
+    },
+
+    finishScopeRequest: function (t, e, o) {
+        var i = t + "@" + e, n = (this._scopePending[i] || 1) - 1;
+        n > 0 ? this._scopePending[i] = n : delete this._scopePending[i];
+        if (o) {
+            var a = (this._bundleInflight[o] || 1) - 1;
+            a > 0 ? this._bundleInflight[o] = a : delete this._bundleInflight[o];
+        }
+        if (!this._scopePending[i] && this._releasedEpochs[t] === e) {
+            delete this._releasedEpochs[t];
+            delete this._scopeEpochs[t];
+        }
     },
 
     assetKey: function (t) {
         return t && (t._uuid || t.nativeUrl || t.url || t.name && t.name + ":" + t.__instanceId);
     },
 
-    register: function (t, e, o, i, n, a) {
+    releaseUnclaimed: function (t, e, o) {
+        for (var i = 0; i < (t || []).length; i++) {
+            var n = t[i], a = this.assetKey(n);
+            a && !this._assetRefs[a] && this.releaseAsset(n);
+        }
+        e && o && !this._bundleRefs[e] && (this._bundleInflight[e] || 0) <= 1 && (o.releaseAll(), cc.assetManager.removeBundle(o));
+    },
+
+    register: function (t, e, o, i, n, a, s) {
         if (!e || !e.length) return;
-        var s = this._scopes[t];
-        s || (s = this._scopes[t] = {
-            directories: {},
-            assets: {},
-            bundles: {}
-        });
-        o && (s.directories[o] = !0);
-        a && (s.directories[a] = !0);
-        if (i && n && !s.bundles[i]) {
-            s.bundles[i] = n;
-            var r = this._bundleRefs[i];
-            r || (r = this._bundleRefs[i] = {
+        null == s && (s = this.beginScope(t, o, a));
+        var r = this._scopes[t];
+        // A component/scene may be destroyed while its loadDir request is in
+        // flight. Never recreate the released scope from a late callback.
+        if (!r || s && r.epoch !== s || this._releasedEpochs[t] === s) {
+            this.releaseUnclaimed(e, i, n);
+            return;
+        }
+        o && (r.directories[o] = !0);
+        a && (r.directories[a] = !0);
+        if (i && n && !r.bundles[i]) {
+            r.bundles[i] = n;
+            var c = this._bundleRefs[i];
+            c || (c = this._bundleRefs[i] = {
                 bundle: n,
                 count: 0
             });
-            r.count++;
+            c.count++;
         }
-        for (var c = 0; c < e.length; c++) {
-            var l = e[c], h = this.assetKey(l);
-            if (h && !s.assets[h]) {
-                s.assets[h] = l;
-                var d = this._assetRefs[h];
-                d || (d = this._assetRefs[h] = {
-                    asset: l,
+        for (var l = 0; l < e.length; l++) {
+            var h = e[l], d = this.assetKey(h);
+            if (d && !r.assets[d]) {
+                r.assets[d] = h;
+                var p = this._assetRefs[d];
+                p || (p = this._assetRefs[d] = {
+                    asset: h,
                     count: 0
                 });
-                d.count++;
+                p.count++;
             }
         }
     },
@@ -120,28 +174,32 @@ var i = {
     },
 
     loadDir: function (t, e, o, i) {
-        var n = this, a = i || t, s = this.resolve(t);
-        this.withBundle(s, function (i, r) {
+        var n = this, a = i || t, s = this.resolve(t), r = this.trackScopeRequest(a, t, s.logical, s.bundle);
+        this.withBundle(s, function (i, c) {
             if (i) {
+                n.finishScopeRequest(a, r, s.bundle);
                 o && o(i, null);
                 return;
             }
-            r.loadDir(s.path, e || function () { }, function (e, i) {
-                e || n.register(a, i, t, s.bundle, r, s.logical);
+            c.loadDir(s.path, e || function () { }, function (e, i) {
+                e || n.register(a, i, t, s.bundle, c, s.logical, r);
+                n.finishScopeRequest(a, r, s.bundle);
                 o && o(e, i);
             });
         });
     },
 
     loadDirTyped: function (t, e, o, i, n) {
-        var a = this, s = n || t, r = this.resolve(t);
-        this.withBundle(r, function (n, c) {
+        var a = this, s = n || t, r = this.resolve(t), c = this.trackScopeRequest(s, t, r.logical, r.bundle);
+        this.withBundle(r, function (n, l) {
             if (n) {
+                a.finishScopeRequest(s, c, r.bundle);
                 i && i(n, null);
                 return;
             }
-            c.loadDir(r.path, e, o || function () { }, function (e, o) {
-                e || a.register(s, o, t, r.bundle, c, r.logical);
+            l.loadDir(r.path, e, o || function () { }, function (e, o) {
+                e || a.register(s, o, t, r.bundle, l, r.logical, c);
+                a.finishScopeRequest(s, c, r.bundle);
                 i && i(e, o);
             });
         });
@@ -159,6 +217,7 @@ var i = {
     releaseScope: function (t) {
         var e = this._scopes[t];
         if (!e) return 0;
+        this._releasedEpochs[t] = e.epoch;
         var o = 0;
         for (var i in e.assets) {
             var n = this._assetRefs[i];
@@ -183,6 +242,10 @@ var i = {
             }
         }
         delete this._scopes[t];
+        if (!this._scopePending[t + "@" + e.epoch]) {
+            delete this._releasedEpochs[t];
+            delete this._scopeEpochs[t];
+        }
         return o;
     },
 

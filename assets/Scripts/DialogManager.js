@@ -12,54 +12,80 @@ Object.defineProperty(o, "__esModule", {
                 var i = this;
                 void 0 === e && (e = []);
                 void 0 === o && (o = null);
-                var n = "prefab/" + t, a = t;
-                this._popupMap[a] && this.close(a);
-                r.default.load(n, cc.Prefab, function (t, a) {
-                    t ? console.log("--- err", t) : i._addPopup(a, e, n, o);
+                var n = "prefab/" + t, a = t, c = ++this._requestSeed, l = cc.director.getScene && cc.director.getScene();
+                this.close(a);
+                this._pendingMap[a] = c;
+                r.default.load(n, cc.Prefab, function (s, r) {
+                    // A prefab can finish loading after a second open/close
+                    // request. Only the newest request may create a node;
+                    // otherwise an untracked modal remains over gameplay.
+                    if (i._pendingMap[a] !== c) return;
+                    delete i._pendingMap[a];
+                    if (l && cc.director.getScene && l !== cc.director.getScene()) return;
+                    if (s || !r) {
+                        console.error("------------ 弹窗资源加载失败 " + n, s);
+                        return;
+                    }
+                    i._addPopup(a, r, e, n, o);
                 });
             };
-            t._addPopup = function (t, e, o, i) {
-                cc.log("open view " + o);
-                var n = cc.instantiate(t), a = n.name;
+            t._addPopup = function (t, e, o, i, n) {
+                var a = cc.find("Canvas");
+                if (!a || !cc.isValid(a)) {
+                    console.error("------------ 弹窗打开失败，Canvas 已销毁 " + t);
+                    return;
+                }
+                cc.log("open view " + i);
+                var c = cc.instantiate(e);
+                if (!c || !cc.isValid(c)) {
+                    console.error("------------ 弹窗实例化失败 " + t);
+                    return;
+                }
                 // Prefab-root group indices are not reliably preserved when
                 // Creator 2.4 instantiates a prefab under Canvas on native.
                 // A default-group popup is then rendered by the moving world
                 // camera and can be covered/cropped by foreground scenery.
-                var c = cc.game.groupList ? cc.game.groupList.indexOf("ui") : 2;
-                c < 0 && (c = 2);
-                var l = function (t) {
-                    t.groupIndex = c;
-                    for (var e = 0; e < t.childrenCount; e++) l(t.children[e]);
+                var l = cc.game.groupList ? cc.game.groupList.indexOf("ui") : 2;
+                l < 0 && (l = 2);
+                var s = function (t) {
+                    t.groupIndex = l;
+                    for (var e = 0; e < t.childrenCount; e++) s(t.children[e]);
                 };
-                l(n);
-                this._popupMap[a] = {
-                    pop: n,
-                    prefab: o
+                s(c);
+                this._popupMap[t] = {
+                    pop: c,
+                    prefab: i
                 };
-                var s = n.getComponent(assetCatalog.default.componentName(a));
-                s && s.initData(e);
-                cc.find("Canvas").addChild(n);
-                n.on(cc.Node.EventType.TOUCH_END, function () {
-                    console.log("------ click popup " + a);
+                this._nodeKeyMap[c.name] = t;
+                var r = c.getComponent(assetCatalog.default.componentName(c.name));
+                r && r.initData(o);
+                a.addChild(c);
+                c.on(cc.Node.EventType.TOUCH_END, function () {
+                    console.log("------ click popup " + t);
                 }, this);
-                i && i(n);
+                n && n(c);
             };
             t.close = function (t) {
-                var e = this._popupMap[t];
-                if (e) {
-                    var o = e.pop;
-                    e.prefab;
-                    cc.log("close view " + t);
-                    delete this._popupMap[t];
-                    if (cc.isValid(o)) {
-                        var i = o.getComponent(assetCatalog.default.componentName(t));
-                        i.onClose && i.onClose();
-                        o.destroy();
+                var e = this._nodeKeyMap[t] || t;
+                delete this._pendingMap[t];
+                delete this._pendingMap[e];
+                var o = this._popupMap[e];
+                if (o) {
+                    var i = o.pop;
+                    o.prefab;
+                    cc.log("close view " + e);
+                    delete this._popupMap[e];
+                    if (cc.isValid(i)) {
+                        delete this._nodeKeyMap[i.name];
+                        var n = i.getComponent(assetCatalog.default.componentName(i.name));
+                        n && n.onClose && n.onClose();
+                        i.destroy();
                     }
-                    o = null;
+                    i = null;
                 }
             };
             t.hasOpenPopup = function () {
+                for (var t in this._pendingMap) if (this._pendingMap[t]) return !0;
                 for (var t in this._popupMap) {
                     var e = this._popupMap[t];
                     if (e && e.pop && cc.isValid(e.pop) && e.pop.activeInHierarchy) return !0;
@@ -67,6 +93,9 @@ Object.defineProperty(o, "__esModule", {
                 return !1;
             };
             t._popupMap = {};
+            t._pendingMap = {};
+            t._nodeKeyMap = {};
+            t._requestSeed = 0;
             return t;
         }();
         o.default = i;

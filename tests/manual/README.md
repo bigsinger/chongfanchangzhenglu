@@ -4,6 +4,10 @@
 `tests/manual/results/`，游戏检查点保存在应用私有目录
 `files/checkpoints/`，重新安装 `-r` 构建后仍可恢复。
 
+七张发布地图的机器清单保存在
+[`android-game/published-maps.json`](android-game/published-maps.json)，稳定性脚本和
+`npm run check:content` 共用该清单，历史编辑地图不会被误算为发布覆盖。
+
 ## 常用命令
 
 ```powershell
@@ -30,9 +34,14 @@
 
 # 轮换全部七张已发布地图执行后台/恢复/日志/内存稳定性检查
 .\tests\manual\android-game\game-test.ps1 stability -Name seven-map -Minutes 10
+
+# 构造缺少“红星报”的旧版 d3_3 存档，验证启动迁移后精确恢复一次
+.\tests\manual\android-game\game-test.ps1 oldsave -Name d3_3-legacy -WaitSeconds 12
 ```
 
 `inspect` 会先在本机生成压缩预览并执行 OCR，原始 ADB 截图不会上传。
+`oldsave` 和 `stability` 都会先保存当前数据库检查点，并在测试结束或失败后自动恢复，
+不会覆盖测试人员原有进度。
 
 ## 通关范围
 

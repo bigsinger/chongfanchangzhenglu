@@ -1,0 +1,44 @@
+[
+  {
+    "chapter": 1,
+    "map": 1,
+    "scene": "scenes_d1_1",
+    "title": "村庄主路"
+  },
+  {
+    "chapter": 1,
+    "map": 2,
+    "scene": "scenes_d1_2",
+    "title": "取水支路"
+  },
+  {
+    "chapter": 2,
+    "map": 1,
+    "scene": "scenes_d2_1",
+    "title": "战场主路"
+  },
+  {
+    "chapter": 2,
+    "map": 2,
+    "scene": "scenes_d2_2",
+    "title": "村屋水源"
+  },
+  {
+    "chapter": 3,
+    "map": 1,
+    "scene": "scenes_d3_1",
+    "title": "白石渡主路"
+  },
+  {
+    "chapter": 3,
+    "map": 2,
+    "scene": "scenes_d3_2",
+    "title": "医疗点"
+  },
+  {
+    "chapter": 3,
+    "map": 3,
+    "scene": "scenes_d3_3",
+    "title": "小学堂兑换点"
+  }
+]

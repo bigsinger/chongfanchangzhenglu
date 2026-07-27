@@ -104,7 +104,9 @@ APK/AAB 属于可重复生成的构建产物，不提交到 Git；本地最终 A
 - 世界空间的任务/物品引导卡片按新版原生视口缩放为 55%，避免遮挡附近的交互气泡。
 
 代码、章节体验、稳定性、性能及正式发布门槛的综合结论见
-[`docs/project/codebase-audit-2026-07-27.md`](docs/project/codebase-audit-2026-07-27.md)。
+[`docs/project/codebase-audit-2026-07-27.md`](docs/project/codebase-audit-2026-07-27.md)；
+第二轮专项审计、实施结果和剩余风险见
+[`docs/project/codebase-audit-followup-2026-07-27.md`](docs/project/codebase-audit-followup-2026-07-27.md)。
 
 ## 通关文档
 

@@ -166,11 +166,12 @@ var i = {
     update: function (t, e) {
         if (!t || !t.m_objectiveLabel) return;
         var o = this.describe(t, e);
-        t.m_objectiveLabel.string = "当前目标：" + o.objective;
+        var n = "当前目标：" + o.objective;
+        t.m_objectiveLabel.string !== n && (t.m_objectiveLabel.string = n);
         if (t.m_actionTargetNode && t.m_actionTargetLabel) {
             var i = !!(o.action && t.btn_user && t.btn_user.activeInHierarchy);
             t.m_actionTargetNode.active = i;
-            i && (t.m_actionTargetLabel.string = o.action);
+            i && t.m_actionTargetLabel.string !== o.action && (t.m_actionTargetLabel.string = o.action);
         }
     },
 

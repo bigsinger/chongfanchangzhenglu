@@ -13,7 +13,8 @@ param(
     [ValidatePattern('^[A-Z]$')]
     [string]$DriveLetter = 'S',
     [switch]$SkipGenerate,
-    [switch]$SkipNative
+    [switch]$SkipNative,
+    [switch]$AllowDirtySource
 )
 
 $ErrorActionPreference = 'Stop'
@@ -43,6 +44,12 @@ $runtimeSource = Join-Path $buildRoot 'frameworks\runtime-src'
 $androidProject = Join-Path $runtimeSource 'proj.android-studio'
 $packageName = 'com.game.longmarch.creator243'
 $expectedAbis = @('arm64-v8a', 'armeabi-v7a')
+$sourceCommit = (& git -C $projectRoot rev-parse HEAD).Trim()
+if ($LASTEXITCODE -ne 0) { throw '无法读取 Git 源码版本' }
+$sourceChanges = @(& git -C $projectRoot status --porcelain)
+if ($sourceChanges.Count -and -not $AllowDirtySource) {
+    throw '正式构建要求干净工作树；如仅做本地诊断可显式传入 -AllowDirtySource'
+}
 
 Assert-File -Path $CreatorPath -Description 'Cocos Creator 2.4.3'
 Assert-File -Path (Join-Path $JavaHome 'bin\java.exe') -Description 'JDK 17'
@@ -56,13 +63,12 @@ if ($javaVersion -notmatch 'version "(17|18|19|2[0-9])') {
     throw "正式构建要求 JDK 17+，当前：$javaVersion"
 }
 
-& npm test
-if ($LASTEXITCODE -ne 0) { throw '自动质量门禁失败' }
-
-& node (Join-Path $projectRoot 'tools\apply-runtime-fixes.js')
+& node (Join-Path $projectRoot 'tools\apply-runtime-fixes.js') --verify
 if ($LASTEXITCODE -ne 0) { throw '运行时代码验证失败' }
 & node (Join-Path $projectRoot 'tools\restore-original-resources.js') --verify
 if ($LASTEXITCODE -ne 0) { throw '资源 UUID 验证失败' }
+& npm test
+if ($LASTEXITCODE -ne 0) { throw '自动质量门禁失败' }
 
 if (-not $SkipGenerate) {
     $buildOptions = 'platform=android;template=link;debug=false;md5Cache=true;buildPath=' +
@@ -197,7 +203,7 @@ try {
 
     Push-Location ($drive + '\proj.android-studio')
     try {
-        & .\gradlew.bat --no-daemon clean :app:assembleRelease :app:bundleRelease
+        & .\gradlew.bat --no-daemon clean :app:lintRelease :app:assembleRelease :app:bundleRelease
         if ($LASTEXITCODE -ne 0) { throw "Gradle 正式构建失败：$LASTEXITCODE" }
     } finally {
         Pop-Location
@@ -235,6 +241,10 @@ if ($badging -notmatch "targetSdkVersion:'36'" -or
     $badging -notmatch "versionName='$([regex]::Escape($VersionName))'") {
     throw "APK 版本/API 验证失败：$badging"
 }
+$permissions = (& (Join-Path $buildTools 'aapt.exe') dump permissions $apk.FullName) -join "`n"
+if ($permissions -match 'uses-permission') {
+    throw "离线 APK 不应申请系统权限：$permissions"
+}
 
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 $archive = [IO.Compression.ZipFile]::OpenRead($apk.FullName)
@@ -257,8 +267,35 @@ $distAab = Join-Path $dist "chongfanchangzhenglu-$VersionName-$VersionCode-relea
 Copy-Item $apk.FullName $distApk -Force
 Copy-Item $aab.FullName $distAab -Force
 
+$generatedBundle = Get-ChildItem (Join-Path $buildRoot 'assets\main') -Filter 'index*.js' -File |
+    Sort-Object LastWriteTime -Descending | Select-Object -First 1
+Assert-File -Path $generatedBundle.FullName -Description 'Cocos 主代码包'
+$apkHash = (Get-FileHash $distApk -Algorithm SHA256).Hash
+$aabHash = (Get-FileHash $distAab -Algorithm SHA256).Hash
+$buildManifestPath = Join-Path $dist "chongfanchangzhenglu-$VersionName-$VersionCode-build-manifest.json"
+$buildManifest = [ordered]@{
+    schemaVersion = 1
+    builtAt = (Get-Date).ToUniversalTime().ToString('o')
+    gitCommit = $sourceCommit
+    dirtySource = [bool]$sourceChanges.Count
+    versionName = $VersionName
+    versionCode = $VersionCode
+    creator = '2.4.3'
+    gradle = '8.11.1'
+    agp = '8.9.2'
+    java = (($javaVersion -split "`n")[0]).Trim()
+    ndk = '20.1.5948944'
+    targetSdk = 36
+    abis = $actualAbis
+    bundleSha256 = (Get-FileHash $generatedBundle.FullName -Algorithm SHA256).Hash
+    apkSha256 = $apkHash
+    aabSha256 = $aabHash
+}
+Set-Utf8Text -Path $buildManifestPath -Text ($buildManifest | ConvertTo-Json -Depth 4)
+
 Write-Output "APK: $distApk"
 Write-Output "AAB: $distAab"
+Write-Output "Build manifest: $buildManifestPath"
 Write-Output "ABIs: $($actualAbis -join ', ')"
-Write-Output "APK SHA256: $((Get-FileHash $distApk -Algorithm SHA256).Hash)"
-Write-Output "AAB SHA256: $((Get-FileHash $distAab -Algorithm SHA256).Hash)"
+Write-Output "APK SHA256: $apkHash"
+Write-Output "AAB SHA256: $aabHash"

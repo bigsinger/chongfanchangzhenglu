@@ -34,6 +34,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     e.cloudArr2 = [];
                     e.cloudArr3 = [];
                     e.nodeLength = 2e3;
+                    e.m_cloudInitialized = !1;
                     return e;
                 }
                 e.prototype.start = function () {
@@ -43,6 +44,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     this.createCloudArr(1, 5);
                     this.createCloudArr(2, 4);
                     this.createCloudArr(3, 3);
+                    this.m_cloudInitialized = !0;
                     this.schedule(this.cloudAct, 1 / 30);
                 };
                 e.prototype.createCloudArr = function (t, e) {
@@ -71,63 +73,42 @@ var i, n = this && this.__extends || (i = function (t, e) {
                         this.node.addChild(i);
                     }
                 };
-                e.prototype.addCloud = function (t) {
-                    var e = new cc.Node(), o = e.addComponent(cc.Sprite);
-                    s.default.setSpriteFrame(o, "gk/scenes_public/cloud/cloud_" + t + "_" + s.default.mt_rand(1, 3));
+                e.prototype.resetCloud = function (t, e) {
                     e.x = this.nodeLength / 2 + s.default.mt_rand(-80, 80);
                     switch (t) {
                         case 1:
                             e.y = s.default.mt_rand(-70, -20);
-                            e.zIndex = 3;
-                            this.cloudArr1.push(e);
                             break;
 
                         case 2:
                             e.y = s.default.mt_rand(-150, -90);
-                            e.zIndex = 2;
-                            this.cloudArr2.push(e);
                             break;
 
                         case 3:
                             e.y = s.default.mt_rand(-200, -150);
-                            e.zIndex = 1;
-                            this.cloudArr3.push(e);
                     }
-                    this.node.addChild(e);
                 };
                 e.prototype.cloudAct = function () {
                     var o = Math.min(arguments[0] || 1 / 30, .1) * 60;
-                    for (var t in this.cloudArr1) {
+                    for (var t = 0; t < this.cloudArr1.length; t++) {
                         (e = this.cloudArr1[t]).x -= .16 * o;
-                        if (e.x < -this.nodeLength / 2) {
-                            e.removeFromParent();
-                            this.cloudArr1.splice(Number(t), 1);
-                            this.addCloud(1);
-                            break;
-                        }
+                        e.x < -this.nodeLength / 2 && this.resetCloud(1, e);
                     }
-                    for (var t in this.cloudArr2) {
+                    for (var t = 0; t < this.cloudArr2.length; t++) {
                         (e = this.cloudArr2[t]).x -= .1 * o;
-                        if (e.x < -this.nodeLength / 2) {
-                            e.removeFromParent();
-                            this.cloudArr2.splice(Number(t), 1);
-                            this.addCloud(2);
-                            break;
-                        }
+                        e.x < -this.nodeLength / 2 && this.resetCloud(2, e);
                     }
-                    for (var t in this.cloudArr3) {
+                    for (var t = 0; t < this.cloudArr3.length; t++) {
                         var e;
                         (e = this.cloudArr3[t]).x -= .07 * o;
-                        if (e.x < -this.nodeLength / 2) {
-                            e.removeFromParent();
-                            this.cloudArr3.splice(Number(t), 1);
-                            this.addCloud(3);
-                            break;
-                        }
+                        e.x < -this.nodeLength / 2 && this.resetCloud(3, e);
                     }
                 };
+                e.prototype.onEnable = function () {
+                    this.m_cloudInitialized && this.schedule(this.cloudAct, 1 / 30);
+                };
                 e.prototype.onDisable = function () {
-                    this.unscheduleAllCallbacks();
+                    this.unschedule(this.cloudAct);
                 };
                 return a([c], e);
             }(cc.Component));

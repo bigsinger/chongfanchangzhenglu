@@ -33,19 +33,82 @@ var i = {
         "67|2": ""
     }
 }, n = {
-    repairScene: function (t, e) {
-        var o = i[t], n = 0;
-        if (!o || !e || !Array.isArray(e.confArr)) return n;
-        for (var a = 0; a < e.confArr.length; a++) {
-            var s = e.confArr[a], r = s.eventTrigger || [];
-            for (var c = 0; c < r.length; c++) {
-                var l = s.index + "|" + r[c].index;
-                Object.prototype.hasOwnProperty.call(o, l) && r[c].next !== o[l] && (r[c].next = o[l], n++);
+    scenes_d3_3: [{
+        // prop113 existed in the recovered catalogue and chapter total but was
+        // never placed in a published map. Put the original Red Star Newspaper
+        // collectible on the route through the school/exchange area so the
+        // advertised third-section 5/5 completion is actually attainable.
+        name: "收藏品-红星报",
+        url: "item/items/item3",
+        key: "collection",
+        eventPre: null,
+        eventTrigger: [{
+            index: 1,
+            key: "5",
+            param: "prop113",
+            next: "",
+            isLoop: !1,
+            trigger: "6",
+            last: 0,
+            delay: 0,
+            isWait: !0,
+            specialParam: "",
+            isNoAct: !1
+        }],
+        index: 26,
+        x: -250,
+        y: -145,
+        z: 190,
+        sx: .7,
+        sy: .7,
+        r: 0,
+        box: {
+            width: 91,
+            height: 84,
+            x: 0,
+            y: -20
+        },
+        button: {
+            x: 0,
+            y: 0
+        },
+        isClimb: !1,
+        isLoop: !1,
+        isOb: !1,
+        isDrag: !1,
+        ani: "13",
+        lockCount: 0,
+        isLock: !1,
+        isHide: !1,
+        guide: "",
+        width: 91,
+        height: 84,
+        color: ""
+    }]
+}, a = {
+    repairScene: function (t, e, o) {
+        var a = i[t], s = n[t], r = 0;
+        if (!e || !Array.isArray(e.confArr)) return r;
+        if (a) for (var c = 0; c < e.confArr.length; c++) {
+            var l = e.confArr[c], h = l.eventTrigger || [];
+            for (var d = 0; d < h.length; d++) {
+                var p = l.index + "|" + h[d].index;
+                Object.prototype.hasOwnProperty.call(a, p) && h[d].next !== a[p] && (h[d].next = a[p], r++);
             }
         }
-        return n;
+        if (s) for (var u = 0; u < s.length; u++) {
+            for (var m = s[u], _ = m.eventTrigger[0].param, f = !1, g = 0; g < e.confArr.length && !f; g++) {
+                var y = e.confArr[g], v = y.eventTrigger || [];
+                for (var b = 0; b < v.length; b++) v[b].param === _ && (f = !0);
+            }
+            // Saved item arrays intentionally remove collected props. Do not
+            // reinsert a compatibility placement after permanent collection.
+            f || o && o[_] || (e.confArr.push(JSON.parse(JSON.stringify(m))), r++);
+        }
+        return r;
     },
-    repairs: i
+    repairs: i,
+    placements: n
 };
 
-o.default = n;
+o.default = a;

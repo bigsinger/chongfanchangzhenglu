@@ -15,8 +15,17 @@ var i = {
     SCHEMA_VERSION: 2,
     CURRENT_KEY: "longmarch_save_v2_current",
     PREVIOUS_KEY: "longmarch_save_v2_previous",
+    PUBLISHED_MAP_COUNTS: {
+        1: 2,
+        2: 2,
+        3: 3
+    },
+    MAX_UNLOCKED_CHAPTER: 2,
     _commitTimer: null,
     _lastReason: "",
+    _lifecycleInstalled: !1,
+    _lifecycleState: null,
+    _onAppHide: null,
 
     parseJSON: function (t, e) {
         if (null == t || "" === t) return e;
@@ -34,6 +43,36 @@ var i = {
         } catch (o) {
             return e;
         }
+    },
+
+    writeIfChanged: function (t, e) {
+        var o = String(e);
+        cc.sys.localStorage.getItem(t) !== o && cc.sys.localStorage.setItem(t, e);
+    },
+
+    removeIfPresent: function (t) {
+        null != cc.sys.localStorage.getItem(t) && cc.sys.localStorage.removeItem(t);
+    },
+
+    isPlainObject: function (t) {
+        return !!t && "object" == typeof t && !Array.isArray(t);
+    },
+
+    isPublishedLocation: function (t, e) {
+        t = Number(t);
+        e = Number(e);
+        return Number.isFinite(t) && Number.isFinite(e) && Math.floor(t) === t && Math.floor(e) === e && !!this.PUBLISHED_MAP_COUNTS[t] && e >= 1 && e <= this.PUBLISHED_MAP_COUNTS[t];
+    },
+
+    normalizePlayData: function (t, e) {
+        var o = this.isPlainObject(t) ? t : this.clone(e, {});
+        this.isPlainObject(o) || (o = {});
+        this.isPlainObject(o.itemData) || (o.itemData = {});
+        Array.isArray(o.storyData) || (o.storyData = []);
+        Array.isArray(o.gametips) || (o.gametips = []);
+        Number.isFinite(Number(o.chapterCur)) && Number(o.chapterCur) >= 1 ? o.chapterCur = Math.min(3, Math.floor(Number(o.chapterCur))) : o.chapterCur = 1;
+        Number.isFinite(Number(o.unlockchapters)) && Number(o.unlockchapters) >= 0 ? o.unlockchapters = Math.min(this.MAX_UNLOCKED_CHAPTER, Math.floor(Number(o.unlockchapters))) : o.unlockchapters = 0;
+        return o;
     },
 
     checksum: function (t) {
@@ -54,22 +93,42 @@ var i = {
 
     readState: function (t) {
         var e = this.parseJSON(cc.sys.localStorage.getItem("longmarch"), null);
-        e && "object" == typeof e && !Array.isArray(e) || (e = this.clone(t, {}));
+        e = this.normalizePlayData(e, t);
+        var o = this.readNumber("chapter", Number(e.chapter) || 1, 1), i = this.readNumber("mapIndex", Number(e.mapIndex) || 1, 1);
+        this.isPublishedLocation(o, i) || (o = 1, i = 1);
+        e.chapter = o;
+        e.mapIndex = i;
+        var c = Math.min(this.MAX_UNLOCKED_CHAPTER, this.readNumber("unlockchapters", Number(e.unlockchapters) || 0, 0));
+        e.unlockchapters = c;
+        var n = this.parseJSON(cc.sys.localStorage.getItem("tempData"), {}), a = this.parseJSON(cc.sys.localStorage.getItem("cross"), null), s = this.parseJSON(cc.sys.localStorage.getItem("heroItem"), null), r = this.parseJSON(cc.sys.localStorage.getItem("heroFollow"), null);
+        this.isPlainObject(n) || (n = {});
+        null == a || Array.isArray(a) || (a = null);
+        null == s || this.isPlainObject(s) || (s = null);
+        null == r || this.isPlainObject(r) || (r = null);
         return {
             playData: e,
-            tempData: this.parseJSON(cc.sys.localStorage.getItem("tempData"), {}),
-            cross: this.parseJSON(cc.sys.localStorage.getItem("cross"), null),
-            heroItem: this.parseJSON(cc.sys.localStorage.getItem("heroItem"), null),
-            heroFollow: this.parseJSON(cc.sys.localStorage.getItem("heroFollow"), null),
+            tempData: n,
+            cross: a,
+            heroItem: s,
+            heroFollow: r,
             heroSpine: cc.sys.localStorage.getItem("heroSpine") || null,
-            chapter: this.readNumber("chapter", Number(e.chapter) || 1, 1),
-            mapIndex: this.readNumber("mapIndex", Number(e.mapIndex) || 1, 1),
-            unlockchapters: this.readNumber("unlockchapters", Number(e.unlockchapters) || 0, 0)
+            chapter: o,
+            mapIndex: i,
+            unlockchapters: c
         };
     },
 
+    isStateValid: function (t) {
+        if (!this.isPlainObject(t) || !this.isPlainObject(t.playData) || !this.isPlainObject(t.tempData)) return !1;
+        if (!this.isPlainObject(t.playData.itemData) || !Array.isArray(t.playData.storyData) || !Array.isArray(t.playData.gametips)) return !1;
+        if (null != t.cross && !Array.isArray(t.cross) || null != t.heroItem && !this.isPlainObject(t.heroItem) || null != t.heroFollow && !this.isPlainObject(t.heroFollow)) return !1;
+        if (null != t.heroSpine && "string" != typeof t.heroSpine || !this.isPublishedLocation(t.chapter, t.mapIndex)) return !1;
+        if (Number(t.playData.chapter) !== Number(t.chapter) || Number(t.playData.mapIndex) !== Number(t.mapIndex) || Number(t.playData.unlockchapters) !== Number(t.unlockchapters)) return !1;
+        return Number.isFinite(Number(t.unlockchapters)) && Number(t.unlockchapters) >= 0 && Number(t.unlockchapters) <= this.MAX_UNLOCKED_CHAPTER;
+    },
+
     isValid: function (t) {
-        if (!t || Number(t.schemaVersion) !== this.SCHEMA_VERSION || !t.state || "object" != typeof t.state) return !1;
+        if (!t || Number(t.schemaVersion) !== this.SCHEMA_VERSION || !this.isStateValid(t.state)) return !1;
         return t.checksum === this.checksum(JSON.stringify(t.state)) && Number.isFinite(Number(t.revision)) && Number(t.revision) >= 1;
     },
 
@@ -84,17 +143,17 @@ var i = {
     },
 
     writeLegacy: function (t) {
-        if (!t || "object" != typeof t) return;
-        var e = t.playData && "object" == typeof t.playData ? t.playData : {};
-        cc.sys.localStorage.setItem("longmarch", JSON.stringify(e));
-        cc.sys.localStorage.setItem("tempData", JSON.stringify(t.tempData && "object" == typeof t.tempData ? t.tempData : {}));
-        cc.sys.localStorage.setItem("cross", JSON.stringify(null == t.cross ? null : t.cross));
-        cc.sys.localStorage.setItem("heroItem", JSON.stringify(null == t.heroItem ? null : t.heroItem));
-        cc.sys.localStorage.setItem("heroFollow", JSON.stringify(null == t.heroFollow ? null : t.heroFollow));
-        null == t.heroSpine || "" === t.heroSpine ? cc.sys.localStorage.removeItem("heroSpine") : cc.sys.localStorage.setItem("heroSpine", t.heroSpine);
-        cc.sys.localStorage.setItem("chapter", Number(t.chapter) || 1);
-        cc.sys.localStorage.setItem("mapIndex", Number(t.mapIndex) || 1);
-        cc.sys.localStorage.setItem("unlockchapters", Math.max(0, Number(t.unlockchapters) || 0));
+        if (!this.isStateValid(t)) return;
+        var e = t.playData;
+        this.writeIfChanged("longmarch", JSON.stringify(e));
+        this.writeIfChanged("tempData", JSON.stringify(t.tempData && "object" == typeof t.tempData ? t.tempData : {}));
+        this.writeIfChanged("cross", JSON.stringify(null == t.cross ? null : t.cross));
+        this.writeIfChanged("heroItem", JSON.stringify(null == t.heroItem ? null : t.heroItem));
+        this.writeIfChanged("heroFollow", JSON.stringify(null == t.heroFollow ? null : t.heroFollow));
+        null == t.heroSpine || "" === t.heroSpine ? this.removeIfPresent("heroSpine") : this.writeIfChanged("heroSpine", t.heroSpine);
+        this.writeIfChanged("chapter", Number(t.chapter) || 1);
+        this.writeIfChanged("mapIndex", Number(t.mapIndex) || 1);
+        this.writeIfChanged("unlockchapters", Math.max(0, Number(t.unlockchapters) || 0));
     },
 
     restoreOrMigrate: function (t, e) {
@@ -145,6 +204,18 @@ var i = {
             o._commitTimer = null;
             o.commit(o._lastReason, e);
         }, 0));
+    },
+
+    installLifecycle: function (t) {
+        this._lifecycleState = t || this._lifecycleState;
+        if (this._lifecycleInstalled || !cc.game || !cc.game.on) return;
+        var e = this;
+        this._onAppHide = function () {
+            var t = e._lifecycleState && e._lifecycleState.playData || {};
+            e.flush("app-hide", t);
+        };
+        cc.game.on(cc.game.EVENT_HIDE, this._onAppHide, this);
+        this._lifecycleInstalled = !0;
     },
 
     flush: function (t, e) {

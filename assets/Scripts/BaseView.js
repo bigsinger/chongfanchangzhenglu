@@ -63,19 +63,24 @@ var i, n = this && this.__extends || (i = function (t, e) {
             };
             e.prototype.createPrefab = function (t, e) {
                 void 0 === e && (e = null);
-                l.default.load("prefab/" + t, cc.Prefab, function (t, o) {
+                var o = this.node;
+                l.default.load("prefab/" + t, cc.Prefab, function (t, i) {
                     if (t) {
                         console.log("--- err", t);
                         if (!e) return null;
                         e(null);
                         return;
                     }
-                    e && e(cc.instantiate(o));
+                    if (!o || !cc.isValid(o, !0) || !i) {
+                        e && e(null);
+                        return;
+                    }
+                    e && e(cc.instantiate(i));
                 });
             };
             e.prototype.setSpriteFrame = function (t, e) {
                 l.default.load(e, cc.SpriteFrame, function (e, o) {
-                    e || (t.spriteFrame = o);
+                    e || t && cc.isValid(t, !0) && (t.spriteFrame = o);
                 });
             };
             e.prototype.addClickEvent = function (t, e, o, i, n) {

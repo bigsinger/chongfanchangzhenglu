@@ -28,7 +28,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
             }
             e.setSpriteFrame = function (t, e) {
                 r.default.load(e, cc.SpriteFrame, function (e, o) {
-                    e || (t.spriteFrame = o);
+                    e || t && cc.isValid(t, !0) && (t.spriteFrame = o);
                 });
             };
             e.createPrefab = function (t, e) {
@@ -37,8 +37,9 @@ var i, n = this && this.__extends || (i = function (t, e) {
                         console.log("--- err", t);
                         if (!e) return null;
                         e(null);
+                        return;
                     }
-                    e && e(cc.instantiate(o));
+                    e && e(o ? cc.instantiate(o) : null);
                 });
             };
             e.fadeAct = function (t, e) {

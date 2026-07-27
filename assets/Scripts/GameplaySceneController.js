@@ -107,7 +107,6 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 e.m_MiniY = 3e3;
                 e.m_MaxZindex = 999;
                 e.m_isTimeTouch = 0;
-                e.dropCount = 0;
                 e.initCameraData = null;
                 e.m_moveSavePending = !1;
                 e.m_moveSaveFrames = 0;
@@ -120,6 +119,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 e.m_actionTargetNode = null;
                 e.m_actionTargetLabel = null;
                 e.m_onGameHide = null;
+                e.m_onGameShow = null;
                 e.m_canvasNode = null;
                 e.m_canvasTouchStart = null;
                 e.m_isRestoredScene = !1;
@@ -127,6 +127,10 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 e.m_touchProximityActive = {};
                 e.m_lastParallaxX = null;
                 e.m_lastParallaxY = null;
+                e.m_cameraTrackPosition = {
+                    x: 0,
+                    y: 0
+                };
                 e.m_partSpriteFrame = null;
                 e.cameraCurScale = 1;
                 e.layer_ex = null;
@@ -163,6 +167,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 // before the process was reclaimed.
                 var t = this;
                 this.m_onGameHide = function () {
+                    t.resetActiveInput();
                     if (t.m_gameReady && t.hero && t.gameNode && t.mapName) {
                         t.saveItemConf({
                             x: t.hero.x,
@@ -172,8 +177,13 @@ var i, n = this && this.__extends || (i = function (t, e) {
                         t.m_moveSavePending = !1;
                         console.log("------------ 应用进入后台，游戏进度已保存");
                     }
+                    v.default.flush("gameplay-hide", c.default.playData);
+                };
+                this.m_onGameShow = function () {
+                    t.resetActiveInput();
                 };
                 cc.game.on(cc.game.EVENT_HIDE, this.m_onGameHide, this);
+                cc.game.on(cc.game.EVENT_SHOW, this.m_onGameShow, this);
             };
             e.prototype.start = function () {
                 var t = this;
@@ -435,6 +445,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 this.m_progressSavePending = !1;
                 this.m_progressSaveFrames = 0;
                 this.operateDir = 0;
+                u.default.resetTransientState();
                 this.itemMap = {};
                 this.gameNode.removeAllChildren();
                 this.gameNode.removeFromParent();
@@ -691,7 +702,6 @@ var i, n = this && this.__extends || (i = function (t, e) {
             e.prototype.setSpecialMode = function (t) {
                 this.specialMode = t;
             };
-            e.prototype.checkCollision = function () { };
             e.prototype.resumeInterruptedDelayedEvents = function () {
                 if (!this.itemMap) return;
                 var t = {}, e = [], o = {};
@@ -805,21 +815,19 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 // a freely controlled hero to walk out to the edge of the
                 // viewport: once the horizontal safe area is exceeded, resume
                 // normal tracking automatically.
+                if (!this.hero) {
+                    this.alignLayer();
+                    return;
+                }
+                var t = this.m_cameraTrackPosition;
+                t.x = this.hero.x;
+                t.y = this.hero.y + 275;
                 if (!this.isLockCamera && !this.isCheck && this.hero && Math.abs(this.hero.x - this.camera_master.node.x) > .28 * this.gameWidth) {
                     this.isLockCamera = !0;
-                    this.camera_master_ts.restoreHeroTracking({
-                        x: this.hero.x,
-                        y: this.hero.y + 275
-                    });
+                    this.camera_master_ts.restoreHeroTracking(t);
                     console.log("------------ 人物超出镜头安全区，已恢复跟随");
                 }
-                if (this.isLockCamera) {
-                    var t = this.hero.getPosition();
-                    this.camera_master_ts.trackPosAct({
-                        x: t.x,
-                        y: t.y + 275
-                    });
-                }
+                this.isLockCamera && this.camera_master_ts.trackPosAct(t);
                 this.alignLayer();
             };
             e.prototype.directionForKey = function (t) {
@@ -1096,6 +1104,10 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 this.m_globalTouchListener = null;
                 this.m_onGameHide && cc.game.off(cc.game.EVENT_HIDE, this.m_onGameHide, this);
                 this.m_onGameHide = null;
+                this.m_onGameShow && cc.game.off(cc.game.EVENT_SHOW, this.m_onGameShow, this);
+                this.m_onGameShow = null;
+                u.default.resetTransientState();
+                l.default.stopSceneSounds();
                 w.default.destroy(this);
                 // Cocos invokes component onDestroy after its node hierarchy has
                 // started teardown. Serialized child references can therefore
@@ -1138,23 +1150,49 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     this.dirEndCall(this.operateDir);
                 }
             };
+            e.prototype.resetActiveInput = function () {
+                var t = this.operateDir;
+                this.keyDirections = {};
+                this.keyDirection = 0;
+                this.nPos = null;
+                this.m_touchState = 0;
+                this.isGesture = !1;
+                this.isToucheLong = 0;
+                this.m_tochDir = 0;
+                this.operateDir = 0;
+                if (this.node_control) {
+                    this.node_control.active = !1;
+                    this.btn_control && (this.btn_control.x = 0);
+                    this.pan_control && (this.pan_control.angle = 0);
+                    this.btn_light && (this.btn_light.active = !1);
+                    this.controlAngle = 999;
+                }
+                if (this.hero_ts) if (t == this.DIR_UP || t == this.DIR_DOWN) {
+                    this.hero_ts.targetY = null;
+                    this.hero_ts.stopMoveLadder();
+                } else {
+                    this.hero_ts.targetX = null;
+                    this.hero_ts.stopMove();
+                }
+            };
             e.prototype.scanTouchProximity = function () {
                 if (!this.hero || !this.itemMap || this.isCheck || this.gameOperate || d.default.hasOpenPopup && d.default.hasOpenPopup()) return;
-                var t = {}, e = 320 * 320;
-                for (var o in this.itemMap) {
-                    var i = this.itemMap[o], n = i && i.activeInHierarchy && i.getComponent("InteractiveObject");
-                    if (n && n.itemConf && !(n.itemConf.lockCount > 0) && n.eventArr) {
-                        for (var a = null, s = 0; s < n.eventArr.length; s++) if (!n.eventArr[s].isFinish) {
-                            a = n.eventArr[s];
+                var t = {}, e = 320 * 320, o = 520 * 520, i = [];
+                for (var n in this.itemMap) {
+                    var a = this.itemMap[n], s = a && a.activeInHierarchy && a.getComponent("InteractiveObject");
+                    if (s && s.itemConf && !(s.itemConf.lockCount > 0) && s.eventArr) {
+                        var r = a.x - this.hero.x, l = a.y - this.hero.y, h = r * r + l * l;
+                        h <= o && i.push(a);
+                        for (var p = null, m = 0; m < s.eventArr.length; m++) if (!s.eventArr[m].isFinish) {
+                            p = s.eventArr[m];
                             break;
                         }
-                        if (a && Number(a.key) <= 1e3 && Number(a.trigger) == c.default.OP_TOUCH) {
-                            var r = i.x - this.hero.x, l = i.y - this.hero.y;
-                            if (r * r + l * l <= e) {
-                                t[o] = !0;
-                                if (!this.m_touchProximityActive[o]) {
-                                    console.log("------------ 近场补偿触发剧情物 " + o);
-                                    u.default.triggerEvent(i, c.default.OP_TOUCH);
+                        if (p && Number(p.key) <= 1e3 && Number(p.trigger) == c.default.OP_TOUCH) {
+                            if (h <= e) {
+                                t[n] = !0;
+                                if (!this.m_touchProximityActive[n]) {
+                                    console.log("------------ 近场补偿触发剧情物 " + n);
+                                    u.default.triggerEvent(a, c.default.OP_TOUCH);
                                 }
                             }
                         }
@@ -1167,10 +1205,9 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 // units above the hero's feet).  selectClosestItem uses a
                 // bounded manual-operation search and picks one deterministic
                 // target.
-                u.default.selectClosestItem();
+                u.default.selectClosestItem(i);
             };
             e.prototype.upGame = function () {
-                this.checkEnemy();
                 this.m_isTimeTouch++;
                 36e3 == this.m_isTimeTouch && this.passBack();
                 this.btnShield > 0 && this.btnShield--;
@@ -1178,7 +1215,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     this.m_touchProximityFrame = 0;
                     this.scanTouchProximity();
                 }
-                if (++this.m_objectiveFrame >= 15) {
+                if (++this.m_objectiveFrame >= 30) {
                     this.m_objectiveFrame = 0;
                     w.default.update(this, u.default);
                 }
@@ -1223,12 +1260,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                         console.log("------------ 交互进度已自动存档");
                     }
                 } else this.m_progressSavePending && (this.m_progressSaveFrames = 0);
-                if (this.dropCount > 0) {
-                    this.dropCount--;
-                    1 == this.dropCount && u.default.checkDrop();
-                }
                 if (!(this.isCheck || this.btnShield > 20)) {
-                    this.operateDir;
                     if (this.texture_sp.node.parent.parent.active) {
                         this.cameraIndex % 3 == 0 && this.setCamera_part();
                         this.cameraIndex++;
@@ -1561,7 +1593,6 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     this.operateDir = 0;
                     this.hero_ts.stopMove();
                     this.isToucheLong = 1;
-                    this.hero_ts.isRight;
                     this.updateLine(1);
                     this.hero_ts.setState(c.default.HERO_TOUZI);
                 }
@@ -1573,9 +1604,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     u.default.analysisEvent(this.interactMod);
                 }
             };
-            e.prototype.endBack = function () {
-                this.isCheck;
-            };
+            e.prototype.endBack = function () { };
             e.prototype.startClimbBack = function () {
                 if (d.default.hasOpenPopup && d.default.hasOpenPopup()) return;
                 if (!(this.isCheck || this.btnShield > 0)) {
@@ -1890,7 +1919,6 @@ var i, n = this && this.__extends || (i = function (t, e) {
             e.prototype.addEnemy = function (t, e) {
                 this.enemyMap[e] = t;
             };
-            e.prototype.checkEnemy = function () { };
             e.prototype.setLayer_Ex = function (t) {
                 void 0 === t && (t = -1);
                 var e = this.gameNode.getChildByName("node_master");

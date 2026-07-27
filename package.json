@@ -5,10 +5,11 @@
   "description": "重返长征路 Cocos Creator 2.4.3 迁移与质量验证",
   "scripts": {
     "check:syntax": "node tools/check-syntax.js",
-    "check:config": "node tools/validate-game-config.js",
+    "check:config": "node tools/validate-game-config.js --max-warnings=440",
+    "check:content": "node tools/verify-published-content.js",
     "check:contracts": "node tools/verify-gameplay-contracts.js",
     "check:naming": "node tools/apply-readable-names.js --verify",
     "check:textures": "node tools/verify-texture-budget.js",
-    "test": "npm run check:syntax && npm run check:config && npm run check:contracts && npm run check:naming && npm run check:textures"
+    "test": "npm run check:syntax && npm run check:config && npm run check:content && npm run check:contracts && npm run check:naming && npm run check:textures"
   }
 }

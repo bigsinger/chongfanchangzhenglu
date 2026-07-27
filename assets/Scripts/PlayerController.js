@@ -81,7 +81,6 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     var e = t.heroConf.heroface;
                     e && "" != e && t.setSwitchHead(e);
                 });
-                this.setGoSound();
                 this.schedule(this.moveAct, 0);
             };
             e.prototype.setControl = function (t) {
@@ -140,7 +139,6 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     this.m_dragonBones.setAction(t, e, o || 1);
                 } else console.log("setPlay==参数错误");
             };
-            e.prototype.setGoSound = function () { };
             e.prototype.setState = function (t, e) {
                 var o = this;
                 void 0 === e && (e = null);
@@ -493,7 +491,6 @@ var i, n = this && this.__extends || (i = function (t, e) {
                         this.turnType || ("right" == this.lockDir ? this.isRight = !0 : "left" == this.lockDir ? this.isRight = !1 : this.isRight = t);
                         var e;
                         this.turnType ? 1 == this.turnType ? e = s.default.HERO_TURN : 2 == this.turnType && (e = s.default.HERO_TURN2) : e = this.goCount <= 0 ? 2 == this.goType ? s.default.HERO_BZ : 1 == this.goType ? s.default.HERO_WALk : this.goWay : s.default.HERO_START;
-                        this.isDrop;
                         if (this.hero_state == s.default.EMBARK && this.m_carrier) {
                             var o = this.m_specialSpeed ? this.m_specialSpeed : this.goSpeed;
                             this.node.x += t ? o : -o;

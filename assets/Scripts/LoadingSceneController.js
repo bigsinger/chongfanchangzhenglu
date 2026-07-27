@@ -48,6 +48,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
             }
             e.prototype.onLoad = function () {
                 b.default.install();
+                v.default.installLifecycle(c.default);
                 var t = this, e = v.default.restoreOrMigrate(c.default.playData, "gameScene" == cc.sys.localStorage.getItem("codex_direct_scene")), o = c.default.playData;
                 if (e && "object" == typeof e && !Array.isArray(e)) {
                     for (var i in o) null == e[i] && (e[i] = o[i]);
