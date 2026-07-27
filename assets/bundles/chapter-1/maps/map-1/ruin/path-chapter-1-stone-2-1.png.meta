@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.5",
+  "ver": "2.3.7",
   "uuid": "b413f688-dbd8-4819-87ff-25aeac0ef482",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "path-chapter-1-stone-2-1": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "710d45a5-2634-495e-b0e7-4abd5aa95624",
+      "importer": "sprite-frame",
       "rawTextureUuid": "b413f688-dbd8-4819-87ff-25aeac0ef482",
       "trimType": "auto",
       "trimThreshold": 1,

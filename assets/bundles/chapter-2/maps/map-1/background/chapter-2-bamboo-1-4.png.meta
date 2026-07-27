@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.5",
+  "ver": "2.3.7",
   "uuid": "fbd7058e-49e6-4371-8c8c-d3e353793d0c",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "chapter-2-bamboo-1-4": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "221c90a3-9f37-471a-83b8-2f10c595ae5d",
+      "importer": "sprite-frame",
       "rawTextureUuid": "fbd7058e-49e6-4371-8c8c-d3e353793d0c",
       "trimType": "auto",
       "trimThreshold": 1,

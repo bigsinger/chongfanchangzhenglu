@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.5",
+  "ver": "2.3.7",
   "uuid": "af7fa91e-235d-4057-87d5-b984d8f35a51",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "foreground-chapter-1-gravel-4-2": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "fdb35063-6976-415f-ba0d-6876196c2275",
+      "importer": "sprite-frame",
       "rawTextureUuid": "af7fa91e-235d-4057-87d5-b984d8f35a51",
       "trimType": "auto",
       "trimThreshold": 1,

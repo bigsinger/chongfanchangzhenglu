@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.5",
+  "ver": "2.3.7",
   "uuid": "258fef8c-a37e-4958-8be2-4ea18754cfb6",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "houses-light-1-1": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "e644ae6b-74ad-4bb8-a1c1-54f58822fc5e",
+      "importer": "sprite-frame",
       "rawTextureUuid": "258fef8c-a37e-4958-8be2-4ea18754cfb6",
       "trimType": "auto",
       "trimThreshold": 1,

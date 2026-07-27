@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.5",
+  "ver": "2.3.7",
   "uuid": "50812893-07c6-4ade-8fb1-daa5dd499e0c",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "foreground-chapter-1-houses-1-1": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "28910223-7be1-457a-8fc2-4758e9051d39",
+      "importer": "sprite-frame",
       "rawTextureUuid": "50812893-07c6-4ade-8fb1-daa5dd499e0c",
       "trimType": "auto",
       "trimThreshold": 1,

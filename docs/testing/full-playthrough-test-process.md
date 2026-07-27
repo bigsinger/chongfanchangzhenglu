@@ -58,7 +58,7 @@
 
 ### 3.1 固定工具
 
-- Cocos Creator：`E:\temp\CocosCreator-2.4.3\CocosCreator.exe`
+- Cocos Creator：`E:\temp\CocosCreator-2.4.15\CocosCreator.exe`
 - ADB：`D:\Android\Sdk\platform-tools\adb.exe`
 - 默认设备：`emulator-5554`
 - 调试 APK：`dist\chongfanchangzhenglu-armv7-arm64-debug.apk`

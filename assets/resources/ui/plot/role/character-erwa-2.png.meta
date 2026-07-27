@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.5",
+  "ver": "2.3.7",
   "uuid": "9081682f-1c17-4c68-8bb0-1bad1501c66d",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "character-erwa-2": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "65a0b0cd-e367-4557-8743-0407cc07dc23",
+      "importer": "sprite-frame",
       "rawTextureUuid": "9081682f-1c17-4c68-8bb0-1bad1501c66d",
       "trimType": "auto",
       "trimThreshold": 1,

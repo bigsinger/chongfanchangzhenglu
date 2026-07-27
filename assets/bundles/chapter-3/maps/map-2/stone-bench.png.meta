@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.5",
+  "ver": "2.3.7",
   "uuid": "2d6db5fe-b1ea-4fba-8d41-4e20a5472921",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "stone-bench": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "e25b7f51-c45b-413c-8b40-63fa5660f278",
+      "importer": "sprite-frame",
       "rawTextureUuid": "2d6db5fe-b1ea-4fba-8d41-4e20a5472921",
       "trimType": "auto",
       "trimThreshold": 1,

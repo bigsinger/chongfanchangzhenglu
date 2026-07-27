@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.5",
+  "ver": "2.3.7",
   "uuid": "fd9c050e-182e-4e74-825a-dbccd0fccb37",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "character-yihan": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "6b05b6aa-0bdf-44ce-b287-d7bc7ddd9e8f",
+      "importer": "sprite-frame",
       "rawTextureUuid": "fd9c050e-182e-4e74-825a-dbccd0fccb37",
       "trimType": "auto",
       "trimThreshold": 1,

@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.5",
+  "ver": "2.3.7",
   "uuid": "935a1a13-ea17-4fee-8fd9-33fbab67e2fe",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "path-chapter-1-stonebridge-1-2": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "06f2cb19-038e-4c91-88c7-f093ce5efa5f",
+      "importer": "sprite-frame",
       "rawTextureUuid": "935a1a13-ea17-4fee-8fd9-33fbab67e2fe",
       "trimType": "auto",
       "trimThreshold": 1,

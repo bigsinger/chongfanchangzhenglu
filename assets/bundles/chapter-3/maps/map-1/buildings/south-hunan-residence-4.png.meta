@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.5",
+  "ver": "2.3.7",
   "uuid": "2e21660c-ebe5-4f6e-8353-a0f070a83c31",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "south-hunan-residence-4": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "281dde7f-58cd-4cea-b324-5fdd67e66c67",
+      "importer": "sprite-frame",
       "rawTextureUuid": "2e21660c-ebe5-4f6e-8353-a0f070a83c31",
       "trimType": "auto",
       "trimThreshold": 1,

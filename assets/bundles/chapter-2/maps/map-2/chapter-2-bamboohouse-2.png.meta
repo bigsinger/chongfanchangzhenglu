@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.5",
+  "ver": "2.3.7",
   "uuid": "4bba5a8c-92ae-42e3-8297-9e693815eb12",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "chapter-2-bamboohouse-2": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "74fb1ae1-c282-48b5-9e7f-82015826abcd",
+      "importer": "sprite-frame",
       "rawTextureUuid": "4bba5a8c-92ae-42e3-8297-9e693815eb12",
       "trimType": "auto",
       "trimThreshold": 1,

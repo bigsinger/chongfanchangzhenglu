@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.5",
+  "ver": "2.3.7",
   "uuid": "0a7009b1-51e4-48ea-ae3b-85efe8c3f254",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "role_npc_woman_1": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "bc529703-67c9-4011-869c-b13c846243fa",
+      "importer": "sprite-frame",
       "rawTextureUuid": "0a7009b1-51e4-48ea-ae3b-85efe8c3f254",
       "trimType": "auto",
       "trimThreshold": 1,

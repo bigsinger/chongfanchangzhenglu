@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-    [string]$CreatorPath = 'E:\temp\CocosCreator-2.4.3\CocosCreator.exe',
+    [string]$CreatorPath = 'E:\temp\CocosCreator-2.4.15\CocosCreator.exe',
     [string]$JavaHome = 'E:\temp\jdk17',
     [string]$AndroidSdk = 'D:\Android\Sdk',
     [string]$NdkPath = 'D:\Android\Sdk\ndk\20.1.5948944',
@@ -37,6 +37,22 @@ function Convert-ToPropertiesPath {
     return $Path.Replace('\', '\\').Replace(':', '\:')
 }
 
+function Stop-ProcessTree {
+    param([int]$RootId)
+    $all = @(Get-CimInstance Win32_Process)
+    $pending = @($RootId)
+    $ids = New-Object System.Collections.Generic.List[int]
+    while ($pending.Count) {
+        $current = [int]$pending[0]
+        $pending = @($pending | Select-Object -Skip 1)
+        $ids.Add($current)
+        $pending += @($all | Where-Object { $_.ParentProcessId -eq $current } | ForEach-Object ProcessId)
+    }
+    foreach ($id in ($ids | Sort-Object -Descending)) {
+        Stop-Process -Id $id -Force -ErrorAction SilentlyContinue
+    }
+}
+
 $projectRoot = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
 $signingPath = [System.IO.Path]::GetFullPath($SigningProperties)
 $buildRoot = Join-Path $projectRoot 'build\jsb-link'
@@ -51,12 +67,17 @@ if ($sourceChanges.Count -and -not $AllowDirtySource) {
     throw '正式构建要求干净工作树；如仅做本地诊断可显式传入 -AllowDirtySource'
 }
 
-Assert-File -Path $CreatorPath -Description 'Cocos Creator 2.4.3'
+Assert-File -Path $CreatorPath -Description 'Cocos Creator 2.4.15'
 Assert-File -Path (Join-Path $JavaHome 'bin\java.exe') -Description 'JDK 17'
 Assert-File -Path (Join-Path $AndroidSdk 'platforms\android-36\android.jar') -Description 'Android API 36'
 Assert-File -Path (Join-Path $AndroidSdk 'build-tools\35.0.0\apksigner.bat') -Description 'apksigner'
 Assert-File -Path (Join-Path $NdkPath 'source.properties') -Description 'Android NDK r20b'
 Assert-File -Path $signingPath -Description '签名配置'
+
+& node (Join-Path $projectRoot 'tools\verify-build-inputs.js') `
+    "--creator-root=$([System.IO.Path]::GetDirectoryName($CreatorPath))" `
+    "--ndk-root=$NdkPath"
+if ($LASTEXITCODE -ne 0) { throw 'Creator/NDK 构建输入哈希验证失败' }
 
 $javaVersion = (& (Join-Path $JavaHome 'bin\java.exe') -version 2>&1) -join "`n"
 if ($javaVersion -notmatch 'version "(17|18|19|2[0-9])') {
@@ -78,10 +99,9 @@ if (-not $SkipGenerate) {
         ';apiLevel=android-36;textureCompress=true;encryptJs=false;zipCompressJs=true'
 
     $creatorBuildStarted = Get-Date
-    & $CreatorPath --path $projectRoot --build $buildOptions
-    if ($LASTEXITCODE -ne 0) {
-        throw "Cocos Creator 正式工程生成失败：$LASTEXITCODE"
-    }
+    $creatorProcess = Start-Process -FilePath $CreatorPath `
+        -ArgumentList @('--path', $projectRoot, '--build', $buildOptions) `
+        -WindowStyle Hidden -PassThru
 
     $creatorLog = Join-Path $env:USERPROFILE '.CocosCreator\logs\CocosCreator.log'
     $settingsDirectory = Join-Path $buildRoot 'src'
@@ -90,27 +110,31 @@ if (-not $SkipGenerate) {
     $failureMarker = 'Build Failed:'
     $deadline = (Get-Date).AddMinutes(20)
     $completed = $false
-    do {
-        $settingsFile = Get-ChildItem -LiteralPath $settingsDirectory -Filter 'settings*.js' -File -ErrorAction SilentlyContinue |
-            Sort-Object LastWriteTime -Descending | Select-Object -First 1
-        $bundleFile = Get-ChildItem -LiteralPath $bundleDirectory -Filter 'index*.js' -File -ErrorAction SilentlyContinue |
-            Sort-Object LastWriteTime -Descending | Select-Object -First 1
-        if ((Test-Path -LiteralPath $creatorLog) -and $settingsFile -and $bundleFile) {
-            $recentLog = (Get-Content -LiteralPath $creatorLog -Tail 240) -join [Environment]::NewLine
-            $logItem = Get-Item -LiteralPath $creatorLog
-            if ($logItem.LastWriteTime -ge $creatorBuildStarted -and $recentLog.Contains($failureMarker)) {
-                throw 'Cocos Creator 正式资源构建失败，请检查日志'
+    try {
+        do {
+            $settingsFile = Get-ChildItem -LiteralPath $settingsDirectory -Filter 'settings*.js' -File -ErrorAction SilentlyContinue |
+                Sort-Object LastWriteTime -Descending | Select-Object -First 1
+            $bundleFile = Get-ChildItem -LiteralPath $bundleDirectory -Filter 'index*.js' -File -ErrorAction SilentlyContinue |
+                Sort-Object LastWriteTime -Descending | Select-Object -First 1
+            if ((Test-Path -LiteralPath $creatorLog) -and $settingsFile -and $bundleFile) {
+                $recentLog = (Get-Content -LiteralPath $creatorLog -Tail 240) -join [Environment]::NewLine
+                $logItem = Get-Item -LiteralPath $creatorLog
+                if ($logItem.LastWriteTime -ge $creatorBuildStarted -and $recentLog.Contains($failureMarker)) {
+                    throw 'Cocos Creator 正式资源构建失败，请检查日志'
+                }
+                if ($settingsFile.LastWriteTime -ge $creatorBuildStarted.AddSeconds(-2) -and
+                    $bundleFile.LastWriteTime -ge $creatorBuildStarted.AddSeconds(-2) -and
+                    $recentLog.Contains($successMarker)) {
+                    $completed = $true
+                    break
+                }
             }
-            if ($settingsFile.LastWriteTime -ge $creatorBuildStarted.AddSeconds(-2) -and
-                $bundleFile.LastWriteTime -ge $creatorBuildStarted.AddSeconds(-2) -and
-                $recentLog.Contains($successMarker)) {
-                $completed = $true
-                break
-            }
-        }
-        Start-Sleep -Seconds 1
-    } while ((Get-Date) -lt $deadline)
-    if (-not $completed) { throw '等待 Cocos Creator 正式构建超时' }
+            Start-Sleep -Seconds 1
+        } while ((Get-Date) -lt $deadline)
+        if (-not $completed) { throw '等待 Cocos Creator 正式构建超时' }
+    } finally {
+        Stop-ProcessTree -RootId $creatorProcess.Id
+    }
 }
 
 & node (Join-Path $projectRoot 'tools\prune-production-bundle.js')
@@ -118,7 +142,7 @@ if ($LASTEXITCODE -ne 0) { throw '生产包裁剪失败' }
 & node (Join-Path $projectRoot 'tools\verify-production-bundle.js')
 if ($LASTEXITCODE -ne 0) { throw '生产包裁剪验证失败' }
 
-$env:LONGMARCH_COCOS_ENGINE = 'E:/temp/CocosCreator-2.4.3/resources/cocos2d-x'
+$env:LONGMARCH_COCOS_ENGINE = 'E:/temp/CocosCreator-2.4.15/resources/cocos2d-x'
 $env:LONGMARCH_VERSION_CODE = "$VersionCode"
 $env:LONGMARCH_VERSION_NAME = $VersionName
 & node (Join-Path $projectRoot 'tools\modernize-android-project.js')
@@ -132,7 +156,7 @@ Set-Utf8Text -Path $localProperties -Text (
 $nativeRoot = Join-Path $buildRoot 'native-release'
 $nativeObjectRoot = Join-Path $nativeRoot 'obj'
 $nativeLibraryRoot = Join-Path $nativeRoot 'lib'
-$cocosEngineRoot = 'E:/temp/CocosCreator-2.4.3/resources/cocos2d-x'
+$cocosEngineRoot = 'E:/temp/CocosCreator-2.4.15/resources/cocos2d-x'
 $modulePath = @($cocosEngineRoot, "$cocosEngineRoot/cocos", "$cocosEngineRoot/external") -join ';'
 $nativeArguments = @(
     'NDK_PROJECT_PATH=null',
@@ -253,6 +277,30 @@ try {
         Where-Object { $_.FullName -like 'lib/*/*.so' } |
         ForEach-Object { ($_.FullName -split '/')[1] } |
         Sort-Object -Unique)
+    $forbiddenRuntime = @('org/cocos2dx/okhttp', 'okhttp3/', 'okio/')
+    $offlineStubFound = $false
+    foreach ($dex in $archive.Entries | Where-Object { $_.FullName -like 'classes*.dex' }) {
+        $stream = $dex.Open()
+        try {
+            $memory = New-Object System.IO.MemoryStream
+            $stream.CopyTo($memory)
+            $dexText = [Text.Encoding]::ASCII.GetString($memory.ToArray())
+        } finally {
+            if ($memory) { $memory.Dispose() }
+            $stream.Dispose()
+        }
+        foreach ($needle in $forbiddenRuntime) {
+            if ($dexText.Contains($needle)) {
+                throw "正式离线包仍包含禁用网络运行时：$needle"
+            }
+        }
+        if ($dexText.Contains('Offline build does not support download tasks')) {
+            $offlineStubFound = $true
+        }
+    }
+    if (-not $offlineStubFound) {
+        throw '正式包未包含离线 Downloader 兼容桩'
+    }
 } finally {
     $archive.Dispose()
 }
@@ -280,7 +328,7 @@ $buildManifest = [ordered]@{
     dirtySource = [bool]$sourceChanges.Count
     versionName = $VersionName
     versionCode = $VersionCode
-    creator = '2.4.3'
+    creator = '2.4.15'
     gradle = '8.11.1'
     agp = '8.9.2'
     java = (($javaVersion -split "`n")[0]).Trim()

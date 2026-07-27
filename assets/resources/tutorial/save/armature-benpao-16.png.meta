@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.5",
+  "ver": "2.3.7",
   "uuid": "873d9316-c28c-4410-83d8-81c9268cfce3",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "armature-benpao-16": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "4c2ac7f0-88c6-41c6-a809-861d86b6bac5",
+      "importer": "sprite-frame",
       "rawTextureUuid": "873d9316-c28c-4410-83d8-81c9268cfce3",
       "trimType": "auto",
       "trimThreshold": 1,

@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.5",
+  "ver": "2.3.7",
   "uuid": "af198e68-7d5d-4cb4-ab58-5ef2e3f8f76c",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "scani9_tex": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "5341d23b-81cf-4a7a-9996-ed90525a2e35",
+      "importer": "sprite-frame",
       "rawTextureUuid": "af198e68-7d5d-4cb4-ab58-5ef2e3f8f76c",
       "trimType": "auto",
       "trimThreshold": 1,

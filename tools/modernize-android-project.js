@@ -5,7 +5,7 @@ const path = require('path');
 
 const root = path.resolve(__dirname, '..');
 const androidProject = path.join(root, 'build', 'jsb-link', 'frameworks', 'runtime-src', 'proj.android-studio');
-const engineRoot = process.env.LONGMARCH_COCOS_ENGINE || 'E:/temp/CocosCreator-2.4.3/resources/cocos2d-x';
+const engineRoot = process.env.LONGMARCH_COCOS_ENGINE || 'E:/temp/CocosCreator-2.4.15/resources/cocos2d-x';
 const versionCode = Number(process.env.LONGMARCH_VERSION_CODE || 2026072701);
 const versionName = process.env.LONGMARCH_VERSION_NAME || '1.1.0';
 const packageName = 'com.game.longmarch.creator243';
@@ -25,6 +25,7 @@ const read = (file) => fs.readFileSync(file, 'utf8');
 
 const sourceLib = path.join(engineRoot, 'cocos', 'platform', 'android', 'libcocos2dx');
 const localLib = path.join(androidProject, 'libcocos2dx');
+const engineJavaSource = path.join(engineRoot, 'cocos', 'platform', 'android', 'java', 'src');
 if (!fs.existsSync(path.join(androidProject, 'app', 'build.gradle'))) throw new Error(`Android 工程不存在：${androidProject}`);
 if (!fs.existsSync(sourceLib)) throw new Error(`Cocos Android 库不存在：${sourceLib}`);
 fs.rmSync(localLib, { recursive: true, force: true });
@@ -32,6 +33,61 @@ fs.cpSync(sourceLib, localLib, {
   recursive: true,
   filter: (source) => source === sourceLib || path.basename(source) !== 'build'
 });
+const localJavaSource = path.join(localLib, 'src', 'main', 'java');
+fs.rmSync(localJavaSource, { recursive: true, force: true });
+fs.cpSync(engineJavaSource, localJavaSource, { recursive: true });
+write(
+  path.join(localJavaSource, 'org', 'cocos2dx', 'lib', 'Cocos2dxDownloader.java'),
+  `package org.cocos2dx.lib;
+
+/**
+ * Offline compatibility surface for Creator's native downloader registration.
+ * The game has no download call sites, network permission, OkHttp, or Okio.
+ */
+public final class Cocos2dxDownloader {
+    private final int id;
+
+    private Cocos2dxDownloader(int id) {
+        this.id = id;
+    }
+
+    public static Cocos2dxDownloader createDownloader(
+            int id, int timeoutInSeconds, String tempFileSuffix, int maxProcessingTasks) {
+        return new Cocos2dxDownloader(id);
+    }
+
+    public static void createTask(
+            final Cocos2dxDownloader downloader,
+            final int taskId,
+            String url,
+            String path,
+            String[] headers) {
+        Cocos2dxHelper.runOnGLThread(new Runnable() {
+            @Override
+            public void run() {
+                downloader.nativeOnFinish(
+                        downloader.id,
+                        taskId,
+                        -1,
+                        "Offline build does not support download tasks",
+                        null);
+            }
+        });
+    }
+
+    public static void abort(Cocos2dxDownloader downloader, int taskId) {
+        // No network task can be created.
+    }
+
+    public static void cancelAllRequests(Cocos2dxDownloader downloader) {
+        // No network task can be created.
+    }
+
+    native void nativeOnFinish(
+            int downloaderId, int taskId, int errorCode, String error, byte[] data);
+}
+`
+);
 
 write(path.join(androidProject, 'settings.gradle'), `pluginManagement {
     repositories {
@@ -113,22 +169,101 @@ write(
   cocosAndroidMk.replace(/LOCAL_MODULE\s*:=\s*cocos2djs(?:_shared)?/, 'LOCAL_MODULE := cocos2djs')
 );
 
+// Creator 2.4.15 enables a V8 inspector listener whenever COCOS2D_DEBUG is
+// non-zero. Android 9+ emulators may deny binding 0.0.0.0:6086; the upstream
+// inspector then aborts the whole process. QA builds remain Android-debuggable
+// and retain native symbols, but they must not expose or depend on a TCP debug
+// listener.
+const appDelegateFile = path.join(androidProject, '..', 'Classes', 'AppDelegate.cpp');
+const appDelegate = read(appDelegateFile);
+const debuggerBlock = /#if defined\(COCOS2D_DEBUG\) && \(COCOS2D_DEBUG > 0\)\s*\/\/ Enable debugger here\s*jsb_enable_debugger\("0\.0\.0\.0", 6086, false\);\s*#endif/;
+const debuggerDisabled = '// V8 inspector disabled: QA/release builds must not bind a TCP debug port.';
+if (!debuggerBlock.test(appDelegate) && !appDelegate.includes(debuggerDisabled)) {
+  throw new Error(`无法定位 Creator 2.4.15 V8 inspector 启动块：${appDelegateFile}`);
+}
+write(
+  appDelegateFile,
+  appDelegate.replace(debuggerBlock, debuggerDisabled)
+);
+
+// Android's stock Cocos2dxGLSurfaceView only forwards DPAD keys; physical
+// A/D/W/S key events fall through and never reach cc.systemEvent. Map those
+// four hardware keys to the equivalent DPAD events in the generated Activity.
+const appActivityFile = path.join(
+  androidProject,
+  'app',
+  'src',
+  'org',
+  'cocos2dx',
+  'javascript',
+  'AppActivity.java'
+);
+let appActivity = read(appActivityFile);
+const hardwareKeyMarker = 'LongMarch hardware key bridge';
+if (!appActivity.includes(hardwareKeyMarker)) {
+  appActivity = appActivity.replace(
+    'import android.content.res.Configuration;',
+    'import android.content.res.Configuration;\nimport android.view.KeyEvent;'
+  );
+  const activityClass = 'public class AppActivity extends Cocos2dxActivity {';
+  if (!appActivity.includes(activityClass)) {
+    throw new Error(`无法定位 Android Activity：${appActivityFile}`);
+  }
+  appActivity = appActivity.replace(
+    activityClass,
+    `${activityClass}
+
+    // LongMarch hardware key bridge: Cocos native forwards DPAD, not A/D/W/S.
+    private static int mapMovementKey(int keyCode) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_A: return KeyEvent.KEYCODE_DPAD_LEFT;
+            case KeyEvent.KEYCODE_D: return KeyEvent.KEYCODE_DPAD_RIGHT;
+            case KeyEvent.KEYCODE_W: return KeyEvent.KEYCODE_DPAD_UP;
+            case KeyEvent.KEYCODE_S: return KeyEvent.KEYCODE_DPAD_DOWN;
+            default: return keyCode;
+        }
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        int mapped = mapMovementKey(event.getKeyCode());
+        Cocos2dxGLSurfaceView surface = getGLSurfaceView();
+        if (mapped != event.getKeyCode() && surface != null) {
+            if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                return surface.onKeyDown(mapped, event);
+            }
+            if (event.getAction() == KeyEvent.ACTION_UP) {
+                return surface.onKeyUp(mapped, event);
+            }
+        }
+        return super.dispatchKeyEvent(event);
+    }
+`
+  );
+}
+write(appActivityFile, appActivity);
+
 write(path.join(androidProject, 'app', 'build.gradle'), `plugins {
     id "com.android.application"
 }
 
+def requestedTasks = gradle.startParameter.taskNames.collect { it.toLowerCase() }
+def needsReleaseSigning = requestedTasks.any { it.contains("release") }
 def signingFilePath = System.getenv("LONGMARCH_SIGNING_PROPERTIES")
-if (signingFilePath == null || signingFilePath.trim().isEmpty()) {
+def hasReleaseSigning = signingFilePath != null && !signingFilePath.trim().isEmpty()
+if (needsReleaseSigning && !hasReleaseSigning) {
     throw new GradleException("LONGMARCH_SIGNING_PROPERTIES 未设置")
 }
-def signingFile = file(signingFilePath)
-if (!signingFile.isFile()) {
-    throw new GradleException("签名配置不存在: " + signingFile)
-}
 def signingProps = new Properties()
-signingFile.withInputStream { signingProps.load(it) }
-["storeFile", "storePassword", "keyAlias", "keyPassword"].each {
-    if (!signingProps.getProperty(it)) throw new GradleException("签名配置缺少 " + it)
+if (hasReleaseSigning) {
+    def signingFile = file(signingFilePath)
+    if (!signingFile.isFile()) {
+        throw new GradleException("签名配置不存在: " + signingFile)
+    }
+    signingFile.withInputStream { signingProps.load(it) }
+    ["storeFile", "storePassword", "keyAlias", "keyPassword"].each {
+        if (!signingProps.getProperty(it)) throw new GradleException("签名配置缺少 " + it)
+    }
 }
 
 def cocosSourceDir = System.getenv("COCOS_JSB_SOURCE_DIR")
@@ -154,7 +289,7 @@ android {
     namespace "${packageName}"
     compileSdk 36
     buildToolsVersion "35.0.0"
-    // Creator 2.4.3's Android.mk runtime is validated against NDK r20.
+    // Creator 2.4.15's Android.mk runtime is validated against NDK r20.
     ndkVersion "20.1.5948944"
 
     defaultConfig {
@@ -177,23 +312,31 @@ android {
 
     signingConfigs {
         release {
-            storeFile file(signingProps.getProperty("storeFile"))
-            storePassword signingProps.getProperty("storePassword")
-            keyAlias signingProps.getProperty("keyAlias")
-            keyPassword signingProps.getProperty("keyPassword")
-            enableV1Signing true
-            enableV2Signing true
-            enableV3Signing true
+            if (hasReleaseSigning) {
+                storeFile file(signingProps.getProperty("storeFile"))
+                storePassword signingProps.getProperty("storePassword")
+                keyAlias signingProps.getProperty("keyAlias")
+                keyPassword signingProps.getProperty("keyPassword")
+                enableV1Signing true
+                enableV2Signing true
+                enableV3Signing true
+            }
         }
     }
 
     buildTypes {
+        debug {
+            debuggable true
+            jniDebuggable true
+            minifyEnabled false
+            shrinkResources false
+        }
         release {
             debuggable false
             jniDebuggable false
             minifyEnabled true
             shrinkResources true
-            signingConfig signingConfigs.release
+            if (hasReleaseSigning) signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
         }
     }
@@ -243,13 +386,9 @@ android {
 
     sourceSets {
         main {
-            aidl.srcDir "${normalizedEngine}/cocos/platform/android/java/src"
+            aidl.srcDir "src/main/java"
             java {
-                srcDir "${normalizedEngine}/cocos/platform/android/java/src"
-                // This release is deliberately offline. The native downloader
-                // has no JS call site, and excluding it also removes the
-                // vulnerable shaded OkHttp/Okio stack from the APK.
-                exclude "org/cocos2dx/lib/Cocos2dxDownloader.java"
+                srcDir "src/main/java"
             }
             manifest.srcFile "AndroidManifest.xml"
         }

@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.5",
+  "ver": "2.3.7",
   "uuid": "c9d9e663-20e1-42a8-a426-b189ef7bf7ab",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "niupeng2": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "3dfee828-df44-4956-891a-d73ea6d7f585",
+      "importer": "sprite-frame",
       "rawTextureUuid": "c9d9e663-20e1-42a8-a426-b189ef7bf7ab",
       "trimType": "auto",
       "trimThreshold": 1,

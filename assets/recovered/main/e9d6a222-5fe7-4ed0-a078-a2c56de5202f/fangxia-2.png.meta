@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.5",
+  "ver": "2.3.7",
   "uuid": "2c1dbee0-8b69-4ba1-8229-6f1dc7910cf8",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "fangxia-2": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "e9d6a222-5fe7-4ed0-a078-a2c56de5202f",
+      "importer": "sprite-frame",
       "rawTextureUuid": "2c1dbee0-8b69-4ba1-8229-6f1dc7910cf8",
       "trimType": "auto",
       "trimThreshold": 1,

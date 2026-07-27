@@ -89,7 +89,15 @@ const saveManagerSource = source('SaveManager.js');
 const menu = source('MainMenuController.js');
 const cloudSources = source('CloudSpawner.js') + source('AmbientCloudSpawner.js');
 const fireMiniGame = source('FireExtinguishMiniGame.js');
-assert(/KEY_DOWN/.test(scene) && /keyDirections/.test(scene), 'A/D keyboard movement contract');
+assert(
+  /KEY_DOWN/.test(scene) &&
+    /keyDirections/.test(scene) &&
+    /case 1000:/.test(scene) &&
+    /case 1001:/.test(scene) &&
+    /case 1003:/.test(scene) &&
+    /case 1004:/.test(scene),
+  'web A/D/W/S and Creator Android DPAD keyboard movement contract'
+);
 assert(/manual-operation reach/.test(event) && /pickEvent/.test(event), 'nearby pickup contract');
 assert(
   /GameplayInteractionQuery/.test(event + scene) &&

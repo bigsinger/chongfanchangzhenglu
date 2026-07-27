@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.5",
+  "ver": "2.3.7",
   "uuid": "c9e5bce7-0fb0-4d30-8208-acfa4b7caaf3",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "character-yaozudashu": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "2056d6d3-183e-4930-b75b-9c8bdb156dca",
+      "importer": "sprite-frame",
       "rawTextureUuid": "c9e5bce7-0fb0-4d30-8208-acfa4b7caaf3",
       "trimType": "auto",
       "trimThreshold": 1,

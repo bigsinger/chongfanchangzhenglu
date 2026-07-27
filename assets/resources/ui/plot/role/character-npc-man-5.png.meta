@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.5",
+  "ver": "2.3.7",
   "uuid": "f04f6bc0-737b-439a-8f78-5ca62b1f3cfd",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "character-npc-man-5": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "ea44fa10-3be5-4f61-b7e8-d8e4ad4c43fe",
+      "importer": "sprite-frame",
       "rawTextureUuid": "f04f6bc0-737b-439a-8f78-5ca62b1f3cfd",
       "trimType": "auto",
       "trimThreshold": 1,

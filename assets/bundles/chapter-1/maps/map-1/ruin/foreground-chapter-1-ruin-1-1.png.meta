@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.5",
+  "ver": "2.3.7",
   "uuid": "285457db-36ff-44c9-8e48-9bcc9d44a4c3",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "foreground-chapter-1-ruin-1-1": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "f65c30e9-205a-4d93-b69d-21b88ae9c88d",
+      "importer": "sprite-frame",
       "rawTextureUuid": "285457db-36ff-44c9-8e48-9bcc9d44a4c3",
       "trimType": "auto",
       "trimThreshold": 1,

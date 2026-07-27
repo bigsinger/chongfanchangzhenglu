@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.5",
+  "ver": "2.3.7",
   "uuid": "6f8321c5-894b-490a-a9cf-de6565b19250",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "scenes_fire12": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "a87b1a65-8c5d-4e8b-8686-261077f9b758",
+      "importer": "sprite-frame",
       "rawTextureUuid": "6f8321c5-894b-490a-a9cf-de6565b19250",
       "trimType": "auto",
       "trimThreshold": 1,

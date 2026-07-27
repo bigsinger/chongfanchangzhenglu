@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.5",
+  "ver": "2.3.7",
   "uuid": "7ef63885-d9a8-408a-8757-acef3fac3471",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "heliujinjing": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "905c0ec3-f8be-470c-bd80-b175a8d4c3a6",
+      "importer": "sprite-frame",
       "rawTextureUuid": "7ef63885-d9a8-408a-8757-acef3fac3471",
       "trimType": "auto",
       "trimThreshold": 1,

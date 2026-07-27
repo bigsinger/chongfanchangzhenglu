@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.5",
+  "ver": "2.3.7",
   "uuid": "9dc811b9-e344-4ad1-894e-52e0f8ec71c4",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "chapter-3-chair-1": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "89883001-209f-4b58-af19-c99c4608aa85",
+      "importer": "sprite-frame",
       "rawTextureUuid": "9dc811b9-e344-4ad1-894e-52e0f8ec71c4",
       "trimType": "auto",
       "trimThreshold": 1,

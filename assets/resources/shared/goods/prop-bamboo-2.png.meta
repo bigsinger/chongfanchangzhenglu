@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.5",
+  "ver": "2.3.7",
   "uuid": "4371ed76-e789-4389-84dc-e80e1208d852",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "prop-bamboo-2": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "c3758f2d-0c92-4197-8298-cf96972e3807",
+      "importer": "sprite-frame",
       "rawTextureUuid": "4371ed76-e789-4389-84dc-e80e1208d852",
       "trimType": "auto",
       "trimThreshold": 1,

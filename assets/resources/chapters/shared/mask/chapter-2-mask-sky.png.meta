@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.5",
+  "ver": "2.3.7",
   "uuid": "819c3697-a249-4516-ab61-b655c5cec9f9",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "chapter-2-mask-sky": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "10cee338-4a11-4576-bd52-628355c523a2",
+      "importer": "sprite-frame",
       "rawTextureUuid": "819c3697-a249-4516-ab61-b655c5cec9f9",
       "trimType": "auto",
       "trimThreshold": 1,

@@ -1,21 +1,20 @@
-# 重返长征路（Cocos Creator 2.4.3 原版重建）
+# 重返长征路（Cocos Creator 2.4.15 维护版）
 
-本工程从 APK `E:\APPs\cfczl100\cfczl3.apk` 的原始 Creator 2.4.3 构建内容重新恢复，不包含此前 Creator 3.8.8 复刻版的代码或资源。
+本工程从 APK `E:\APPs\cfczl100\cfczl3.apk` 的原始 Creator 2.4.3 构建内容重新恢复，现已迁移到 Creator 2.4.15；不包含此前 Creator 3.8.8 复刻版的代码或资源。
 
-原 APK 的 `assets/src/cocos2d-jsb.js` 明确记录 `cc.ENGINE_VERSION = "2.4.3"`。本工程保持原始场景结构、美术、音频、动画、配置和 JavaScript 游戏逻辑，不重新设计玩法。
+原 APK 的 `assets/src/cocos2d-jsb.js` 明确记录 `cc.ENGINE_VERSION = "2.4.3"`。当前维护运行时为 2.4.15；工程保持原始场景结构、美术、音频、动画、配置和 JavaScript 游戏逻辑，不重新设计玩法。
 
 ## 固定工具链
 
-- Cocos Creator：`E:\temp\CocosCreator-2.4.3\CocosCreator.exe`
-- 原始引擎版本：2.4.3
-- 调试构建 JDK：Temurin 8u492，`E:\temp\jdk8u492-b09`
-- 发布构建 JDK：17，`E:\temp\jdk17`
+- Cocos Creator：`E:\temp\CocosCreator-2.4.15\CocosCreator.exe`
+- 当前引擎版本：2.4.15（原 APK 为 2.4.3）
+- 调试/发布构建 JDK：17，`E:\temp\jdk17`
 - Android NDK：r20b / 20.1.5948944
 - 调试 Android SDK：API 28 / Build Tools 28.0.3
 - 发布 Android SDK：API/target 36 / Build Tools 35.0.0
 - 业务逻辑：JavaScript（恢复模块已改为描述职责的 PascalCase 名称）
 - 目标 ABI：`armeabi-v7a`、`arm64-v8a`
-- Android 包名：`com.game.longmarch.creator243`（避免覆盖模拟器中的原始 APK）
+- Android 包名：`com.game.longmarch.creator243`（保留以兼容既有安装数据和升级链）
 
 ## 源文件恢复
 
@@ -67,7 +66,7 @@ node .\tools\restore-original-resources.js --verify
 ```
 
 发布流程使用 AGP 8.9.2、Gradle 8.11.1、JDK 17、targetSdk 36，执行 R8、签名、
-`zipalign`、`apksigner` 和双 ABI 核验。调试产物：
+`zipalign`、`apksigner`、双 ABI、零权限及离线依赖核验。调试产物：
 
 `dist/chongfanchangzhenglu-armv7-arm64-debug.apk`
 
@@ -90,7 +89,7 @@ APK/AAB 属于可重复生成的构建产物，不提交到 Git；本地最终 A
 
 ## 已完成验证
 
-- Creator 2.4.3 Web Mobile 构建成功，无资源缺失警告。
+- Creator 2.4.15 Web Mobile 构建成功，无资源缺失警告。
 - Android 双 ARM 原生库与 APK 构建成功，APK 内无 x86/x86_64。
 - 雷电模拟器安装、启动和触控成功；已用 ADB 点击与长按滑动回归验证角色移动及镜头跟随。
 - 已使用 ADB 完整通关当前版本的三大章、七张地图；第三章结局会显示原作自带的“后续关卡正在开发中，敬请期待”，确认后可正常返回主菜单。
@@ -106,7 +105,9 @@ APK/AAB 属于可重复生成的构建产物，不提交到 Git；本地最终 A
 代码、章节体验、稳定性、性能及正式发布门槛的综合结论见
 [`docs/project/codebase-audit-2026-07-27.md`](docs/project/codebase-audit-2026-07-27.md)；
 第二轮专项审计、实施结果和剩余风险见
-[`docs/project/codebase-audit-followup-2026-07-27.md`](docs/project/codebase-audit-followup-2026-07-27.md)。
+[`docs/project/codebase-audit-followup-2026-07-27.md`](docs/project/codebase-audit-followup-2026-07-27.md)；
+2.4.15 的构建输入、兼容修复和完整验证证据见
+[`docs/project/cocos-creator-2.4.15-migration-and-validation-2026-07-27.md`](docs/project/cocos-creator-2.4.15-migration-and-validation-2026-07-27.md)。
 
 ## 通关文档
 
@@ -119,5 +120,5 @@ APK/AAB 属于可重复生成的构建产物，不提交到 Git；本地最终 A
 
 - 场景、预制体、动画、配置、图片、音频、Spine 与 DragonBones 数据均来自 APK 原始资源。
 - 不重新设计玩法，不使用此前复刻版 TypeScript 逻辑。
-- 不编写 C++ 游戏逻辑；Android 原生包只使用 Creator 2.4.3 自带运行时。
+- 不编写 C++ 游戏逻辑；Android 原生包只使用 Creator 2.4.15 自带运行时。
 - 构建时只启用 ARM32 与 ARM64。

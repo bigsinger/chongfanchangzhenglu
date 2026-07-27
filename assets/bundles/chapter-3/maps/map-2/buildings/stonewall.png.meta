@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.5",
+  "ver": "2.3.7",
   "uuid": "c8806010-e6ea-41b8-86d9-8054744cc430",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "stonewall": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "9542175d-565a-4e01-8cc2-47d25d9420a7",
+      "importer": "sprite-frame",
       "rawTextureUuid": "c8806010-e6ea-41b8-86d9-8054744cc430",
       "trimType": "auto",
       "trimThreshold": 1,

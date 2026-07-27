@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.5",
+  "ver": "2.3.7",
   "uuid": "db9af993-4399-432a-af32-6199858471c5",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "role_npc_man_2": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "a45fd910-638e-4df7-b4af-168a58c10b90",
+      "importer": "sprite-frame",
       "rawTextureUuid": "db9af993-4399-432a-af32-6199858471c5",
       "trimType": "auto",
       "trimThreshold": 1,

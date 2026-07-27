@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.5",
+  "ver": "2.3.7",
   "uuid": "b0bbb792-c9eb-4190-8dca-b164e2f8145a",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "qingbai-hall": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "ef9603d2-0b6f-4dc0-8cfd-f441fe5a5943",
+      "importer": "sprite-frame",
       "rawTextureUuid": "b0bbb792-c9eb-4190-8dca-b164e2f8145a",
       "trimType": "auto",
       "trimThreshold": 1,

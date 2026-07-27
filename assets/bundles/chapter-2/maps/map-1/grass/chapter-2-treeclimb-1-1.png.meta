@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.5",
+  "ver": "2.3.7",
   "uuid": "0a4a4be8-a666-404f-87ea-9a46dd6cf89f",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "chapter-2-treeclimb-1-1": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "ef609476-ca61-4a25-90e4-baeb5e1bce0c",
+      "importer": "sprite-frame",
       "rawTextureUuid": "0a4a4be8-a666-404f-87ea-9a46dd6cf89f",
       "trimType": "auto",
       "trimThreshold": 1,

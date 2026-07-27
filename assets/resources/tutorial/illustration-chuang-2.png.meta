@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.5",
+  "ver": "2.3.7",
   "uuid": "66ced556-470d-41cc-8fbd-ee44e0ccf27e",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "illustration-chuang-2": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "28814eaf-bc54-4352-983e-70f47a1305c8",
+      "importer": "sprite-frame",
       "rawTextureUuid": "66ced556-470d-41cc-8fbd-ee44e0ccf27e",
       "trimType": "auto",
       "trimThreshold": 1,

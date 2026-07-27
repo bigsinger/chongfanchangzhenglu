@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.5",
+  "ver": "2.3.7",
   "uuid": "ca9c1d5b-c6de-4068-8969-a4bb65a10a29",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "foreground-chapter-1-railing-1-1": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "63b519c2-47ea-41c6-88c1-d8ccb5990e00",
+      "importer": "sprite-frame",
       "rawTextureUuid": "ca9c1d5b-c6de-4068-8969-a4bb65a10a29",
       "trimType": "auto",
       "trimThreshold": 1,

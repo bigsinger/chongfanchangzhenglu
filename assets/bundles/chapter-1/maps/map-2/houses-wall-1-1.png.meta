@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.5",
+  "ver": "2.3.7",
   "uuid": "b502cdc8-cbd0-40b3-808a-f0dcb7cfd992",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "houses-wall-1-1": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "1788e6fc-312c-4bfe-98a3-24552d150bbe",
+      "importer": "sprite-frame",
       "rawTextureUuid": "b502cdc8-cbd0-40b3-808a-f0dcb7cfd992",
       "trimType": "auto",
       "trimThreshold": 1,

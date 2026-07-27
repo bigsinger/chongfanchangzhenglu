@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.5",
+  "ver": "2.3.7",
   "uuid": "77933d9c-28f8-4a64-89b5-c527df6aecb4",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "houses-grounchapter-2-4": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "b59dc694-f698-48f3-8150-a029c644df63",
+      "importer": "sprite-frame",
       "rawTextureUuid": "77933d9c-28f8-4a64-89b5-c527df6aecb4",
       "trimType": "auto",
       "trimThreshold": 1,

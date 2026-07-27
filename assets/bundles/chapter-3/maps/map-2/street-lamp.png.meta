@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.5",
+  "ver": "2.3.7",
   "uuid": "8cd140e6-61d4-4b9d-88f2-e3cef8810633",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "street-lamp": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "93911687-66d0-4689-94ed-a87a4c489194",
+      "importer": "sprite-frame",
       "rawTextureUuid": "8cd140e6-61d4-4b9d-88f2-e3cef8810633",
       "trimType": "auto",
       "trimThreshold": 1,

@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.5",
+  "ver": "2.3.7",
   "uuid": "49b5ea73-ab92-4738-8dc9-7dc274c6f153",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "communist-party-saves-the-people-slogan": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "63867d1a-b552-4203-8126-2325e40c7665",
+      "importer": "sprite-frame",
       "rawTextureUuid": "49b5ea73-ab92-4738-8dc9-7dc274c6f153",
       "trimType": "auto",
       "trimThreshold": 1,

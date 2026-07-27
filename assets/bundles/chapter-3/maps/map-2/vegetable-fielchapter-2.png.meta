@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.5",
+  "ver": "2.3.7",
   "uuid": "8b10e7b5-ae55-44b6-8b14-cdc07b6cce1c",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "vegetable-fielchapter-2": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "a7680d64-292e-4bc7-ba9c-e1e5cfc222e0",
+      "importer": "sprite-frame",
       "rawTextureUuid": "8b10e7b5-ae55-44b6-8b14-cdc07b6cce1c",
       "trimType": "auto",
       "trimThreshold": 1,

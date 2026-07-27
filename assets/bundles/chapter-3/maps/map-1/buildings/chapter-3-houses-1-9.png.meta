@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.5",
+  "ver": "2.3.7",
   "uuid": "b0d12d9b-95c3-4c6f-8e54-2a5c0f73306b",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "chapter-3-houses-1-9": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "a32e0331-647d-42e4-8fcd-e28f996f6799",
+      "importer": "sprite-frame",
       "rawTextureUuid": "b0d12d9b-95c3-4c6f-8e54-2a5c0f73306b",
       "trimType": "auto",
       "trimThreshold": 1,

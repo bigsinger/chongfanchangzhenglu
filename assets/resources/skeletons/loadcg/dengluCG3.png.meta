@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.5",
+  "ver": "2.3.7",
   "uuid": "51035115-b0e8-44ff-874f-e967b2b70c7e",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "dengluCG3": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "db9f25b9-381d-4afc-a5bf-d5af66201a22",
+      "importer": "sprite-frame",
       "rawTextureUuid": "51035115-b0e8-44ff-874f-e967b2b70c7e",
       "trimType": "auto",
       "trimThreshold": 1,

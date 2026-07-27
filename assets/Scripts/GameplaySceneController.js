@@ -826,15 +826,19 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 switch (t) {
                     case cc.macro.KEY.left:
                     case cc.macro.KEY.a:
+                    case 1000:
                         return this.DIR_LEFT;
                     case cc.macro.KEY.right:
                     case cc.macro.KEY.d:
+                    case 1001:
                         return this.DIR_RIGHT;
                     case cc.macro.KEY.up:
                     case cc.macro.KEY.w:
+                    case 1003:
                         return this.DIR_UP;
                     case cc.macro.KEY.down:
                     case cc.macro.KEY.s:
+                    case 1004:
                         return this.DIR_DOWN;
                     default:
                         return 0;

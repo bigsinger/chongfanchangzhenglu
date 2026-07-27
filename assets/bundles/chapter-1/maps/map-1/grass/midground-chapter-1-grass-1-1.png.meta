@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.5",
+  "ver": "2.3.7",
   "uuid": "b8de8367-7e87-4cff-8248-ff0441458f07",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "midground-chapter-1-grass-1-1": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "7e45bb41-cba1-43ae-85e1-6813dd511a9b",
+      "importer": "sprite-frame",
       "rawTextureUuid": "b8de8367-7e87-4cff-8248-ff0441458f07",
       "trimType": "auto",
       "trimThreshold": 1,

@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.5",
+  "ver": "2.3.7",
   "uuid": "a9f62d2b-1abf-44fe-b2dd-6d9c8c4e52d3",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "illustration-mg-blink": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "09005e1f-a1e0-4efe-8d37-352fb304db9a",
+      "importer": "sprite-frame",
       "rawTextureUuid": "a9f62d2b-1abf-44fe-b2dd-6d9c8c4e52d3",
       "trimType": "auto",
       "trimThreshold": 1,

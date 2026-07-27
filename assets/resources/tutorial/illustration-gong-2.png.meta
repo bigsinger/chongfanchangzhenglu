@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.5",
+  "ver": "2.3.7",
   "uuid": "75dfc18a-1c83-420b-8da9-f11dac93ed37",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "illustration-gong-2": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "e19ee82b-ac9b-4599-9442-13c16ad20845",
+      "importer": "sprite-frame",
       "rawTextureUuid": "75dfc18a-1c83-420b-8da9-f11dac93ed37",
       "trimType": "auto",
       "trimThreshold": 1,

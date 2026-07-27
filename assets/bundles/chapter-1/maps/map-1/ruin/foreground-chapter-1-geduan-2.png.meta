@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.5",
+  "ver": "2.3.7",
   "uuid": "26454e47-384a-4a03-8f79-4045bdb3bf9e",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "foreground-chapter-1-geduan-2": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "334e66c1-767c-44b5-b473-a18cd6b74e94",
+      "importer": "sprite-frame",
       "rawTextureUuid": "26454e47-384a-4a03-8f79-4045bdb3bf9e",
       "trimType": "auto",
       "trimThreshold": 1,

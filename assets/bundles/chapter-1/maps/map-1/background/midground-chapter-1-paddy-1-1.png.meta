@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.5",
+  "ver": "2.3.7",
   "uuid": "5687e81f-a219-4c2c-bdff-ec2dc26a2e60",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "midground-chapter-1-paddy-1-1": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "54e4dbb1-65eb-41cf-9ab6-f3429f9f1718",
+      "importer": "sprite-frame",
       "rawTextureUuid": "5687e81f-a219-4c2c-bdff-ec2dc26a2e60",
       "trimType": "auto",
       "trimThreshold": 1,

@@ -92,7 +92,7 @@ function Save-Logs {
     $localPath = Join-Path $ResultDir "$Name.log"
     $lines = Invoke-Adb -Arguments @('logcat', '-d', '-v', 'time', '-t', '3000')
     $lines | Set-Content -LiteralPath $localPath -Encoding utf8
-    $errors = $lines | Select-String 'TypeError|ReferenceError|FATAL EXCEPTION|Fatal signal|SIGSEGV|SIGABRT|crash_dump|tombstone|ANR in|Uncaught Exception|asset.*failed|load.*failed'
+    $errors = $lines | Select-String 'TypeError|ReferenceError|FATAL EXCEPTION|Fatal signal|SIGSEGV|SIGABRT|crash_dump|tombstone|ANR in|Uncaught Exception|asset.*failed|load.*failed|Error processing arguments|Failed to invoke'
     if ($errors) {
         $errors | ForEach-Object { Write-Error $_.Line }
         throw "运行日志包含错误，完整日志：$localPath"

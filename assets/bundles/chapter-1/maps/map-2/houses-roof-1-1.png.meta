@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.5",
+  "ver": "2.3.7",
   "uuid": "edbdd489-2e2b-4b24-8bd7-6381f5eab9d1",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "houses-roof-1-1": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "7af790a1-dd8f-446a-8b82-f127ef15fd9f",
+      "importer": "sprite-frame",
       "rawTextureUuid": "edbdd489-2e2b-4b24-8bd7-6381f5eab9d1",
       "trimType": "auto",
       "trimThreshold": 1,

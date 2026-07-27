@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.5",
+  "ver": "2.3.7",
   "uuid": "14bd1dd3-a8d2-446f-885f-8b2611edccdc",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "falls_shang": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "55a7f9ad-085b-4ed4-a2f1-8eea436b9150",
+      "importer": "sprite-frame",
       "rawTextureUuid": "14bd1dd3-a8d2-446f-885f-8b2611edccdc",
       "trimType": "auto",
       "trimThreshold": 1,

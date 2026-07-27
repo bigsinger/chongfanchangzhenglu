@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.5",
+  "ver": "2.3.7",
   "uuid": "236b9c84-e5ac-4421-8ae4-8dc0371e53d2",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "nera-chapter-2-hill-2": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "497f016d-af90-4f32-bef5-b6f0ecd5c408",
+      "importer": "sprite-frame",
       "rawTextureUuid": "236b9c84-e5ac-4421-8ae4-8dc0371e53d2",
       "trimType": "auto",
       "trimThreshold": 1,

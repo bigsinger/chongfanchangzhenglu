@@ -55,8 +55,15 @@ Object.defineProperty(o, "__esModule", {
                         i.default.nowBGM = t;
                         this.loadClip(s, function (n, s) {
                             if (n) console.error(n); else if (a == o.bgmRequestToken && i.default.nowBGM == t) {
+                                // Creator 2.4.15's native binding only accepts a
+                                // numeric float. LocalStorage returns strings,
+                                // so apply the normalized value through the
+                                // music API before playMusic consumes it.
+                                var r = Number(i.default.MUSIC_BGM);
+                                isFinite(r) || (r = 1);
+                                r = Math.max(0, Math.min(1, r));
+                                cc.audioEngine.setMusicVolume(r);
                                 o.bgmID = cc.audioEngine.playMusic(s, e);
-                                cc.audioEngine.setVolume(o.bgmID, i.default.MUSIC_BGM);
                             }
                         });
                     }

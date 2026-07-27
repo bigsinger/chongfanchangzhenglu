@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.5",
+  "ver": "2.3.7",
   "uuid": "44cad0e2-768f-4aed-8093-e9349f35eeea",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "midground-chapter-2-village-8": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "d35e882a-3a9c-4119-8260-c8ea25709e39",
+      "importer": "sprite-frame",
       "rawTextureUuid": "44cad0e2-768f-4aed-8093-e9349f35eeea",
       "trimType": "auto",
       "trimThreshold": 1,

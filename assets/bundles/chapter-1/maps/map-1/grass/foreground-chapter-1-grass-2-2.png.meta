@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.5",
+  "ver": "2.3.7",
   "uuid": "85ff4344-97d5-4eef-8860-202af253d4ce",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "foreground-chapter-1-grass-2-2": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "6f4c9b80-3c93-4239-a1a6-d6530e91042f",
+      "importer": "sprite-frame",
       "rawTextureUuid": "85ff4344-97d5-4eef-8860-202af253d4ce",
       "trimType": "auto",
       "trimThreshold": 1,

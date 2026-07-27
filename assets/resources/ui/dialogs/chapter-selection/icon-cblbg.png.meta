@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.5",
+  "ver": "2.3.7",
   "uuid": "d61e6470-99fb-4d39-ba29-22200145f3d6",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "icon-cblbg": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "600233b0-68eb-4933-b141-0383f4a4ed80",
+      "importer": "sprite-frame",
       "rawTextureUuid": "d61e6470-99fb-4d39-ba29-22200145f3d6",
       "trimType": "auto",
       "trimThreshold": 1,

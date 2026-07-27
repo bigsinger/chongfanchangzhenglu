@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.5",
+  "ver": "2.3.7",
   "uuid": "52d5fb8a-2742-40dd-8c9a-0d5702d6abea",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "boston-ivy": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "f6ee4b41-cf4c-43f9-87a6-e7bcb31c4b12",
+      "importer": "sprite-frame",
       "rawTextureUuid": "52d5fb8a-2742-40dd-8c9a-0d5702d6abea",
       "trimType": "auto",
       "trimThreshold": 1,

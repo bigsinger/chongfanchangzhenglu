@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.5",
+  "ver": "2.3.7",
   "uuid": "d087b15f-fd9f-4ef7-888c-9219acc47125",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "chapter-2-deadgrass-1": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "fcc95794-d96c-4cac-a0dd-27fa1d181caf",
+      "importer": "sprite-frame",
       "rawTextureUuid": "d087b15f-fd9f-4ef7-888c-9219acc47125",
       "trimType": "auto",
       "trimThreshold": 1,

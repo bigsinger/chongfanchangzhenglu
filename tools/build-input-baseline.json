@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "creator": {
+    "version": "2.4.15",
+    "downloadUrl": "https://download.cocos.com/CocosCreator/v2.4.15/CocosCreator_v2.4.15_20250328_win.zip",
+    "archiveFileName": "CocosCreator_v2.4.15_20250328_win.zip",
+    "archiveSize": 680532659,
+    "archiveSha256": "B2E5A465E6E6074CAB0859DE67C6CF0F6442C8195D03E26FAC9B519B90BAFCE0",
+    "files": {
+      "CocosCreator.exe": "9EBC21345281D1975C6022B6EC8F5877E8AAEAA72558733B40EC262835C0EB6C",
+      "resources/engine/package.json": "34139E3F3D2AACCD266C08E98803754E90EEEA8607A2B9870267310DD3D4A444",
+      "resources/cocos2d-x/templates/js-template-link/frameworks/runtime-src/proj.android-studio/jni/CocosAndroid.mk": "952A085266AC5E63D0A61883BD6854D86657C9AE9FC67EFE34D9A02E8224A83B",
+      "resources/static/build-templates/native/debug.keystore": "F9C7810E318DED62437FB178FD9CDF920B034F2D333B9F9FAD95E2044DA0155A"
+    }
+  },
+  "ndk": {
+    "version": "20.1.5948944",
+    "sourcePropertiesSha256": "6AB1F3415CAF51EA55FBBFA7B9DA14E2BCB165E077007A1D4BC8D1FB0C99BAAA"
+  },
+  "androidBuild": {
+    "gradle": "8.11.1",
+    "androidGradlePlugin": "8.9.2",
+    "compileSdk": 36,
+    "targetSdk": 36,
+    "minSdk": 21
+  }
+}

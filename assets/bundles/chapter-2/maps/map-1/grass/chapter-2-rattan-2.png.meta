@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.5",
+  "ver": "2.3.7",
   "uuid": "165acea1-3c9e-4612-8c84-ad1817b834c4",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "chapter-2-rattan-2": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "a4e7ffa2-a9c7-488a-9233-56eed7943421",
+      "importer": "sprite-frame",
       "rawTextureUuid": "165acea1-3c9e-4612-8c84-ad1817b834c4",
       "trimType": "auto",
       "trimThreshold": 1,
