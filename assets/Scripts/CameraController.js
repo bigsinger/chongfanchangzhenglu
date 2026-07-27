@@ -49,6 +49,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 return e;
             }
             e.prototype.initCamera = function (t, e, o, i, n) {
+                this.unscheduleAllCallbacks();
                 this.gameManager = n;
                 this.camera_ts = this.node.getComponent(cc.Camera);
                 this.camera_ts.zoomRatio = 1;
@@ -109,10 +110,13 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 this.trackPosAct(t);
             };
             e.prototype.checkCamera = function (t, e) {
-                var o = this.camera_ts.zoomRatio, i = this.mapHeight / 2 * Math.sqrt(o), n = this.showHeight / 2;
-                e > i - n ? e = i - n : e < -i + n && (e = -i + n);
-                var a = this.mapWidth / 2, s = this.showWidth / 2;
-                t > a - s ? t = a - s : t < -a + s && (t = -a + s);
+                var o = cc.view.getVisibleSize();
+                o && o.width > 0 && o.height > 0 && (this.showWidth = o.width, this.showHeight = o.height);
+                var i = Math.max(.01, Number(this.camera_ts.zoomRatio) || 1);
+                var n = this.mapHeight / 2, a = this.showHeight / (2 * i), s = Math.max(0, n - a);
+                e = Math.max(-s, Math.min(s, e));
+                var r = this.mapWidth / 2, c = this.showWidth / (2 * i), l = Math.max(0, r - c);
+                t = Math.max(-l, Math.min(l, t));
                 this.node.x = t;
                 this.node.y = e;
             };

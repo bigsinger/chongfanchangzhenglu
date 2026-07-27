@@ -61,6 +61,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 e.isDrop = !1;
                 e.goOrRunTime = 1;
                 e.m_isGo = !1;
+                e.m_footstepSound = "";
                 e.node_mount = null;
                 return e;
             }
@@ -357,9 +358,13 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     this.isRight = t.x >= this.node.x;
                     this.node_mount.scaleX = this.isRight ? this.m_scale : -this.m_scale;
                 }
-                null != i && Math.abs(t.x - this.node.x) > 5 && this.setState(s.default.HERO_WALk);
+                if (null != i && Math.abs(t.x - this.node.x) > 5) {
+                    this.setState(s.default.HERO_WALk);
+                    this.setFootstepSound(!0);
+                }
                 var r = null != o ? o : Math.abs(t.x - this.node.x) / 200;
                 this.node.runAction(cc.sequence(cc.moveTo(r, cc.v2(t.x, t.y)), cc.callFunc(function () {
+                    a.setFootstepSound(!1);
                     a.setState(s.default.HERO_STANDBY);
                     e && e();
                 })));
@@ -401,7 +406,15 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     this.node_mount.color = cc.color(t, t, t);
                 } else this.dColor ? this.node_mount.color = cc.color(this.dColor[0], this.dColor[1], this.dColor[2]) : this.node_mount.color = cc.color(255, 255, 255);
             };
+            e.prototype.setFootstepSound = function (t) {
+                var e = t ? "run" == this.goMod && this.hero_state != s.default.STATE_LOAD ? "footsteps-run" : "footsteps-walk" : "";
+                if (e == this.m_footstepSound) return;
+                this.m_footstepSound && r.default.gameStopSound(this.m_footstepSound);
+                this.m_footstepSound = e;
+                e && r.default.playSound(e, !0, "footsteps-run" == e ? .42 : .36);
+            };
             e.prototype.initMoveData = function () {
+                this.setFootstepSound(!1);
                 this.targetX = null;
                 this.turnType = 0;
                 this.goType = 0;
@@ -517,12 +530,14 @@ var i, n = this && this.__extends || (i = function (t, e) {
                             this.setState(e);
                         }
                         this.m_isGo = !0;
+                        this.setFootstepSound(!0);
                     } else if (this.hero_state == s.default.STATE_DRAG) {
                         i = t ? s.default.SPEED_DRAG : -s.default.SPEED_DRAG;
                         t && this.item_drag.x > this.node.x || !t && this.item_drag.x < this.node.x ? this.setState(s.default.HERO_DRAG) : this.setState(s.default.HERO_DRAG, !0);
                         this.node.x += i;
                         this.item_drag.getComponent(cc.RigidBody).linearVelocity = cc.v2(0, -1);
                         this.item_drag.x += i;
+                        this.setFootstepSound(!0);
                         this.goCount--;
                         if (this.goCount <= 0) if (Math.abs(this.item_drag.x - this.drag_x) < s.default.SPEED_DRAG - .1) this.switchState(s.default.STATE_DRAG, !0); else {
                             this.drag_x = this.item_drag.x;
@@ -1081,9 +1096,14 @@ var i, n = this && this.__extends || (i = function (t, e) {
             e.prototype.changeVol = function () {
                 var t = (Math.abs(this.node.x - this.m_posAry[1]) / (this.m_posAry[2] - this.m_posAry[1])).toFixed(1);
                 this.m_soundVal = 1 - Number(t) < .1 ? .1 : 1 - Number(t);
-                r.default.nowSoundVal = this.m_soundVal;
                 console.log("=m_soundVal==", this.m_soundVal);
-                r.default.soundMap[this.m_soundId] && r.default.setSoundVolume(this.m_soundId, this.m_soundVal);
+                r.default.setSoundVolume(this.m_soundId, this.m_soundVal);
+            };
+            e.prototype.onDisable = function () {
+                this.setFootstepSound(!1);
+            };
+            e.prototype.onDestroy = function () {
+                this.setFootstepSound(!1);
             };
             a([u(sp.Skeleton)], e.prototype, "ske_run", void 0);
             a([u(cc.Node)], e.prototype, "node_run", void 0);

@@ -4,6 +4,12 @@ const assert = require('assert');
 const interaction = require('../assets/Scripts/GameplayInteractionQuery.js');
 const persistence = require('../assets/Scripts/GameplayPersistence.js');
 const objective = require('../assets/Scripts/ObjectiveManager.js').default;
+const audioCatalog = require('../assets/Scripts/AudioCatalog.js').default;
+
+assert.strictEqual(audioCatalog.effectPath('action/bucket_getwater.mp3'), 'audio/effect/fetch-water');
+assert.strictEqual(audioCatalog.effectPath('walk.mp3'), 'audio/effect/footsteps-walk');
+assert.strictEqual(audioCatalog.effectPath('shot_gun'), 'audio/effect/rifle-shot');
+assert.strictEqual(audioCatalog.musicPath('gkbg/bgm1.mp3'), 'audio/gameplay/main-theme');
 
 function interactiveNode(name, x, y, operation, events) {
   const component = {
@@ -282,4 +288,4 @@ assert.strictEqual(persistedItems.length, 1);
 assert.strictEqual(saved[0][0], 'temp');
 assert.deepStrictEqual(saved[saved.length - 1], ['commit', 'game-scene', { chapter: 3 }]);
 
-console.log('Gameplay support modules: interaction selection, proximity scan, and persistence passed');
+console.log('Gameplay support modules: audio routing, interaction selection, proximity scan, and persistence passed');

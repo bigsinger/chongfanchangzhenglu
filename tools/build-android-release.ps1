@@ -7,9 +7,9 @@ param(
     [Parameter(Mandatory)]
     [string]$SigningProperties,
     [ValidateRange(1, 2100000000)]
-    [int]$VersionCode = 2026072701,
+    [int]$VersionCode = 2026072704,
     [ValidatePattern('^\d+\.\d+\.\d+(?:[-+][A-Za-z0-9.-]+)?$')]
-    [string]$VersionName = '1.1.0',
+    [string]$VersionName = '1.1.1',
     [ValidatePattern('^[A-Z]$')]
     [string]$DriveLetter = 'S',
     [switch]$SkipGenerate,

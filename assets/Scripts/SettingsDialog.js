@@ -42,6 +42,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 r.default.MUSIC_BGM = cc.sys.localStorage.getItem("MUSIC_BGM") || 1;
                 r.default.MUSIC_SOUND = cc.sys.localStorage.getItem("MUSIC_SOUND") || 1;
                 r.default.MUSIC_VOICE = cc.sys.localStorage.getItem("MUSIC_VOICE") || 1;
+                l.default.refreshSoundVolumes();
                 var t = this.node_bgm.getChildByName("slider_bgm"), e = t.getComponent(cc.Slider);
                 e.progress = r.default.MUSIC_BGM;
                 e.enabled = cc.sys.localStorage.getItem("BGM_ENABLED") || !0;
@@ -85,6 +86,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                         this.setSpriteFrame(u, "dialog/set/image_kdt" + m);
                         this.setSpriteFrame(p, "dialog/set/image_jz" + m);
                         cc.sys.localStorage.setItem("SOUND_ENABLED", o);
+                        o ? l.default.refreshSoundVolumes() : l.default.stopSceneSounds();
                         break;
 
                     case 2:
@@ -150,13 +152,16 @@ var i, n = this && this.__extends || (i = function (t, e) {
                         case 1:
                             r.default.MUSIC_SOUND = t.progress.toFixed(1);
                             cc.sys.localStorage.setItem("MUSIC_SOUND", r.default.MUSIC_SOUND);
-                            cc.audioEngine.setEffectsVolume(r.default.MUSIC_SOUND);
+                            l.default.refreshSoundVolumes();
                             break;
 
                         case 2:
                             r.default.MUSIC_VOICE = t.progress.toFixed(1);
                             cc.sys.localStorage.setItem("MUSIC_VOICE", r.default.MUSIC_VOICE);
-                            cc.audioEngine.setEffectsVolume(r.default.MUSIC_VOICE);
+                            // The restored package has no separate voice clips.
+                            // Do not route this legacy slider through the global
+                            // effects bus or it also mutes footsteps and actions.
+                            l.default.refreshSoundVolumes();
                     }
                 }
             };

@@ -6443,7 +6443,7 @@
     },
     {
       "oldPath": "sound/cg/cgbgm",
-      "newPath": "audio/cg/cgbgm",
+      "newPath": "audio/cutscenes/opening-theme",
       "bundle": "resources",
       "uuid": "8117619b-9a6d-4a63-8cff-1a495312670a"
     },
@@ -6479,7 +6479,7 @@
     },
     {
       "oldPath": "sound/effect/chuihao",
-      "newPath": "audio/effect/chuihao",
+      "newPath": "audio/effect/bugle-call",
       "bundle": "resources",
       "uuid": "c7c94166-da51-4d7d-bc38-945019519e37"
     },
@@ -6557,25 +6557,25 @@
     },
     {
       "oldPath": "sound/effect/grenadebang",
-      "newPath": "audio/effect/grenadebang",
+      "newPath": "audio/effect/grenade-impact",
       "bundle": "resources",
       "uuid": "2f5a2ba4-097c-472c-bfc0-09623f268afc"
     },
     {
       "oldPath": "sound/effect/grenadeboom",
-      "newPath": "audio/effect/grenadeboom",
+      "newPath": "audio/effect/grenade-explosion",
       "bundle": "resources",
       "uuid": "85cd2825-b2cc-4f99-9e73-de9a89a0c294"
     },
     {
       "oldPath": "sound/effect/grenadeso",
-      "newPath": "audio/effect/grenadeso",
+      "newPath": "audio/effect/grenade-throw",
       "bundle": "resources",
       "uuid": "8e8908a0-8b23-4a9f-87b8-236d4298ef10"
     },
     {
       "oldPath": "sound/effect/hanyang",
-      "newPath": "audio/effect/hanyang",
+      "newPath": "audio/effect/hanyang-rifle",
       "bundle": "resources",
       "uuid": "3109367d-3f34-4d35-83f5-6e1e05eec30c"
     },
@@ -6605,7 +6605,7 @@
     },
     {
       "oldPath": "sound/effect/kaiqiang",
-      "newPath": "audio/effect/kaiqiang",
+      "newPath": "audio/effect/rifle-shot",
       "bundle": "resources",
       "uuid": "71688977-235e-493c-92d8-f1508d8481c8"
     },
@@ -6671,7 +6671,7 @@
     },
     {
       "oldPath": "sound/effect/run",
-      "newPath": "audio/effect/run",
+      "newPath": "audio/effect/footsteps-run",
       "bundle": "resources",
       "uuid": "a7afae1c-0e39-4e0a-ac3a-92dd1bf9dc44"
     },
@@ -6731,7 +6731,7 @@
     },
     {
       "oldPath": "sound/effect/walk",
-      "newPath": "audio/effect/path",
+      "newPath": "audio/effect/footsteps-walk",
       "bundle": "resources",
       "uuid": "e42dc903-f95b-4a8e-a842-0ae41898c049"
     },
@@ -6743,49 +6743,49 @@
     },
     {
       "oldPath": "sound/effect/zhongzheng",
-      "newPath": "audio/effect/zhongzheng",
+      "newPath": "audio/effect/zhongzheng-rifle",
       "bundle": "resources",
       "uuid": "c82111a3-433b-49ed-b67d-f624561ff22f"
     },
     {
       "oldPath": "sound/gkbg/bgm1",
-      "newPath": "audio/gkbg/bgm-1",
+      "newPath": "audio/gameplay/main-theme",
       "bundle": "resources",
       "uuid": "e2e01a32-b668-4778-bc57-2b9b036a48c0"
     },
     {
       "oldPath": "sound/home",
-      "newPath": "audio/home",
+      "newPath": "audio/main-menu-theme",
       "bundle": "resources",
       "uuid": "f612d9db-3425-46e2-8dd5-e79a1ffcb798"
     },
     {
       "oldPath": "sound/loadbg",
-      "newPath": "audio/loadbg",
+      "newPath": "audio/loading-theme",
       "bundle": "resources",
       "uuid": "1b6f1af8-e918-40b1-9462-381127eaf8b0"
     },
     {
       "oldPath": "sound/transitionBg/transition_1_0",
-      "newPath": "audio/transition-bg/transition-1-0",
+      "newPath": "audio/chapter-transitions/chapter-1-part-0",
       "bundle": "resources",
       "uuid": "66830c52-a988-4b46-a7c9-7ee428ece091"
     },
     {
       "oldPath": "sound/transitionBg/transition_1_1",
-      "newPath": "audio/transition-bg/transition-1-1",
+      "newPath": "audio/chapter-transitions/chapter-1-part-1",
       "bundle": "resources",
       "uuid": "13b71858-cffc-413f-af49-0e7c2e75d1da"
     },
     {
       "oldPath": "sound/transitionBg/transition_1_2",
-      "newPath": "audio/transition-bg/transition-1-2",
+      "newPath": "audio/chapter-transitions/chapter-1-part-2",
       "bundle": "resources",
       "uuid": "0dac344f-36d0-4792-b10b-ed562d0b7b75"
     },
     {
       "oldPath": "sound/transitionBg/transition_1_3",
-      "newPath": "audio/transition-bg/transition-1-3",
+      "newPath": "audio/chapter-transitions/chapter-1-part-3",
       "bundle": "resources",
       "uuid": "6fd5f5a4-cde1-41ee-9c9c-1f734e620152"
     },

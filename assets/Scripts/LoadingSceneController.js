@@ -25,7 +25,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
         Object.defineProperty(o, "__esModule", {
             value: !0
         });
-        var s = require("./BaseView"), r = require("./GameConfigManager"), c = require("./GameState"), l = require("./AudioManager"), h = require("./PlatformBridge"), v = require("./SaveManager"), y = require("./ResourceManager"), b = require("./Logger"), d = cc._decorator, p = d.ccclass, u = d.property, m = function (t) {
+        var s = require("./BaseView"), r = require("./GameConfigManager"), c = require("./GameState"), l = require("./AudioManager"), h = require("./PlatformBridge"), v = require("./SaveManager"), y = require("./ResourceManager"), b = require("./Logger"), displayAdapter = require("./DisplayAdapter"), d = cc._decorator, p = d.ccclass, u = d.property, m = function (t) {
             n(e, t);
             function e() {
                 var e = null !== t && t.apply(this, arguments) || this;
@@ -44,9 +44,15 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 e.m_asideIndex = 1;
                 e.m_timeIndex = 0;
                 e.m_index = 0;
+                e.m_openingGateDone = !1;
+                e.m_openingGateCallback = null;
                 return e;
             }
             e.prototype.onLoad = function () {
+                displayAdapter.default.apply(this.node, {
+                    referenceWidth: 1650,
+                    coverNodes: [this.cg && this.cg.node]
+                });
                 b.default.install();
                 v.default.installLifecycle(c.default);
                 var t = this, e = v.default.restoreOrMigrate(c.default.playData, "gameScene" == cc.sys.localStorage.getItem("codex_direct_scene")), o = c.default.playData;
@@ -56,11 +62,13 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 }
                 cc.sys.localStorage.getItem("longmarch_first") && (this.m_isFirst = !0);
                 this.btn_skip.active = this.m_isFirst;
-                this.cg.node.active = !0;
+                // The restored 2.4.3 Spine title animation renders its
+                // attachments with invalid transforms on current Android
+                // wide-screen devices. Keep the clean illustrated splash,
+                // progress bar and historical captions instead of displaying
+                // scattered skeleton parts across the screen.
+                this.cg.node.active = !1;
                 this.btn_skip.active && this.btn_skip.runAction(cc.fadeIn(1.2));
-                this.cg.setCompleteListener(function () {
-                    t._onPlayComplete();
-                });
                 h.default.init();
                 cc.debug.setDisplayStats(!1);
             };
@@ -74,11 +82,13 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 c.default.loadMapInfo();
                 r.default.loadTempData();
                 this.m_callBack = function () {
-                    t.m_playName = "await";
-                    t.cg.setAnimation(0, "await", !1);
                     l.default.gamePlayBGM("cg/cgbgm");
                     t.m_titleData = c.default.cgtitleData[0];
                     t.schedule(t.execute, 1);
+                    t.m_openingGateCallback = function () {
+                        t.finishOpeningGate();
+                    };
+                    t.scheduleOnce(t.m_openingGateCallback, 6);
                 };
                 y.default.loadDir("sound/effect/ui", function () { }, function () { }, "core:ui-sound");
                 this.loadGameConfig();
@@ -258,11 +268,18 @@ var i, n = this && this.__extends || (i = function (t, e) {
                         this.gotoLoginScene();
                 }
             };
+            e.prototype.finishOpeningGate = function () {
+                if (this.m_openingGateDone) return;
+                this.m_openingGateDone = !0;
+                this.m_openingGateCallback && this.unschedule(this.m_openingGateCallback);
+                this.m_openingGateCallback = null;
+                this.m_loadIndex++;
+                this.gotoLoginScene();
+            };
             e.prototype.skipBack = function () {
                 l.default.playSound("ui/back.mp3");
                 this.plot_label.node.active = !1;
-                this.m_loadIndex++;
-                this.gotoLoginScene();
+                this.finishOpeningGate();
             };
             a([u(cc.Node)], e.prototype, "probg", void 0);
             a([u(cc.Node)], e.prototype, "proimg", void 0);

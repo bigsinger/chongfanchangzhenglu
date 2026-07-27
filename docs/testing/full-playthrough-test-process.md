@@ -44,6 +44,8 @@
 | 类别 | 必测结果 |
 |---|---|
 | 移动 | 点击道路、`A`/`D`、左右方向键有效；梯子上的 `W`/`S` 或上下方向键有效 |
+| 音频 | 主菜单、片头、章节和游戏 BGM 连续；走/跑脚步声随移动启停；动作、武器、取水、UI 音效可辨认 |
+| 横屏 | Android 强制横屏；16:9、20:9/21:9 下片头、主菜单、章节卡和游戏 HUD 不裁切、不重叠 |
 | 镜头 | 人物处于地图边缘时，镜头仍显示可行动道路和必要交互，不把人物长期卡在画面边缘 |
 | 交互 | 靠近目标后，右下操作按钮显示正确动作和目标；世界气泡可点击 |
 | 拾取 | 物品被拾取、携带状态更新、任务追踪更新并自动保存 |
@@ -382,6 +384,9 @@ d<章>-<图>-<before|after>-<节点>-<序号>
 6. 走进交互距离，动作标签应包含实际目标名称。
 7. 完成交互后立刻按 Home，再恢复应用，结果仍存在。
 8. 抓取 OCR 预览和日志。
+9. 走、跑和停步各一次，确认脚步声及时开始、切换并停止；不得叠加成多路循环声。
+10. 通过门、道路或楼梯进入另一层后，人物和当前层道路必须立即回到可视范围，镜头不能
+    停留在前一个层级。
 
 ```powershell
 .\tests\manual\android-game\game-test.ps1 background `
@@ -389,6 +394,48 @@ d<章>-<图>-<before|after>-<节点>-<序号>
 .\tests\manual\android-game\game-test.ps1 inspect -Name d3-2-after-delivery
 .\tests\manual\android-game\game-test.ps1 logs -Name d3-2-after-delivery
 ```
+
+### 6.1 手机横屏、镜头与音频专项矩阵
+
+每个发布候选至少覆盖以下比例：
+
+| 设备比例 | 示例分辨率 | 必测界面 |
+|---|---:|---|
+| 16:9 | 1920×1080 | Android 启动画面、插画片头、主菜单、章节卡、游戏 HUD |
+| 20:9 | 2400×1080 | 同上，并检查刘海/圆角安全边缘 |
+| 21:9 或最宽目标机 | 2520×1080 | 标题、跳过、暂停、目标条和右下操作按钮 |
+
+模拟器可以临时覆盖分辨率，但必须使用 `finally` 恢复，避免影响后续测试：
+
+```powershell
+$adb = 'D:\Android\Sdk\platform-tools\adb.exe'
+try {
+    & $adb -s emulator-5554 shell wm size 1080x2400
+    .\tests\manual\android-game\game-test.ps1 stop
+    .\tests\manual\android-game\game-test.ps1 launch
+    Start-Sleep -Seconds 4
+    .\tests\manual\android-game\game-test.ps1 inspect -Name startup-20x9
+    .\tests\manual\android-game\game-test.ps1 logs -Name startup-20x9
+} finally {
+    & $adb -s emulator-5554 shell wm size reset
+}
+```
+
+片头预期为稳定的插画、标题、历史字幕、进度条和跳过按钮；不得出现旧 Spine 附件散落、
+黑屏或标题越界。检查 Android 工程的 Activity 清单包含
+`android:screenOrientation="landscape"`。
+
+镜头专项至少自然操作一次“同图前后景门”和一次“跨地图门”。进入后立即检查：
+
+- 主角完整可见，且不贴在错误的上/下边缘；
+- 当前道路、梯子或交互按钮处于画面内；
+- 摄像机缩放后的边界按实际可视尺寸约束；
+- 返回原层后仍跟随主角，不继承前一层的固定镜头。
+
+音频专项不要只听一次。依次验证主菜单、片头、游戏 BGM，走路、跑步、取水、开门、拾取、
+枪炮和 UI 音效，再在设置中把音效调整为 30%、100% 和关闭/开启。语音滑块不得连带静音
+脚步与动作音效。Android 原生日志应能看到对应 MP3 被
+`AudioPlayerProvider`/`AudioDecoder` 载入，不得出现“资源路径不存在”。
 
 ## 7. 异常与恢复测试
 
@@ -525,6 +572,10 @@ d<章>-<图>-<before|after>-<节点>-<序号>
 - [ ] 七张发布地图逐图加载和移动
 - [ ] 三章主线完整通关
 - [ ] 所有核心交互合同
+- [ ] 16:9、20:9/21:9 横屏片头、主菜单、章节卡和 HUD
+- [ ] 同图前后景门、跨图门和楼梯后的镜头重定位
+- [ ] BGM、走/跑脚步、动作、枪炮、取水、开门和 UI 音效
+- [ ] 音效/语音设置互不误伤，关闭与重新开启立即生效
 - [ ] CG 跳过和对白加速
 - [ ] 后台、覆盖安装、坏档回退
 - [ ] 日志无 JavaScript、Native、ANR 和加载错误
@@ -598,7 +649,7 @@ APK、AAB、签名文件和测试原始截图不提交 Git。Markdown 结论、�
 
 - `git diff --check` 通过；
 - `game-test.ps1` PowerShell 语法解析通过；
-- `npm test` 通过：69 个脚本及全部 JSON、配置图 0 错误、发布内容、游戏合同、命名和
+- `npm test` 通过：71 个脚本及全部 JSON、配置图 0 错误、发布内容、游戏合同、命名和
   纹理预算通过；
 - 从第一章到第三章终局的完整人工通关通过，九次医疗物资分发、两组答题、战场演出、
   红星报拾取和终局确认均实际操作；
@@ -607,6 +658,9 @@ APK、AAB、签名文件和测试原始截图不提交 Git。Markdown 结论、�
 - 测试结束自动恢复原现场：第三章第 1 图、`role_erwa2`、解锁进度 2；
 - `longmarch_save_v2_current` 与 `longmarch_save_v2_previous` 两代快照均存在；
 - 恢复后的日志没有 JavaScript、Native fatal、ANR 或资源加载错误。
+- 1.1.1 手机专项复测确认 Android 强制横屏；16:9 与 20:9 片头布局通过；片头和游戏
+  BGM、跑步脚步声均由 Android 原生音频解码器实际载入和播放；同图门摄像机重定位及
+  缩放边界已纳入自动合同。
 
 完整记录见
 [`full-playthrough-validation-2026-07-27.md`](full-playthrough-validation-2026-07-27.md)。

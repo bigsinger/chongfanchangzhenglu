@@ -25,7 +25,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
         Object.defineProperty(o, "__esModule", {
             value: !0
         });
-        var s = require("./BaseView"), r = require("./GameConfigManager"), c = require("./GameState"), l = require("./AudioManager"), h = require("./GameUtilities"), d = require("./DialogManager"), p = require("./SpineAnimationManager"), u = require("./GameplayEventController"), v = require("./SaveManager"), w = require("./ObjectiveManager"), timingEvent = require("./timingEvent"), interactionQuery = require("./GameplayInteractionQuery"), gameplayPersistence = require("./GameplayPersistence"), m = cc._decorator, _ = m.ccclass, f = m.property, g = function (t) {
+        var s = require("./BaseView"), r = require("./GameConfigManager"), c = require("./GameState"), l = require("./AudioManager"), h = require("./GameUtilities"), d = require("./DialogManager"), p = require("./SpineAnimationManager"), u = require("./GameplayEventController"), v = require("./SaveManager"), w = require("./ObjectiveManager"), timingEvent = require("./TimingEvent"), interactionQuery = require("./GameplayInteractionQuery"), gameplayPersistence = require("./GameplayPersistence"), displayAdapter = require("./DisplayAdapter"), m = cc._decorator, _ = m.ccclass, f = m.property, g = function (t) {
             n(e, t);
             function e() {
                 var e = null !== t && t.apply(this, arguments) || this;
@@ -147,6 +147,9 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 return e;
             }
             e.prototype.onLoad = function () {
+                displayAdapter.default.apply(this.node, {
+                    referenceWidth: 1334
+                });
                 // Keep modal dialogs and HUD above every world/foreground
                 // camera. The legacy scene assigned the same depth to both
                 // cameras, whose order is undefined on native renderers.
@@ -544,6 +547,12 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     this.hero.runAction(cc.sequence(cc.fadeOut(.7), cc.callFunc(function () {
                         o.hero.x = Number(e.x) - o.gameNode.width / 2;
                         o.hero.y = -(Number(e.y) - o.gameNode.height / 2);
+                        o.isLockCamera = !0;
+                        o.camera_master_ts.restoreCamera({
+                            x: o.hero.x,
+                            y: o.hero.y + 275
+                        }, null);
+                        o.alignLayer();
                     }), cc.fadeIn(.7), cc.callFunc(function () {
                         o.changeForceWait(!1);
                         u.default.isGround = !0;
@@ -764,6 +773,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     x: t.x,
                     y: t.y + 275
                 }, this.initCameraData);
+                l.default.gamePlayBGM("gameplay/main-theme");
                 this.horizonY = this.hero.y;
                 this.saveItemConf({
                     x: this.hero.x,

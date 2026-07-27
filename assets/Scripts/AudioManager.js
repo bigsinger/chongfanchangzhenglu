@@ -1,139 +1,173 @@
 'use strict';
 
-var e = module;
-var o = exports;
+Object.defineProperty(exports, "__esModule", {
+    value: !0
+});
 
-Object.defineProperty(o, "__esModule", {
-            value: !0
+var GameState = require("./GameState");
+var ResourceManager = require("./ResourceManager");
+var AudioCatalog = require("./AudioCatalog");
+
+function numberInRange(value, fallback) {
+    var numeric = Number(value);
+    if (!isFinite(numeric)) numeric = fallback;
+    return Math.max(0, Math.min(1, numeric));
+}
+
+var AudioManager = function () {
+    function AudioManager() { }
+
+    AudioManager.isEnabled = function (key) {
+        var stored = cc.sys.localStorage.getItem(key);
+        return null == stored || "0" != stored && "false" != String(stored).toLowerCase();
+    };
+
+    AudioManager.loadClip = function (path, callback) {
+        var manager = this;
+        var normalizedPath = String(path || "").replace(/\.(mp3|wav|ogg)$/i, "");
+        if (this.audioCache[normalizedPath]) {
+            callback(null, this.audioCache[normalizedPath]);
+            return;
+        }
+        if (this.audioLoading[normalizedPath]) {
+            this.audioLoading[normalizedPath].push(callback);
+            return;
+        }
+        this.audioLoading[normalizedPath] = [callback];
+        ResourceManager.default.load(normalizedPath, cc.AudioClip, function (error, clip) {
+            if (!error && clip) manager.audioCache[normalizedPath] = clip;
+            var callbacks = manager.audioLoading[normalizedPath] || [];
+            delete manager.audioLoading[normalizedPath];
+            for (var index = 0; index < callbacks.length; index++) callbacks[index](error, clip);
         });
-        var i = require("./GameState"), a = require("./ResourceManager"), n = function () {
-            function t() { }
-            t.isEnabled = function (t) {
-                var e = cc.sys.localStorage.getItem(t);
-                return null == e || "0" != e && "false" != String(e).toLowerCase();
-            };
-            t.loadClip = function (t, e) {
-                var o = this;
-                // Creator 2.4 的 resources 接口使用不带扩展名的资源路径，
-                // 同时兼容迁移前代码里普遍存在的 ".mp3" / ".wav" 写法。
-                var i = t.replace(/\.(mp3|wav|ogg)$/i, "");
-                if (this.audioCache[i]) {
-                    e(null, this.audioCache[i]);
-                    return;
-                }
-                if (this.audioLoading[i]) {
-                    this.audioLoading[i].push(e);
-                    return;
-                }
-                this.audioLoading[i] = [e];
-                a.default.load(i, cc.AudioClip, function (e, t) {
-                    e || (o.audioCache[i] = t);
-                    var n = o.audioLoading[i] || [];
-                    delete o.audioLoading[i];
-                    for (var a = 0; a < n.length; a++) n[a](e, t);
-                });
-            };
-            t.passBGM = function () {
-                this.bgmRequestToken++;
-                if (this.bgmID >= 0) {
-                    cc.audioEngine.stop(this.bgmID);
-                    this.bgmID = -1;
-                }
-            };
-            t.gamePlayBGM = function (t, e) {
-                var o = this;
-                void 0 === e && (e = !0);
-                var n = this.isEnabled("BGM_ENABLED");
-                if (i.default.nowBGM != t || this.bgmID < 0) {
-                    var a = ++this.bgmRequestToken;
-                    if (this.bgmID >= 0) {
-                        cc.audioEngine.stop(this.bgmID);
-                        this.bgmID = -1;
-                    }
-                    if (i.default.MUSIC_BGM > 0 && n) {
-                        var s = "sound/" + t + ".mp3";
-                        i.default.nowBGM = t;
-                        this.loadClip(s, function (n, s) {
-                            if (n) console.error(n); else if (a == o.bgmRequestToken && i.default.nowBGM == t) {
-                                // Creator 2.4.15's native binding only accepts a
-                                // numeric float. LocalStorage returns strings,
-                                // so apply the normalized value through the
-                                // music API before playMusic consumes it.
-                                var r = Number(i.default.MUSIC_BGM);
-                                isFinite(r) || (r = 1);
-                                r = Math.max(0, Math.min(1, r));
-                                cc.audioEngine.setMusicVolume(r);
-                                o.bgmID = cc.audioEngine.playMusic(s, e);
-                            }
-                        });
-                    }
-                }
-            };
-            t.stopBGM = function () {
-                this.bgmRequestToken++;
-                if (this.bgmID >= 0) {
-                    cc.audioEngine.stop(this.bgmID);
-                    this.bgmID = -1;
-                }
-                i.default.nowBGM = "";
-            };
-            t.playSound = function (t, e) {
-                var o = this;
-                void 0 === e && (e = !1);
-                var n = this.isEnabled("SOUND_ENABLED");
-                var a = (this.soundRequestTokens[t] || 0) + 1;
-                this.soundRequestTokens[t] = a;
-                if (this.soundMap[t] >= 0) {
-                    cc.audioEngine.stop(this.soundMap[t]);
-                    this.soundMap[t] = -1;
-                }
-                if (i.default.MUSIC_SOUND > 0 && n) {
-                    var s = "sound/effect/" + t;
-                    this.loadClip(s, function (n, s) {
-                        n ? console.error(n) : a == o.soundRequestTokens[t] && (o.soundMap[t] = cc.audioEngine.play(s, e, o.nowSoundVal || i.default.MUSIC_SOUND));
-                    });
-                }
-            };
-            t.gameStopSound = function (t) {
-                this.soundRequestTokens[t] = (this.soundRequestTokens[t] || 0) + 1;
-                if (this.soundMap[t] >= 0) {
-                    cc.audioEngine.stop(this.soundMap[t]);
-                    this.soundMap[t] = -1;
-                    this.nowSoundVal = 0;
-                }
-            };
-            t.stopSceneSounds = function () {
-                for (var t in this.soundRequestTokens) this.soundRequestTokens[t]++;
-                for (var e in this.soundMap) if (this.soundMap[e] >= 0) {
-                    cc.audioEngine.stop(this.soundMap[e]);
-                }
-                this.soundMap = {};
-                this.nowSoundVal = 0;
-            };
-            t.setSoundVolume = function (t, e) {
-                this.soundMap && this.soundMap[t] >= 0 && cc.audioEngine.setVolume(this.soundMap[t], e);
-            };
-            t.playGoSound = function () {
-                var t = this;
-                this.loadClip("sound/effect/go.mp3", function (e, o) {
-                    e ? console.error(e) : cc.audioEngine.play(o, !1, t.voiceVolume);
-                });
-            };
-            t.lk_button = "lk_button";
-            t.audioList = {};
-            t.flag = !0;
-            t.bgVolume = 1;
-            t.deskVolume = 1;
-            t.voiceVolume = 1;
-            t.bgAudioID = -1;
-            t.storyAudioId = -1;
-            t.nowSoundVal = 0;
-            t.soundMap = {};
-            t.soundRequestTokens = {};
-            t.bgmID = -1;
-            t.bgmRequestToken = 0;
-            t.audioCache = {};
-            t.audioLoading = {};
-            return t;
-        }();
-        o.default = n;
+    };
+
+    AudioManager.passBGM = function () {
+        this.bgmRequestToken++;
+        if (this.bgmID >= 0) {
+            cc.audioEngine.stop(this.bgmID);
+            this.bgmID = -1;
+        }
+    };
+
+    AudioManager.gamePlayBGM = function (name, loop) {
+        var manager = this;
+        void 0 === loop && (loop = !0);
+        var key = AudioCatalog.default.musicKey(name);
+        if (GameState.default.nowBGM == key && this.bgmID >= 0) return;
+        var requestToken = ++this.bgmRequestToken;
+        if (this.bgmID >= 0) {
+            cc.audioEngine.stop(this.bgmID);
+            this.bgmID = -1;
+        }
+        GameState.default.nowBGM = key;
+        if (numberInRange(GameState.default.MUSIC_BGM, 1) <= 0 || !this.isEnabled("BGM_ENABLED")) return;
+        this.loadClip(AudioCatalog.default.musicPath(key), function (error, clip) {
+            if (error || !clip) {
+                console.error("------------ 背景音乐加载失败 " + key, error);
+                return;
+            }
+            if (requestToken != manager.bgmRequestToken || GameState.default.nowBGM != key) return;
+            var volume = numberInRange(GameState.default.MUSIC_BGM, 1);
+            cc.audioEngine.setMusicVolume(volume);
+            manager.bgmID = cc.audioEngine.playMusic(clip, loop);
+            console.log("------------ 背景音乐开始 " + key);
+        });
+    };
+
+    AudioManager.stopBGM = function () {
+        this.passBGM();
+        GameState.default.nowBGM = "";
+    };
+
+    AudioManager.playSound = function (name, loop, volume) {
+        var manager = this;
+        void 0 === loop && (loop = !1);
+        var key = AudioCatalog.default.effectKey(name);
+        var requestToken = (this.soundRequestTokens[key] || 0) + 1;
+        this.soundRequestTokens[key] = requestToken;
+        if (this.soundMap[key] >= 0) {
+            cc.audioEngine.stop(this.soundMap[key]);
+            this.soundMap[key] = -1;
+        }
+        if (null != volume) this.soundVolumes[key] = numberInRange(volume, 1);
+        if (numberInRange(GameState.default.MUSIC_SOUND, 1) <= 0 || !this.isEnabled("SOUND_ENABLED")) return;
+        this.loadClip(AudioCatalog.default.effectPath(key), function (error, clip) {
+            if (error || !clip) {
+                console.error("------------ 音效加载失败 " + key, error);
+                return;
+            }
+            if (requestToken != manager.soundRequestTokens[key]) return;
+            var baseVolume = null != manager.soundVolumes[key] ? manager.soundVolumes[key] : 1;
+            var effectVolume = baseVolume * numberInRange(GameState.default.MUSIC_SOUND, 1);
+            manager.soundMap[key] = cc.audioEngine.play(clip, loop, effectVolume);
+        });
+        return key;
+    };
+
+    AudioManager.gameStopSound = function (name) {
+        var key = AudioCatalog.default.effectKey(name);
+        this.soundRequestTokens[key] = (this.soundRequestTokens[key] || 0) + 1;
+        if (this.soundMap[key] >= 0) cc.audioEngine.stop(this.soundMap[key]);
+        this.soundMap[key] = -1;
+        delete this.soundVolumes[key];
+    };
+
+    AudioManager.stopSceneSounds = function () {
+        for (var key in this.soundRequestTokens) this.soundRequestTokens[key]++;
+        for (var soundKey in this.soundMap) {
+            if (this.soundMap[soundKey] >= 0) cc.audioEngine.stop(this.soundMap[soundKey]);
+        }
+        this.soundMap = {};
+        this.soundVolumes = {};
+    };
+
+    AudioManager.setSoundVolume = function (name, volume) {
+        var key = AudioCatalog.default.effectKey(name);
+        var normalizedVolume = numberInRange(volume, 1);
+        this.soundVolumes[key] = normalizedVolume;
+        if (this.soundMap[key] >= 0) {
+            cc.audioEngine.setVolume(
+                this.soundMap[key],
+                normalizedVolume * numberInRange(GameState.default.MUSIC_SOUND, 1)
+            );
+        }
+    };
+
+    AudioManager.refreshSoundVolumes = function () {
+        // Creator exposes one legacy global effects volume for every category.
+        // Keep it neutral so the unused voice slider cannot mute footsteps and
+        // action sounds, then apply the player's sound setting per active clip.
+        cc.audioEngine.setEffectsVolume(1);
+        var soundVolume = numberInRange(GameState.default.MUSIC_SOUND, 1);
+        for (var key in this.soundMap) {
+            if (this.soundMap[key] < 0) continue;
+            var baseVolume = null != this.soundVolumes[key] ? this.soundVolumes[key] : 1;
+            cc.audioEngine.setVolume(this.soundMap[key], baseVolume * soundVolume);
+        }
+    };
+
+    AudioManager.playGoSound = function () {
+        this.playSound("go", !1, this.voiceVolume);
+    };
+
+    AudioManager.lk_button = "lk_button";
+    AudioManager.audioList = {};
+    AudioManager.flag = !0;
+    AudioManager.bgVolume = 1;
+    AudioManager.deskVolume = 1;
+    AudioManager.voiceVolume = 1;
+    AudioManager.bgAudioID = -1;
+    AudioManager.storyAudioId = -1;
+    AudioManager.nowSoundVal = 0;
+    AudioManager.soundMap = {};
+    AudioManager.soundVolumes = {};
+    AudioManager.soundRequestTokens = {};
+    AudioManager.bgmID = -1;
+    AudioManager.bgmRequestToken = 0;
+    AudioManager.audioCache = {};
+    AudioManager.audioLoading = {};
+    return AudioManager;
+}();
+
+exports.default = AudioManager;

@@ -134,7 +134,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 e.prototype.eventListenerBack = function (t) {
                     void 0 === t && (t = "1");
                     var e = this.m_path.split("/"), o = s.default.soundConf[e[1] + "|" + this.m_playName];
-                    o && o.fps != t && r.default.playSound("action/" + o.sound + ".mp3");
+                    o && o.fps != t && r.default.playSound(o.sound);
                 };
                 e.prototype.switchSolt = function (t) {
                     void 0 === t && (t = 0);

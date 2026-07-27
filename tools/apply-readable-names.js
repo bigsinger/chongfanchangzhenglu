@@ -23,9 +23,10 @@ const bundlesRoot = path.join(root, 'assets', 'bundles');
 const reportPath = path.join(root, 'docs', 'project', 'naming-migration.json');
 const apply = process.argv.includes('--apply');
 const verify = process.argv.includes('--verify');
+const refreshCatalog = process.argv.includes('--refresh-catalog');
 
-if (apply === verify) {
-  throw new Error('Specify exactly one of --apply or --verify.');
+if ([apply, verify, refreshCatalog].filter(Boolean).length !== 1) {
+  throw new Error('Specify exactly one of --apply, --verify, or --refresh-catalog.');
 }
 
 const scriptNames = {
@@ -133,6 +134,26 @@ const curatedBasenames = {
   gcdsrmddjx: 'communist-party-saves-the-people-slogan',
 };
 
+const curatedLegacyRoutes = {
+  'sound/home.mp3': 'audio/main-menu-theme.mp3',
+  'sound/loadbg.mp3': 'audio/loading-theme.mp3',
+  'sound/cg/cgbgm.mp3': 'audio/cutscenes/opening-theme.mp3',
+  'sound/gkbg/bgm1.mp3': 'audio/gameplay/main-theme.mp3',
+  'sound/transitionBg/transition_1_0.mp3': 'audio/chapter-transitions/chapter-1-part-0.mp3',
+  'sound/transitionBg/transition_1_1.mp3': 'audio/chapter-transitions/chapter-1-part-1.mp3',
+  'sound/transitionBg/transition_1_2.mp3': 'audio/chapter-transitions/chapter-1-part-2.mp3',
+  'sound/transitionBg/transition_1_3.mp3': 'audio/chapter-transitions/chapter-1-part-3.mp3',
+  'sound/effect/walk.mp3': 'audio/effect/footsteps-walk.mp3',
+  'sound/effect/run.mp3': 'audio/effect/footsteps-run.mp3',
+  'sound/effect/chuihao.mp3': 'audio/effect/bugle-call.mp3',
+  'sound/effect/hanyang.mp3': 'audio/effect/hanyang-rifle.mp3',
+  'sound/effect/kaiqiang.mp3': 'audio/effect/rifle-shot.mp3',
+  'sound/effect/zhongzheng.mp3': 'audio/effect/zhongzheng-rifle.mp3',
+  'sound/effect/grenadeso.mp3': 'audio/effect/grenade-throw.mp3',
+  'sound/effect/grenadebang.mp3': 'audio/effect/grenade-impact.mp3',
+  'sound/effect/grenadeboom.mp3': 'audio/effect/grenade-explosion.mp3',
+};
+
 const tokenNames = {
   btn: 'button',
   image: 'illustration',
@@ -225,6 +246,14 @@ function humanizeBasename(value) {
 }
 
 function routeLegacyPath(legacyPath, extension, renameFilename = true) {
+  const exactRoute = curatedLegacyRoutes[slash(legacyPath)];
+  if (exactRoute) {
+    return {
+      bundle: '',
+      logical: exactRoute,
+      destination: path.join(resourcesRoot, ...exactRoute.replace(/^audio\//, 'audio/').split('/')),
+    };
+  }
   const segments = slash(legacyPath).split('/');
   let bundle = '';
   let logicalSegments;
@@ -573,12 +602,13 @@ function verifyMigration() {
   if (!fs.existsSync(reportPath)) throw new Error(`Naming report is missing: ${reportPath}`);
   const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
   const failures = [];
+  const exactScriptFiles = new Set(fs.readdirSync(scriptsRoot));
   for (const [oldName, newName] of Object.entries(report.scriptRenames)) {
     if (oldName.toLowerCase() !== newName.toLowerCase() && fs.existsSync(path.join(scriptsRoot, `${oldName}.js`))) {
       failures.push(`Legacy script remains: ${oldName}.js`);
     }
     for (const filename of [`${newName}.js`, `${newName}.js.meta`]) {
-      if (!fs.existsSync(path.join(scriptsRoot, filename))) {
+      if (!exactScriptFiles.has(filename)) {
         failures.push(`Renamed script is missing: ${filename}`);
       }
     }
@@ -624,4 +654,10 @@ function verifyMigration() {
 }
 
 if (apply) applyMigration();
-else verifyMigration();
+else if (verify) verifyMigration();
+else {
+  if (!fs.existsSync(reportPath)) throw new Error(`Naming report is missing: ${reportPath}`);
+  const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
+  generateAssetCatalog(report.resourceAliases);
+  console.log(`Refreshed AssetCatalog from ${report.resourceAliases.length} readable resource aliases.`);
+}

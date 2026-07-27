@@ -25,7 +25,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
         Object.defineProperty(o, "__esModule", {
             value: !0
         });
-        var s = require("./GameConfigManager"), r = require("./GameState"), c = require("./AudioManager"), l = require("./DialogManager"), h = require("./DroppedItem"), d = require("./LoopingDropEffect"), p = require("./timingEvent"), interactionQuery = require("./GameplayInteractionQuery"), u = cc._decorator, m = u.ccclass, _ = (u.property,
+        var s = require("./GameConfigManager"), r = require("./GameState"), c = require("./AudioManager"), l = require("./DialogManager"), h = require("./DroppedItem"), d = require("./LoopingDropEffect"), p = require("./TimingEvent"), interactionQuery = require("./GameplayInteractionQuery"), u = cc._decorator, m = u.ccclass, _ = (u.property,
             function (t) {
                 n(e, t);
                 function e() {

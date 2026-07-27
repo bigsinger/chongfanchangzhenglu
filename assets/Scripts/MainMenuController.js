@@ -25,7 +25,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
         Object.defineProperty(o, "__esModule", {
             value: !0
         });
-        var s = require("./BaseView"), r = require("./GameState"), c = require("./AudioManager"), l = require("./DialogManager"), h = require("./SpineAnimationManager"), v = require("./ResourceManager"), d = cc._decorator, p = d.ccclass, u = d.property, m = function (t) {
+        var s = require("./BaseView"), r = require("./GameState"), c = require("./AudioManager"), l = require("./DialogManager"), h = require("./SpineAnimationManager"), v = require("./ResourceManager"), displayAdapter = require("./DisplayAdapter"), d = cc._decorator, p = d.ccclass, u = d.property, m = function (t) {
             n(e, t);
             function e() {
                 var e = null !== t && t.apply(this, arguments) || this;
@@ -39,6 +39,9 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 return e;
             }
             e.prototype.onLoad = function () {
+                displayAdapter.default.apply(this.node, {
+                    referenceWidth: 1650
+                });
                 // Every route back to the menu ends the active gameplay
                 // chapter, including completion/ending dialogs that bypass the
                 // normal transition controller.

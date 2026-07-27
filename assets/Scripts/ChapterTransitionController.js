@@ -25,7 +25,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
         Object.defineProperty(o, "__esModule", {
             value: !0
         });
-        var s = require("./BaseView"), r = require("./GameState"), c = require("./DragonBonesAnimationManager"), l = require("./AudioManager"), h = require("./GameConfigManager"), d = require("./PlatformBridge"), p = require("./SpineAnimationManager"), y = require("./ResourceManager"), u = cc._decorator, m = u.ccclass, _ = u.property, f = function (t) {
+        var s = require("./BaseView"), r = require("./GameState"), c = require("./DragonBonesAnimationManager"), l = require("./AudioManager"), h = require("./GameConfigManager"), d = require("./PlatformBridge"), p = require("./SpineAnimationManager"), y = require("./ResourceManager"), displayAdapter = require("./DisplayAdapter"), u = cc._decorator, m = u.ccclass, _ = u.property, f = function (t) {
             n(e, t);
             function e() {
                 var e = null !== t && t.apply(this, arguments) || this;
@@ -59,6 +59,10 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 return e;
             }
             e.prototype.onLoad = function () {
+                displayAdapter.default.apply(this.node, {
+                    referenceWidth: 1650,
+                    coverNodes: [this.img_bg, this.cg_node]
+                });
                 this.m_plotVal = [];
                 this.m_ChapterAry = r.default.Smallplot.split("_");
                 this.m_ChapterId = this.m_ChapterAry[1];

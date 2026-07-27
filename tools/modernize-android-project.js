@@ -7,7 +7,7 @@ const root = path.resolve(__dirname, '..');
 const androidProject = path.join(root, 'build', 'jsb-link', 'frameworks', 'runtime-src', 'proj.android-studio');
 const engineRoot = process.env.LONGMARCH_COCOS_ENGINE || 'E:/temp/CocosCreator-2.4.15/resources/cocos2d-x';
 const versionCode = Number(process.env.LONGMARCH_VERSION_CODE || 2026072701);
-const versionName = process.env.LONGMARCH_VERSION_NAME || '1.1.0';
+const versionName = process.env.LONGMARCH_VERSION_NAME || '1.1.1';
 const packageName = 'com.game.longmarch.creator243';
 
 if (!Number.isInteger(versionCode) || versionCode < 1 || versionCode > 2100000000) {
@@ -421,6 +421,7 @@ let appManifest = read(appManifestFile)
   .replace(/\s+package="[^"]+"/, '')
   .replace(/\s+android:usesCleartextTraffic="true"/, '')
   .replace('android:allowBackup="true"', 'android:allowBackup="false"')
+  .replace(/android:screenOrientation="[^"]+"/, 'android:screenOrientation="landscape"')
   .replace('android:taskAffinity="" >', 'android:taskAffinity=""\n            android:exported="true" >')
   .replace(/\s*<uses-permission android:name="android\.permission\.(?:INTERNET|ACCESS_NETWORK_STATE|ACCESS_WIFI_STATE)"\/>\s*/g, '\n');
 write(appManifestFile, appManifest);

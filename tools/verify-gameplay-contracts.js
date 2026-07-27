@@ -80,6 +80,7 @@ assert.equal(SaveManager.isValid(semanticCorruption), false);
 // to instantiate without a running JSB engine.
 const scene = source('GameplaySceneController.js');
 const chapterTransition = source('ChapterTransitionController.js');
+const loading = source('LoadingSceneController.js');
 const event = source('GameplayEventController.js');
 const interactionQuery = source('GameplayInteractionQuery.js');
 const interactiveObject = source('InteractiveObject.js');
@@ -92,7 +93,12 @@ const gameInfo = source('GameInfo.js');
 const gameStateSource = source('GameState.js');
 const cloudSources = source('CloudSpawner.js') + source('AmbientCloudSpawner.js');
 const fireMiniGame = source('FireExtinguishMiniGame.js');
-const timingMiniGame = source('timingEvent.js');
+const timingMiniGame = source('TimingEvent.js');
+const audioManager = source('AudioManager.js');
+const settingsDialog = source('SettingsDialog.js');
+const player = source('PlayerController.js');
+const camera = source('CameraController.js');
+const displayAdapter = source('DisplayAdapter.js');
 assert(
   /KEY_DOWN/.test(scene) &&
     /keyDirections/.test(scene) &&
@@ -110,7 +116,7 @@ assert(
   'nearby scan and operation selection must use the isolated query module'
 );
 assert(/showRequirementHint/.test(event) && /onRequiredItemDelivered/.test(event), 'wrong/right delivery contract');
-assert(/require\("\.\/baseEvent"\)/.test(fireMiniGame), 'fire mini-game must use the case-correct BaseEvent module path');
+assert(/require\("\.\/BaseEvent"\)/.test(fireMiniGame), 'fire mini-game must use the case-correct BaseEvent module path');
 assert(/pauseGame|gameOperate/.test(popup + scene), 'modal input blocking contract');
 assert(
   /this\.btn_story = this\.btn_story \|\| this\.node\.getChildByName\("btn_story"\)/.test(scene) &&
@@ -123,6 +129,33 @@ assert(
   'cooking timer action and bounded-time contract'
 );
 assert(/changeMap/.test(scene) && /saveItemConf/.test(scene), 'map transition save contract');
+assert(
+  /restoreCamera\(\{\s*x: o\.hero\.x,\s*y: o\.hero\.y \+ 275/.test(scene) &&
+    /var r = this\.mapWidth \/ 2, c = this\.showWidth \/ \(2 \* i\)/.test(camera),
+  'same-map door transitions and zoomed map bounds must recenter the gameplay camera'
+);
+assert(
+    /setFootstepSound/.test(player) &&
+    /footsteps-walk/.test(player) &&
+    /soundVolumes/.test(audioManager) &&
+    /refreshSoundVolumes/.test(audioManager) &&
+    /baseVolume \* numberInRange\(GameState\.default\.MUSIC_SOUND, 1\)/.test(audioManager) &&
+    /l\.default\.refreshSoundVolumes\(\)/.test(settingsDialog) &&
+    !/setEffectsVolume\(r\.default\.MUSIC_(?:SOUND|VOICE)\)/.test(settingsDialog) &&
+    !/audio\/effect\/action\//.test(audioManager),
+  'movement and authored animation sounds must use canonical, independently mixed effects'
+);
+assert(
+  /ResolutionPolicy\.FIXED_HEIGHT/.test(displayAdapter) &&
+    /ORIENTATION_LANDSCAPE/.test(displayAdapter) &&
+    /DisplayAdapter/.test(scene + chapterTransition + menu),
+  'all primary scenes must share fixed-height landscape adaptation'
+);
+assert(
+  /this\.cg\.node\.active = !1/.test(loading) &&
+    /finishOpeningGate/.test(loading),
+  'wide-screen startup must use the stable illustrated splash instead of the broken restored Spine title'
+);
 assert(
   /prototype\.stopNodeRuntime/.test(scene) &&
     /this\.stopNodeRuntime\(this\.gameNode\)/.test(scene) &&
@@ -150,7 +183,7 @@ assert(
 );
 assert(/releasePrefix\("gk\/d"\)/.test(menu), 'menu must release the active chapter scope');
 assert(
-  /V_S_1\.1\.0/.test(gameInfo) && /V_S_1\.1\.0/.test(gameStateSource),
+  /V_S_1\.1\.1/.test(gameInfo) && /V_S_1\.1\.1/.test(gameStateSource),
   'main-menu display version must match the Android/package release version'
 );
 assert(/_releasedEpochs/.test(resourceManagerSource) && /_bundleInflight/.test(resourceManagerSource), 'late resource load cancellation contract');

@@ -25,7 +25,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
         Object.defineProperty(o, "__esModule", {
             value: !0
         });
-        var s = require("./GameState"), r = require("./GameplayEventController"), c = require("./baseEvent"), l = cc._decorator, h = l.ccclass, d = (l.property,
+        var s = require("./GameState"), r = require("./GameplayEventController"), c = require("./BaseEvent"), l = cc._decorator, h = l.ccclass, d = (l.property,
             function (t) {
                 n(e, t);
                 function e() {

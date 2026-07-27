@@ -2,61 +2,61 @@
   {
     "id": "1",
     "act": "scenes_ruins1|attack1",
-    "sound": "dig_hands_rubble",
+    "sound": "dig-hands",
     "fps": ""
   },
   {
     "id": "2",
     "act": "scenes_fire1|await3",
-    "sound": "fire",
+    "sound": "burn",
     "fps": ""
   },
   {
     "id": "3",
     "act": "role_erwa1|getwater_awaitd",
-    "sound": "bucket_getwater",
+    "sound": "fetch-water",
     "fps": ""
   },
   {
     "id": "4",
     "act": "role_erwa1|splash_await",
-    "sound": "bucket_splash",
+    "sound": "splash-water",
     "fps": "1"
   },
   {
     "id": "5",
     "act": "scenes_fire1|attack3",
-    "sound": "bucket_outfire",
+    "sound": "extinguish",
     "fps": "1"
   },
   {
     "id": "6",
     "act": "role_erwa1|pail_put",
-    "sound": "pickup",
+    "sound": "pick",
     "fps": ""
   },
   {
     "id": "7",
     "act": "role_erwa2|pickup",
-    "sound": "pickup",
+    "sound": "pick",
     "fps": ""
   },
   {
     "id": "8",
     "act": "role_erwa1|dig_spade",
-    "sound": "dig_shovel_rubble",
+    "sound": "dig-shovel",
     "fps": ""
   },
   {
     "id": "9",
     "act": "role_erwa1|dig_hand",
-    "sound": "dig_hands_earth",
+    "sound": "dig-hands",
     "fps": ""
   },
   {
     "id": "10",
     "act": "role_guomindang1|attack1",
-    "sound": "mortar_fire",
+    "sound": "mortar-fire",
     "fps": ""
   },
   {
@@ -74,13 +74,13 @@
   {
     "id": "13",
     "act": "scenes_tree|attack1",
-    "sound": "pull_tree",
+    "sound": "pull-tree",
     "fps": ""
   },
   {
     "id": "14",
     "act": "scenes_bamboo|hit1",
-    "sound": "cut_bamboo",
+    "sound": "cut",
     "fps": ""
   },
   {
@@ -98,43 +98,43 @@
   {
     "id": "17",
     "act": "role_wang|shot",
-    "sound": "shot_gun",
+    "sound": "rifle-shot",
     "fps": ""
   },
   {
     "id": "18",
     "act": "role_hongjun1|shot",
-    "sound": "shot_gun",
+    "sound": "rifle-shot",
     "fps": ""
   },
   {
     "id": "19",
     "act": "role_hongjun2|shot",
-    "sound": "shot_gun",
+    "sound": "rifle-shot",
     "fps": ""
   },
   {
     "id": "20",
     "act": "role_hongjun5|shot",
-    "sound": "shot_gun",
+    "sound": "rifle-shot",
     "fps": ""
   },
   {
     "id": "21",
     "act": "role_hongjun6|shot",
-    "sound": "shot_gun",
+    "sound": "rifle-shot",
     "fps": ""
   },
   {
     "id": "22",
     "act": "role_guomindang1|shot",
-    "sound": "shot_gun",
+    "sound": "rifle-shot",
     "fps": ""
   },
   {
     "id": "23",
     "act": "role_guomindang3|shot",
-    "sound": "shot_gun",
+    "sound": "rifle-shot",
     "fps": ""
   }
 ]
