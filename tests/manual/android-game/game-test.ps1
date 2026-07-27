@@ -228,12 +228,18 @@ function Test-Stability {
     $memoryLog = Join-Path $ResultDir "$originalName-stability-memory.log"
     $deadline = (Get-Date).AddMinutes($Minutes)
     $cycle = 0
+    # Only rotate through the seven maps that have both a runtime config and a
+    # published view prefab.  The recovered czconfig also contains historical
+    # d1_3/d2_3/d3_4/d3_5 rows; jumping to those only tests the missing-prefab
+    # fallback and must not be counted as playable-map stability coverage.
     $maps = @(
         @{ Chapter = 1; Map = 1 },
-        @{ Chapter = 1; Map = 3 },
-        @{ Chapter = 2; Map = 3 },
+        @{ Chapter = 1; Map = 2 },
+        @{ Chapter = 2; Map = 1 },
+        @{ Chapter = 2; Map = 2 },
+        @{ Chapter = 3; Map = 1 },
         @{ Chapter = 3; Map = 2 },
-        @{ Chapter = 3; Map = 5 }
+        @{ Chapter = 3; Map = 3 }
     )
     try {
         Invoke-Adb -Arguments @('logcat', '-c')

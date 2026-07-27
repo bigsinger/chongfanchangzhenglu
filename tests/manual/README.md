@@ -27,6 +27,9 @@
 .\tests\manual\android-game\game-test.ps1 screenshot -Name d1_1_after_move
 .\tests\manual\android-game\game-test.ps1 inspect -Name d1_1_after_move
 .\tests\manual\android-game\game-test.ps1 logs -Name d1_1_after_move
+
+# 轮换全部七张已发布地图执行后台/恢复/日志/内存稳定性检查
+.\tests\manual\android-game\game-test.ps1 stability -Name seven-map -Minutes 10
 ```
 
 `inspect` 会先在本机生成压缩预览并执行 OCR，原始 ADB 截图不会上传。
@@ -41,3 +44,6 @@
 
 每个关键交互点保存一个检查点；修复重装后恢复最近检查点继续，不从片头重跑。
 当前版本只有三大章；第三章结束后原作明确提示后续关卡仍在开发。
+
+完整的章节检查点、异常恢复、发布门禁和缺陷记录流程见
+[`../../docs/testing/full-playthrough-test-process.md`](../../docs/testing/full-playthrough-test-process.md)。

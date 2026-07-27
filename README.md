@@ -106,6 +106,13 @@ APK/AAB 属于可重复生成的构建产物，不提交到 Git；本地最终 A
 代码、章节体验、稳定性、性能及正式发布门槛的综合结论见
 [`docs/project/codebase-audit-2026-07-27.md`](docs/project/codebase-audit-2026-07-27.md)。
 
+## 通关文档
+
+- 开发、测试和发布人员：
+  [`docs/testing/full-playthrough-test-process.md`](docs/testing/full-playthrough-test-process.md)
+- 玩家：
+  [`docs/guides/player-walkthrough.md`](docs/guides/player-walkthrough.md)
+
 ## 工程原则
 
 - 场景、预制体、动画、配置、图片、音频、Spine 与 DragonBones 数据均来自 APK 原始资源。
