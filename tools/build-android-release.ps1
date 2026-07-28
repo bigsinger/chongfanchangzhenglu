@@ -318,8 +318,6 @@ Copy-Item $aab.FullName $distAab -Force
 $generatedBundle = Get-ChildItem (Join-Path $buildRoot 'assets\main') -Filter 'index*.js' -File |
     Sort-Object LastWriteTime -Descending | Select-Object -First 1
 Assert-File -Path $generatedBundle.FullName -Description 'Cocos 主代码包'
-$apkHash = (Get-FileHash $distApk -Algorithm SHA256).Hash
-$aabHash = (Get-FileHash $distAab -Algorithm SHA256).Hash
 $buildManifestPath = Join-Path $dist "chongfanchangzhenglu-$VersionName-$VersionCode-build-manifest.json"
 $buildManifest = [ordered]@{
     schemaVersion = 1
@@ -335,9 +333,6 @@ $buildManifest = [ordered]@{
     ndk = '20.1.5948944'
     targetSdk = 36
     abis = $actualAbis
-    bundleSha256 = (Get-FileHash $generatedBundle.FullName -Algorithm SHA256).Hash
-    apkSha256 = $apkHash
-    aabSha256 = $aabHash
 }
 Set-Utf8Text -Path $buildManifestPath -Text ($buildManifest | ConvertTo-Json -Depth 4)
 
@@ -345,5 +340,3 @@ Write-Output "APK: $distApk"
 Write-Output "AAB: $distAab"
 Write-Output "Build manifest: $buildManifestPath"
 Write-Output "ABIs: $($actualAbis -join ', ')"
-Write-Output "APK SHA256: $apkHash"
-Write-Output "AAB SHA256: $aabHash"
