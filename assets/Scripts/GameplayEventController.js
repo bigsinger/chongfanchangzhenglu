@@ -89,9 +89,9 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     // point, while the chapter-3 newspaper is about 447 units
                     // from the closest saved walk position). Use a slightly
                     // larger manual-operation reach aligned with the
-                    // 650-unit navigation/scan radius. The active objective
-                    // gets a wider range so an authored blocker or queue can
-                    // never make a required NPC impossible to use.
+                    // 520-unit navigation/scan radius. The active objective
+                    // gets a little more tolerance for an authored blocker or
+                    // queue without exposing a near full-screen hit target.
                     // When carrying supplies, a matching task receiver wins
                     // over nearby boxes; distance breaks ties deterministically.
                     var e = interactionQuery.selectClosestOperation({
@@ -101,8 +101,8 @@ var i, n = this && this.__extends || (i = function (t, e) {
                         nearby: Array.isArray(t) ? t : this.gameManager.itemMap,
                         preferredNode: this.preferredNode,
                         preferredOperation: this.preferredOperation,
-                        reachSquared: 650 * 650,
-                        preferredReachSquared: 1e3 * 1e3,
+                        reachSquared: 520 * 520,
+                        preferredReachSquared: 720 * 720,
                         resolveComponent: function (t) {
                             return t.getComponent("InteractiveObject");
                         }

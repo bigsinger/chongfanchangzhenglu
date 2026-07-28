@@ -23,24 +23,24 @@
 
 - 原生开场不再提交不兼容的旧 Spine 网格，改用完整横屏历史底图、标题、原配乐、原字幕
   和 52 秒时序；6 秒、20 秒、后段及自动进主菜单检查均无黑块，首次启动也可跳过；
-- 9 组曾被破坏的 Spine/DragonBones 图集恢复原始分辨率并纳入哈希门禁，保证 NPC、持有物
-  和章节过渡附件不再因破坏性纹理缩放而错位；
+- 9 组曾被破坏的 Spine/DragonBones 图集恢复原始分辨率；全部 79 张 Spine 页面纹理关闭
+  Creator 二次图集打包，保证 NPC、持有物和章节过渡附件继续使用 `.atlas` 的原始坐标；
 - 空桶在待机、行走中间帧和停步后持续显示；未使用的 `before/centre/after`、
   `body_prop/hand_prop` 槽位会清空，不再尝试加载不存在的 `centre0/prop0`；
-- 兑换员前的旧档隐形阻挡自动迁移到 `x=710`、宽 30；普通操作距离为 650，当前任务 NPC
-  为 1000；点击 NPC 身体或扩大的右下按钮均在模拟器实测打开答题面板；
+- 兑换员前的旧档隐形阻挡自动迁移到 `x=710`、宽 30；普通操作距离为 520，当前任务 NPC
+  为 720；NPC 身体和可见圆形按钮均能打开答题面板，按钮外道路不再误触；
 - 同图前后景门切到 1.6× 镜头并继续移动后，角色头、脚和道路保持完整可见；
-- 七地图轮转 2 分钟、9 个周期通过，含 Home/恢复、内存记录和错误日志检查；
+- 七地图轮转 4 分钟、13 个周期通过，含 Home/恢复、内存记录和错误日志检查；
 - 位置音效不再每 200ms 重复写同一个音量和日志。
 
 ## 2. 根因与通用修复
 
 | 类别 | 根因 | 通用修复 |
 |---|---|---|
-| NPC、持有物、过渡角色碎裂 | 纹理优化脚本把 PNG、`size/xy/split/pad` 缩小 50%，但遗漏 `orig/offset`，且部分超大原图无法安全缩放 | 恢复 9 组原始资源；优化脚本改为只验证、不再破坏性缩放骨骼图集 |
+| NPC、持有物、过渡角色碎裂 | 纹理优化脚本曾破坏性缩小部分图集；恢复原图后，79 张 Spine 页面仍带 `packable:true`，Creator 构建时会再次重排纹理，而旧 `.atlas` 继续按原坐标采样 | 恢复 9 组原始资源；全部 Spine 页面设为 `packable:false`；门禁同时校验图集区域和导入配置 |
 | 原生片头中后段碎裂 | 旧五页 Spine 大网格在 Creator 2.4.15 原生渲染器上仍会产生错误几何，真机与模拟器均可复现 | 原生平台关闭该 Spine renderer，保留历史底图、标题、原配乐、原字幕、跳过和完整 52 秒叙事时序；Web/编辑器仍可保留原动画 |
 | 水桶等持有物消失/告警 | `walk_z*` 时间线会清空附件，且旧逻辑为未使用槽位强行加载 `centre0/prop0` | 每次动作切换重挂实际附件；未声明或编号为 0 的槽位调用 `setAttachment(null)` |
-| 兑换员够不到 | 队伍末端的隐藏阻挡过宽，NPC 身体不是直接触摸目标，520 距离在宽屏和旧档位置下仍不够宽容 | 旧档迁移阻挡到 `x=710/width=30`；普通/当前任务距离提高到 650/1000；NPC 身体和操作按钮都扩大命中区 |
+| 兑换员够不到且扩大后易误触 | 队伍末端的隐藏阻挡过宽；第一次修复又保留了旧按钮约 283px 的透明包围盒和大面积坐标兜底 | 阻挡迁移到 `x=710/width=30`；普通/当前任务距离采用 520/720；NPC 身体只覆盖可见躯干，三个 HUD 按钮各使用 84px 圆形命中 |
 | 点中可见气泡却无效 | 世界气泡投影到屏幕后又除了一次 view scale | 去除二次缩放，直接使用摄像机投影矩形 |
 | 门后只见上半场景 | 固定 `hero.y + 275` 与剧情镜头残留偏移在高缩放下把角色和道路推到下缘 | 所有镜头恢复统一使用缩放感知目标；纵向偏移限制为 `min(120, halfView / zoom × 0.28)`；自由输入清除剧情偏移 |
 | 缩放边界错误 | 初始镜头在应用目标 zoom 前按旧 zoom 夹取位置 | 先设置初始 zoom，再计算横纵边界 |
@@ -65,7 +65,8 @@ node tools/apply-runtime-fixes.js --verify
 - Android lint、arm64-v8a 与 armeabi-v7a 构建通过。
 
 图集门禁由 `tools/verify-spine-atlas-integrity.js` 执行。它同时检查页面实际尺寸、区域边界、
-`size/xy/orig/offset` 完整性以及修复图集哈希，防止再次只缩纹理而破坏骨骼附件几何。
+`size/xy/orig/offset` 完整性、修复图集基准以及每张页面纹理的 `packable:false`，防止构建
+阶段再次重排纹理或只缩纹理而破坏骨骼附件几何。
 
 ## 4. 模拟器复测路径
 
@@ -96,10 +97,10 @@ ADB 输入必须按当前设备原始截图坐标操作，不能直接使用压�
 5. 恢复同一检查点，直接点击兑换员身体，再次确认答题面板打开；
 6. 从更远位置点击道路，确认角色能越过旧阻挡终点并触发前置小偷剧情。
 
-普通交互扫描半径为 650；当前任务目标为 1000。最终 APK 证据：
-`final-exchange-after-dialog.preview.jpg`、`final-exchange-button-open.png`、
-`final-exchange-npc-ready3.png`、`final-exchange-npc-open.png`；道路推进证据为
-`sim-d3-walked-to-exchange.preview.jpg`。
+普通交互扫描半径为 520；当前任务目标为 720。最新回归先点击旧方案会误触的
+`(1500,730)` 道路点，人物正常移动且答题面板未打开；再点击可见按钮中心和兑换员身体，
+两条路径均打开第一题。证据：`precise-road-outside-button-after-small.jpg`、
+`precise-visible-button-after-small.jpg`、`precise-exchange-body-after-small.jpg`。
 
 ### 4.3 持桶
 
@@ -110,7 +111,9 @@ ADB 输入必须按当前设备原始截图坐标操作，不能直接使用压�
 3. 停步后再次检查；
 4. 日志不得出现 `Spine attachment missing`。
 
-证据：`feedback-bucket-road-idle-fixed`、`feedback-bucket-road-walk-mid-fixed`。
+证据：`bucket-pickup-card-small.jpg`、`bucket-after-walk-small.jpg`。随后携桶从
+`scenes_d1_2` 自然切回 `scenes_d1_1`，`door-c1m2-arrived-small.jpg` 同时证明附件、
+跨图状态和落点镜头保持完整。
 
 ### 4.4 前后景门与镜头
 
@@ -128,27 +131,35 @@ ADB 输入必须按当前设备原始截图坐标操作，不能直接使用压�
 
 ```powershell
 .\tests\manual\android-game\game-test.ps1 stability `
-  -Name feedback-v112-sevenmaps -Minutes 2 -WaitSeconds 3
+  -Name full-playthrough-20260728 -Minutes 4 -WaitSeconds 5
 ```
 
-发布清单的七张地图全部被轮转覆盖，共完成 9 个周期；测试脚本自动保存并恢复测试前检查点。
+发布清单的七张地图全部被轮转覆盖，共完成 13 个周期；测试脚本自动保存并恢复测试前
+检查点。相同地图第二次加载的 Native Heap 没有持续单向上涨，错误日志匹配为 0。
+
+### 4.6 第一章完整过场对照
+
+分别从原版 APK 和迁移版全新第一章入口录制 60 秒，并每 2 秒抽帧。修复前迁移版的牛棚、
+人物、村庄与路线卷轴被拆成互相错位的矩形；关闭 Spine 页面二次打包后，迁移版的全景、
+动作和整张路线卷轴与原版时序一致。证据：`original-transition-contact-01.jpg`、
+`original-transition-contact-late.jpg`、`migrated-transition-packablefix-early.jpg`、
+`migrated-transition-packablefix-late.jpg`。
 
 ## 5. APK
 
 ```text
 versionName: 1.1.3
 versionCode: 2026072802
-APK: dist/chongfanchangzhenglu-armv7-arm64-debug.apk
-SHA-256: 5A1034C15C2916A68ED7EC294AEF153CDFC8B813365BB243736A30F6C80B19CB
+APK: dist/chongfanchangzhenglu-1.1.3-2026072802-release.apk
 ABI: arm64-v8a, armeabi-v7a
 minSdk/targetSdk: 21/36
 permissions: 0
 ```
 
-最终 APK 已用 `adb install -r -d` 覆盖安装到模拟器，并完成开场和兑换员双路径验证。真机在
-拔线前安装的较早 1.1.3 构建暴露了兑换员仍不易命中的问题；上面的阻挡迁移、650/1000
-距离和 NPC 身体点击是此后加入的最终修复，因此必须重新安装本节 SHA-256 对应的 APK
-才能生效。下一轮真机发布门禁仍应重点复核不同屏幕比例、外放音量和厂商后台恢复行为。
+白盒调试包已在模拟器完成过场、兑换员双路径、按钮外道路、携桶跨图和七图稳定性验证；
+最终交付为不可调试的 Release APK，不提交 Git，也不生成交付哈希。当前 Release 使用本机
+QA 测试签名；商店发布前仍需换成项目正式签名，并在真实 ARM64 设备复核不同屏幕比例、
+外放音量和厂商后台恢复行为。
 
 ## 6. 真机与模拟器差异及最佳实践
 

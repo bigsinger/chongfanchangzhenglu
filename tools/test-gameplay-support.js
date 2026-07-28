@@ -81,28 +81,28 @@ const edgeTaskBeforeDoor = interaction.selectClosestOperation({
 });
 assert.strictEqual(edgeTaskBeforeDoor.node, edgeCollectible, '可见任务边缘的收藏品应可操作且优先于地图门');
 
-const accessibleNpc = interactiveNode('兑换员', 640, 0, 2);
+const accessibleNpc = interactiveNode('兑换员', 500, 0, 2);
 const accessibleNpcSelection = interaction.selectClosestOperation({
   hero,
   heldGoods: null,
   nearby: [accessibleNpc],
-  reachSquared: 650 * 650,
+  reachSquared: 520 * 520,
   resolveComponent: (node) => node.getComponent('InteractiveObject')
 });
-assert.strictEqual(accessibleNpcSelection.node, accessibleNpc, '被障碍挡住但仍可见的 NPC 应在 650 单位内可交互');
+assert.strictEqual(accessibleNpcSelection.node, accessibleNpc, '被障碍挡住但仍可见的 NPC 应在 520 单位内可交互');
 
-const queuedExchangeNpc = interactiveNode('兑换员', 900, 0, 2);
+const queuedExchangeNpc = interactiveNode('兑换员', 700, 0, 2);
 const queuedExchangeSelection = interaction.selectClosestOperation({
   hero,
   heldGoods: null,
   nearby: [nearBox],
   preferredNode: queuedExchangeNpc,
   preferredOperation: 2,
-  reachSquared: 650 * 650,
-  preferredReachSquared: 1000 * 1000,
+  reachSquared: 520 * 520,
+  preferredReachSquared: 720 * 720,
   resolveComponent: (node) => node.getComponent('InteractiveObject')
 });
-assert.strictEqual(queuedExchangeSelection.node, queuedExchangeNpc, '队伍或阻挡后的当前任务 NPC 应在 1000 单位内优先可交互');
+assert.strictEqual(queuedExchangeSelection.node, queuedExchangeNpc, '队伍或阻挡后的当前任务 NPC 应在 720 单位内优先可交互');
 
 const restoredObjectiveOnly = interactiveNode('存档修复后的红星报', 447, 0, null, []);
 const restoredTaskBeforeDoor = interaction.selectClosestOperation({

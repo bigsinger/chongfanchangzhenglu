@@ -376,10 +376,8 @@ $dist = Join-Path $projectRoot 'dist'
 New-Item -ItemType Directory -Path $dist -Force | Out-Null
 $distApk = Join-Path $dist 'chongfanchangzhenglu-armv7-arm64-debug.apk'
 Copy-Item -LiteralPath $apk.FullName -Destination $distApk -Force
-$hash = Get-FileHash -LiteralPath $distApk -Algorithm SHA256
 
 Write-Output "APK: $distApk"
 Write-Output "ABIs: $($actualAbis -join ', ')"
 Write-Output 'API: min 21 / target 36; permissions: 0; debug: true'
 Write-Output 'Offline runtime: OkHttp/Okio absent; non-network downloader compatibility stub present'
-Write-Output "SHA256: $($hash.Hash)"

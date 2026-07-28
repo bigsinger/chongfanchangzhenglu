@@ -253,7 +253,7 @@ if (-not $apk -or -not $aab) { throw '未找到正式 APK/AAB' }
 $buildTools = Join-Path $AndroidSdk 'build-tools\35.0.0'
 & (Join-Path $buildTools 'zipalign.exe') -c -P 16 4 $apk.FullName
 if ($LASTEXITCODE -ne 0) { throw 'APK zipalign 验证失败' }
-& (Join-Path $buildTools 'apksigner.bat') verify --verbose --print-certs $apk.FullName
+& (Join-Path $buildTools 'apksigner.bat') verify --verbose $apk.FullName
 if ($LASTEXITCODE -ne 0) { throw 'APK 签名验证失败' }
 $aabVerification = & (Join-Path $JavaHome 'bin\jarsigner.exe') -verify $aab.FullName 2>&1
 if ($LASTEXITCODE -ne 0) { throw 'AAB 签名验证失败' }

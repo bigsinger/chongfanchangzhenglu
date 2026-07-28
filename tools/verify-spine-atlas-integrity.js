@@ -68,6 +68,11 @@ function validateAtlas(file) {
       const pageSize = pair((lines[index + 1].split(':')[1] || '').trim());
       const image = path.join(path.dirname(file), line.trim());
       assert(fs.existsSync(image), `${file}: 页面图片不存在 ${line.trim()}`);
+      const textureMetaFile = `${image}.meta`;
+      assert(fs.existsSync(textureMetaFile), `${file}: 页面图片缺少导入配置 ${line.trim()}.meta`);
+      const textureMeta = JSON.parse(fs.readFileSync(textureMetaFile, 'utf8'));
+      assert.equal(textureMeta.packable, false,
+        `${file}: Spine 页面纹理不能参与 Creator 图集重打包 ${line.trim()}`);
       const actual = pngDimensions(image);
       assert.deepEqual(actual, { width: pageSize[0], height: pageSize[1] },
         `${file}: 页面声明尺寸与 PNG 不一致 ${line.trim()}`);

@@ -1046,12 +1046,12 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 var e = u.default.cItem, o = e && e.activeInHierarchy && e.getComponent("InteractiveObject"), i = o && o.getOpType();
                 if (!e || !o || !i || !this.hero || !this.camera_master) return null;
                 var n = e.x - this.hero.x, a = e.y - this.hero.y;
-                if (n * n + a * a > 1e3 * 1e3) return null;
+                if (n * n + a * a > 720 * 720) return null;
                 var s = this.camera_master.getComponent(cc.Camera), r = e.parent ? e.parent.convertToWorldSpaceAR(e.position) : e.position, c = s ? s.getWorldToScreenPoint(r) : r, l = t.getLocation();
-                // Include the full visible NPC body and its overhead bubble.
-                // This is deliberately tied to cItem, so enlarging the target
-                // cannot make unrelated scenery consume road taps.
-                return cc.rect(c.x - 145, c.y - 95, 290, 390).contains(l) ? o : null;
+                // Include the visible torso and legs, but leave the surrounding
+                // road available for movement. This is deliberately tied to
+                // cItem, so unrelated scenery can never consume the tap.
+                return cc.rect(c.x - 110, c.y - 45, 220, 310).contains(l) ? o : null;
             };
             e.prototype.getInteractiveBubble = function (t) {
                 if (!this.itemMap) return null;
@@ -1078,7 +1078,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                             // A modest design-space margin keeps the bubbles
                             // finger-friendly without creating invisible
                             // half-screen blockers around raised item tips.
-                            var S = 42, I = 60, C = cc.rect(Math.min(y.x, w.x) - S, Math.min(y.y, w.y) - I, Math.abs(w.x - y.x) + 2 * S, Math.abs(w.y - y.y) + 2 * I), M = cc.v2((C.xMin + C.xMax) / 2, (C.yMin + C.yMax) / 2);
+                            var S = 26, I = 32, C = cc.rect(Math.min(y.x, w.x) - S, Math.min(y.y, w.y) - I, Math.abs(w.x - y.x) + 2 * S, Math.abs(w.y - y.y) + 2 * I), M = cc.v2((C.xMin + C.xMax) / 2, (C.yMin + C.yMax) / 2);
                             d || (d = p + " touch=" + Math.round(e.x) + "," + Math.round(e.y) + " projected=" + Math.round(C.xMin) + "," + Math.round(C.yMin) + "," + Math.round(C.width) + "," + Math.round(C.height) + " scale=" + n.toFixed(3) + "," + a.toFixed(3));
                             for (var x = 0; x < r.length; x++) if (C.contains(r[x])) {
                                 var T = cc.v2(r[x].x - M.x, r[x].y - M.y).magSqr();
@@ -1099,43 +1099,27 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 return null;
             };
             e.prototype.getUiControlTouch = function (t) {
-                var e = t.getLocation(), o = this.camera_ui, i = [this.btn_user, this.btn_throw, this.btn_climb], n = null, a = Number.MAX_VALUE, s = cc.view.getScaleX ? cc.view.getScaleX() : 1, r = cc.view.getScaleY ? cc.view.getScaleY() : 1, c = cc.view.getViewportRect ? cc.view.getViewportRect() : cc.rect(0, 0, 0, 0), l = [e], h = function (t) {
-                    if (!t || !isFinite(t.x) || !isFinite(t.y)) return;
-                    for (var e = 0; e < l.length; e++) if (Math.abs(l[e].x - t.x) < .5 && Math.abs(l[e].y - t.y) < .5) return;
-                    l.push(t);
-                };
-                s && r && (h(cc.v2(e.x * s + c.x, e.y * r + c.y)), h(cc.v2((e.x - c.x) / s, (e.y - c.y) / r)));
-                for (var d = 0; d < i.length; d++) {
-                    var p = i[d];
-                    if (p && p.activeInHierarchy) {
-                        var u = p.getBoundingBoxToWorld();
-                        if (o) {
-                            var m = o.getWorldToScreenPoint(cc.v2(u.xMin, u.yMin)), _ = o.getWorldToScreenPoint(cc.v2(u.xMax, u.yMax)), f = 48, g = cc.rect(Math.min(m.x, _.x) - f, Math.min(m.y, _.y) - f, Math.abs(_.x - m.x) + 2 * f, Math.abs(_.y - m.y) + 2 * f);
-                            for (var v = 0; v < l.length; v++) if (g.contains(l[v])) {
-                                var b = l[v].x - (g.xMin + g.xMax) / 2, y = l[v].y - (g.yMin + g.yMax) / 2, w = b * b + y * y;
-                                w < a && (a = w, n = p);
-                            }
-                        } else for (var S = 0; S < l.length; S++) if (u.contains(l[S])) return p;
-                    }
-                }
-                if (!n) {
-                    // On Creator 2.4 native builds, Widget rendering and Camera
-                    // projection can disagree after a 1650 -> 1333 resolution
-                    // adaptation.  The operation control is visibly rendered in
-                    // the lower-middle safe area, so accept that same touch area
-                    // as a final accessibility fallback while an action is
-                    // active.  This also makes the large control forgiving on
-                    // touch screens.
-                    var C = cc.view.getVisibleSize();
-                    // Keep the native-projection fallback over the visibly
-                    // rendered bottom-right action button only.  The previous
-                    // 30%-wide lower-screen fallback swallowed ordinary road
-                    // taps while carrying an item, making the hero appear
-                    // unable to move and repeatedly activating the nearby prop.
-                    if (e.y <= .32 * C.height && e.x >= .7 * C.width && e.x <= C.width) {
-                        this.btn_user && this.btn_user.activeInHierarchy ? n = this.btn_user : this.btn_climb && this.btn_climb.activeInHierarchy ? n = this.btn_climb : this.btn_throw && this.btn_throw.activeInHierarchy && (n = this.btn_throw);
-                        n && console.log("------------ 可见区域命中操作按钮 " + n.name);
-                    }
+                var e = t.getLocation(), o = cc.view.getVisibleSize(), i = [{
+                    node: this.btn_user,
+                    x: o.width - 105,
+                    y: 105
+                }, {
+                    node: this.btn_climb,
+                    x: o.width - 245,
+                    y: 105
+                }, {
+                    node: this.btn_throw,
+                    x: o.width - 105,
+                    y: 245
+                }], n = null, a = Number.MAX_VALUE;
+                // The legacy prefabs contain a roughly 283px transparent node
+                // around a 130px visible disc. Native Button/bounds tests made
+                // that invisible area consume nearby road taps. All three HUD
+                // controls are positioned at these screen centres above, so a
+                // finger-friendly 84px circle is both accurate and sufficient.
+                for (var s = 0; s < i.length; s++) {
+                    var r = i[s], c = r.node, l = e.x - r.x, h = e.y - r.y, p = l * l + h * h;
+                    c && c.activeInHierarchy && p <= 84 * 84 && p < a && (a = p, n = c);
                 }
                 n && console.log("------------ 点击命中操作按钮 " + n.name);
                 return n;
@@ -1243,7 +1227,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     previousTouchActive: this.m_touchProximityActive,
                     touchOperation: c.default.OP_TOUCH,
                     touchReachSquared: 320 * 320,
-                    operationReachSquared: 650 * 650,
+                    operationReachSquared: 520 * 520,
                     resolveComponent: function (t) {
                         return t.getComponent("InteractiveObject");
                     }

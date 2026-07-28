@@ -171,10 +171,11 @@ assert(
   !/y = cc\.v2\(\(y\.x - s\.x\) \/ P/.test(scene) &&
     /点击命中交互气泡/.test(scene) &&
     /getCurrentInteractionTouch/.test(scene) &&
-    /operationReachSquared: 650 \* 650/.test(scene) &&
-    /preferredReachSquared: 1e3 \* 1e3/.test(event) &&
+    /operationReachSquared: 520 \* 520/.test(scene) &&
+    /preferredReachSquared: 720 \* 720/.test(event) &&
+    /p <= 84 \* 84/.test(scene) &&
     /i\.distance < 1e3/.test(source('ObjectiveManager.js')),
-  'visible NPC bodies, large operation controls and obstructed objective targets must remain touch reachable'
+  'visible NPC bodies, precise operation controls and obstructed objective targets must remain touch reachable'
 );
 assert(
   /this\.setSwitchLoad\(this\.m_goods\)/.test(player) &&
