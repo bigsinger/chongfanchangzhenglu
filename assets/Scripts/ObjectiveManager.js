@@ -203,6 +203,11 @@ var i = {
                         n && p.limit && (f -= p.limit === n ? 2e9 : 1e9);
                         e && e.interactNode === c && (f -= 3e9);
                         /门/.test(h.name || "") && (f += 5e8);
+                        // Optional collections must not replace a nearby main
+                        // NPC as the chapter objective. They remain directly
+                        // pickable through their own bubble and normal nearest
+                        // interaction selection.
+                        /^收藏品/.test(h.name || "") && (f += 2e8);
                         if (f < s) {
                             s = f;
                             a = {
@@ -301,7 +306,7 @@ var i = {
         if (i && i.distance >= 260) s += i.deltaX >= 0 ? "  →" : "  ←";
         return {
             objective: s,
-            action: i && !i.navigationOnly && i.distance < 460 ? this._actionText(i, o, t.mapName) : "",
+            action: i && !i.navigationOnly && i.distance < 520 ? this._actionText(i, o, t.mapName) : "",
             candidate: i
         };
     },

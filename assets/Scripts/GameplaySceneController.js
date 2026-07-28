@@ -411,6 +411,18 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     y: i
                 };
             };
+            e.prototype.cameraTargetForHero = function (t) {
+                // Keep the hero only slightly below center. The former 58%
+                // half-screen offset still pushed feet and nearby ground out
+                // of view after a 1.6x doorway shot on tall Android surfaces.
+                // This zoom-aware cap leaves room for tall held props and the
+                // interaction bubble above the character.
+                var e = this.camera_master_ts ? Math.max(.01, Number(this.camera_master_ts.getZoom()) || 1) : 1, o = cc.view.getVisibleSize(), i = Math.min(120, o.height / (2 * e) * .28);
+                return {
+                    x: t.x,
+                    y: t.y + i
+                };
+            };
             e.prototype.tempCloseUp = function (t) {
                 void 0 === t && (t = !1);
                 if (t) this.camera_master_ts.zoom(0, this.cameraCurScale, null, .3); else {
@@ -485,10 +497,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 }
                 var i = this;
                 this.camera_master_ts.zoom(t.mod, Number(t.scale), o, Number(t.time), function () {
-                    if (!o && i.hero) i.camera_master_ts.restoreHeroTracking({
-                        x: i.hero.x,
-                        y: i.hero.y + 275
-                    });
+                    if (!o && i.hero) i.camera_master_ts.restoreHeroTracking(i.cameraTargetForHero(i.hero));
                 });
             };
             e.prototype.specialEvent = function (t) {
@@ -548,10 +557,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                         o.hero.x = Number(e.x) - o.gameNode.width / 2;
                         o.hero.y = -(Number(e.y) - o.gameNode.height / 2);
                         o.isLockCamera = !0;
-                        o.camera_master_ts.restoreCamera({
-                            x: o.hero.x,
-                            y: o.hero.y + 275
-                        }, null);
+                        o.camera_master_ts.restoreCamera(o.cameraTargetForHero(o.hero), null);
                         o.alignLayer();
                     }), cc.fadeIn(.7), cc.callFunc(function () {
                         o.changeForceWait(!1);
@@ -769,10 +775,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 this.isLockCamera = !0;
                 this.camera_master_ts.initCamera(this.gameWidth, this.gameHeight, this.gameNode.width, this.gameNode.height, this);
                 var t = this.hero.getPosition();
-                this.camera_master_ts.restoreCamera({
-                    x: t.x,
-                    y: t.y + 275
-                }, this.initCameraData);
+                this.camera_master_ts.restoreCamera(this.cameraTargetForHero(t), this.initCameraData);
                 l.default.gamePlayBGM("gameplay/main-theme");
                 this.horizonY = this.hero.y;
                 this.saveItemConf({
@@ -856,8 +859,9 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     return;
                 }
                 var t = this.m_cameraTrackPosition;
-                t.x = this.hero.x;
-                t.y = this.hero.y + 275;
+                var e = this.cameraTargetForHero(this.hero);
+                t.x = e.x;
+                t.y = e.y;
                 if (!this.isLockCamera && !this.isCheck && this.hero && Math.abs(this.hero.x - this.camera_master.node.x) > .28 * this.gameWidth) {
                     this.isLockCamera = !0;
                     this.camera_master_ts.restoreHeroTracking(t);
@@ -1035,7 +1039,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
             };
             e.prototype.getInteractiveBubble = function (t) {
                 if (!this.itemMap) return null;
-                var e = t.getLocation(), o = e, i = this.camera_master && this.camera_master.getComponent(cc.Camera), n = cc.view.getScaleX ? cc.view.getScaleX() : 1, a = cc.view.getScaleY ? cc.view.getScaleY() : 1, s = cc.view.getViewportRect ? cc.view.getViewportRect() : cc.rect(0, 0, 0, 0);
+                var e = t.getLocation(), o = e, i = this.camera_master && this.camera_master.getComponent(cc.Camera), n = cc.view.getScaleX ? cc.view.getScaleX() : 1, a = cc.view.getScaleY ? cc.view.getScaleY() : 1;
                 // Item bubbles live in the scrolling world, so their world
                 // bounds must be compared with a camera-projected touch point.
                 // Android JSB reports Touch in design coordinates here, and
@@ -1050,17 +1054,11 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     if (_ && _.activeInHierarchy) {
                         var f = _.getBoundingBoxToWorld(), g = _.getChildByName("Background"), v = g && g.getBoundingBoxToWorld();
                         if (i) {
-                            // Creator native returns Camera projection in frame
-                            // pixels, while Touch.getLocation() is already in
-                            // design coordinates.  Convert both projected
-                            // corners back to design space before hit testing.
-                            // Comparing the two spaces directly made a bubble
-                            // near the centre consume most of the road to its
-                            // right (for example 1250 px became touch x=868 but
-                            // was compared with a frame-pixel bubble at x=622).
-                            var b = v || f, y = i.getWorldToScreenPoint(cc.v2(b.xMin, b.yMin)), w = i.getWorldToScreenPoint(cc.v2(b.xMax, b.yMax)), P = n || 1, E = a || 1;
-                            y = cc.v2((y.x - s.x) / P, (y.y - s.y) / E);
-                            w = cc.v2((w.x - s.x) / P, (w.y - s.y) / E);
+                            // Creator 2.4 native returns these camera-projected
+                            // points in the same design space as Touch here.
+                            // Dividing by view scale a second time shifts a
+                            // visible NPC bubble hundreds of pixels left/up.
+                            var b = v || f, y = i.getWorldToScreenPoint(cc.v2(b.xMin, b.yMin)), w = i.getWorldToScreenPoint(cc.v2(b.xMax, b.yMax));
                             // A modest design-space margin keeps the bubbles
                             // finger-friendly without creating invisible
                             // half-screen blockers around raised item tips.
@@ -1483,10 +1481,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     e.hero_ts.setEntity(!0);
                     e.changeForceWait(!1);
                     e.isLockCamera = !0;
-                    e.camera_master_ts.restoreHeroTracking({
-                        x: e.hero.x,
-                        y: e.hero.y + 275
-                    });
+                    e.camera_master_ts.restoreHeroTracking(e.cameraTargetForHero(e.hero));
                     e.saveItemConf({
                         x: e.hero.x,
                         y: e.hero.y
@@ -1504,10 +1499,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     // nearby interaction UI inside the playable safe area.
                     if (!this.gameOperate) {
                         this.isLockCamera = !0;
-                        this.camera_master_ts.restoreHeroTracking({
-                            x: this.hero.x,
-                            y: this.hero.y + 275
-                        });
+                        this.camera_master_ts.restoreHeroTracking(this.cameraTargetForHero(this.hero));
                     }
                     // Story events can unschedule role_1.moveAct().  A new player
                     // input must re-enable it before assigning the next target.

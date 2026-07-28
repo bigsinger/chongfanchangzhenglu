@@ -8,7 +8,7 @@ Object.defineProperty(o, "__esModule", {
         });
         var i = function () {
             function t() { }
-            t._version = "V_S_1.1.1";
+            t._version = "V_S_1.1.2";
             t.nowGkId = 1;
             return t;
         }();

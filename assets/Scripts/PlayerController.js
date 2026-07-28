@@ -138,6 +138,14 @@ var i, n = this && this.__extends || (i = function (t, e) {
                         this.setSwitchSolt();
                     }
                     this.m_dragonBones.setAction(t, e, o || 1);
+                    // Several legacy turn timelines set before/centre/after to
+                    // null. Spine keeps that slot state when the next animation
+                    // has no attachment timeline, so the hero can retain the
+                    // carrying pose while the bucket/box disappears. Reapply
+                    // the held prop after each normal animation switch.
+                    if (this.m_goods && "3" == this.m_goods.isthrow && "splash_await" != t) {
+                        this.setSwitchLoad(this.m_goods);
+                    }
                 } else console.log("setPlay==参数错误");
             };
             e.prototype.setState = function (t, e) {
@@ -616,6 +624,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     case "huachuan_hd2":
                         h.default.gameManager.gameOperate = !1;
                 }
+                this.m_goods && "3" == this.m_goods.isthrow && "splash_await" != t && this.setSwitchLoad(this.m_goods);
             };
             e.prototype.setWalkingMode = function (t) {
                 this.goMod = t;
@@ -1095,8 +1104,12 @@ var i, n = this && this.__extends || (i = function (t, e) {
             };
             e.prototype.changeVol = function () {
                 var t = (Math.abs(this.node.x - this.m_posAry[1]) / (this.m_posAry[2] - this.m_posAry[1])).toFixed(1);
-                this.m_soundVal = 1 - Number(t) < .1 ? .1 : 1 - Number(t);
-                console.log("=m_soundVal==", this.m_soundVal);
+                var e = 1 - Number(t) < .1 ? .1 : 1 - Number(t);
+                // Distance is quantized to tenths, so most 200 ms updates do
+                // not change the mix. Avoid a native audio call and log write
+                // until the effective volume actually changes.
+                if (this.m_soundVal === e) return;
+                this.m_soundVal = e;
                 r.default.setSoundVolume(this.m_soundId, this.m_soundVal);
             };
             e.prototype.onDisable = function () {

@@ -138,13 +138,11 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 };
                 e.prototype.switchSolt = function (t) {
                     void 0 === t && (t = 0);
-                    var e = this.m_skeleton.findSlot("body_prop"), o = this.m_skeleton.skeletonData.getRuntimeData(), i = o.findSkin("default"), n = o.findSlotIndex("body_prop"), a = i.getAttachment(n, "prop/prop" + t);
-                    e.setAttachment(a);
+                    return this.setAttachment("body_prop", "prop/prop" + t);
                 };
                 e.prototype.switchHand = function (t) {
                     void 0 === t && (t = 0);
-                    var e = this.m_skeleton.findSlot("hand_prop"), o = this.m_skeleton.skeletonData.getRuntimeData(), i = o.findSkin("default"), n = o.findSlotIndex("hand_prop"), a = i.getAttachment(n, "prop/prop" + t);
-                    e.setAttachment(a);
+                    return this.setAttachment("hand_prop", "prop/prop" + t);
                 };
                 e.prototype.setSlotColor = function (t) {
                     void 0 === t && (t = null);
@@ -164,10 +162,10 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     }
                 };
                 e.prototype.switchHead = function (t) {
-                    var e = this.m_skeleton.findSlot("tou"), o = this.m_skeleton.skeletonData.getRuntimeData(), i = o.findSkin("default"), n = o.findSlotIndex("tou"), a = i.getAttachment(n, "tou_" + t);
-                    e.setAttachment(a);
+                    return this.setAttachment("tou", "tou_" + t);
                 };
                 e.prototype.switchLoad = function (t, e) {
+                    if (!this.m_skeleton || !t) return;
                     var o, i = t.loadorder.split(",");
                     for (var n in this.m_loadAry) {
                         var a = 0;
@@ -183,8 +181,14 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 };
                 e.prototype.setAttachment = function (t, e) {
                     console.log(t + "==插槽=图片=" + e);
-                    var o = this.m_skeleton.findSlot(t), i = this.m_skeleton.skeletonData.getRuntimeData(), n = i.findSkin("default"), a = i.findSlotIndex(t), s = n.getAttachment(a, e);
+                    if (!this.m_skeleton || !this.m_skeleton.skeletonData) return !1;
+                    var o = this.m_skeleton.findSlot(t), i = this.m_skeleton.skeletonData.getRuntimeData(), n = i && i.findSkin("default"), a = i && i.findSlotIndex(t), s = n && a >= 0 ? n.getAttachment(a, e) : null;
+                    if (!o || !s) {
+                        console.warn("Spine attachment missing slot=" + t + " attachment=" + e + " path=" + this.m_path);
+                        return !1;
+                    }
                     o.setAttachment(s);
+                    return !0;
                 };
                 e.prototype.changeSlot = function () { };
                 return a([l], e);

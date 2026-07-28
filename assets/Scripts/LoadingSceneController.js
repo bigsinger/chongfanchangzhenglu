@@ -62,12 +62,13 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 }
                 cc.sys.localStorage.getItem("longmarch_first") && (this.m_isFirst = !0);
                 this.btn_skip.active = this.m_isFirst;
-                // The restored 2.4.3 Spine title animation renders its
-                // attachments with invalid transforms on current Android
-                // wide-screen devices. Keep the clean illustrated splash,
-                // progress bar and historical captions instead of displaying
-                // scattered skeleton parts across the screen.
-                this.cg.node.active = !1;
+                // Keep the complete authored opening. Its five-page atlas is
+                // repaired during the 2.4.15 migration, so native wide-screen
+                // rendering no longer needs the temporary static fallback.
+                this.cg.node.active = !0;
+                this.cg.setCompleteListener(function () {
+                    t._onPlayComplete();
+                });
                 this.btn_skip.active && this.btn_skip.runAction(cc.fadeIn(1.2));
                 h.default.init();
                 cc.debug.setDisplayStats(!1);
@@ -82,13 +83,18 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 c.default.loadMapInfo();
                 r.default.loadTempData();
                 this.m_callBack = function () {
+                    t.m_playName = "await";
+                    t.cg.setAnimation(0, "await", !1);
                     l.default.gamePlayBGM("cg/cgbgm");
                     t.m_titleData = c.default.cgtitleData[0];
                     t.schedule(t.execute, 1);
                     t.m_openingGateCallback = function () {
                         t.finishOpeningGate();
                     };
-                    t.scheduleOnce(t.m_openingGateCallback, 6);
+                    // The complete opening lasts about 56 seconds. This is a
+                    // watchdog for a missing native completion callback, not a
+                    // short presentation timer.
+                    t.scheduleOnce(t.m_openingGateCallback, 65);
                 };
                 y.default.loadDir("sound/effect/ui", function () { }, function () { }, "core:ui-sound");
                 this.loadGameConfig();
@@ -264,8 +270,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                         break;
 
                     case "await":
-                        this.m_loadIndex++;
-                        this.gotoLoginScene();
+                        this.finishOpeningGate();
                 }
             };
             e.prototype.finishOpeningGate = function () {

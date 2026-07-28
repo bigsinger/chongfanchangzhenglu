@@ -81,6 +81,16 @@ const edgeTaskBeforeDoor = interaction.selectClosestOperation({
 });
 assert.strictEqual(edgeTaskBeforeDoor.node, edgeCollectible, '可见任务边缘的收藏品应可操作且优先于地图门');
 
+const accessibleNpc = interactiveNode('兑换员', 510, 0, 2);
+const accessibleNpcSelection = interaction.selectClosestOperation({
+  hero,
+  heldGoods: null,
+  nearby: [accessibleNpc],
+  reachSquared: 520 * 520,
+  resolveComponent: (node) => node.getComponent('InteractiveObject')
+});
+assert.strictEqual(accessibleNpcSelection.node, accessibleNpc, '被障碍挡住但仍可见的 NPC 应在 520 单位内可交互');
+
 const restoredObjectiveOnly = interactiveNode('存档修复后的红星报', 447, 0, null, []);
 const restoredTaskBeforeDoor = interaction.selectClosestOperation({
   hero,
@@ -183,6 +193,18 @@ const edgeCollectibleObjective = objective.describe({
   itemMap: { collectible: objectiveNode('收藏品-红星报', 447, 6, null, 'prop113') }
 }, null);
 assert.strictEqual(edgeCollectibleObjective.action, '拾取【红星报】');
+
+const exchangeBeforeOptionalCollection = objective.describe({
+  mapName: 'scenes_d3_3',
+  hero: { x: 0, y: 0 },
+  hero_ts: { goods: null },
+  itemMap: {
+    report: objectiveNode('收藏品-红星报', 100, 6, null, 'prop113'),
+    exchange: objectiveNode('兑换员', 300, 2)
+  }
+}, null);
+assert.strictEqual(exchangeBeforeOptionalCollection.objective, '操作【兑换员】  →');
+assert.strictEqual(exchangeBeforeOptionalCollection.action, '操作【兑换员】');
 
 const storyNavigation = objective.describe({
   mapName: 'scenes_d2_1',

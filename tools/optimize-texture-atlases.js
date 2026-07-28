@@ -100,7 +100,11 @@ function optimizeSpineAtlas(file) {
       continue;
     }
     if (currentFactor < 1) {
-      const match = /^(\s*)(size|xy|split|pad):\s*(-?\d+),\s*(-?\d+)(?:,\s*(-?\d+),\s*(-?\d+))?$/.exec(lines[index]);
+      // Spine uses orig/offset together with the packed size to rebuild every
+      // region attachment. Scaling only size/xy leaves the UVs on the smaller
+      // texture but keeps the old attachment geometry, which scatters body
+      // parts and props on native renderers.
+      const match = /^(\s*)(size|xy|orig|offset|split|pad):\s*(-?\d+),\s*(-?\d+)(?:,\s*(-?\d+),\s*(-?\d+))?$/.exec(lines[index]);
       if (match) {
         const values = [match[3], match[4], match[5], match[6]]
           .filter((value) => value != null)

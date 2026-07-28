@@ -88,7 +88,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     // supply box is about 368 units from the nearest reachable
                     // point, while the chapter-3 newspaper is about 447 units
                     // from the closest saved walk position). Use a slightly
-                    // larger manual-operation reach that remains below the
+                    // larger manual-operation reach aligned with the
                     // 520-unit navigation/scan radius.
                     // When carrying supplies, a matching task receiver wins
                     // over nearby boxes; distance breaks ties deterministically.
@@ -99,7 +99,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                         nearby: Array.isArray(t) ? t : this.gameManager.itemMap,
                         preferredNode: this.preferredNode,
                         preferredOperation: this.preferredOperation,
-                        reachSquared: 460 * 460,
+                        reachSquared: 520 * 520,
                         resolveComponent: function (t) {
                             return t.getComponent("InteractiveObject");
                         }

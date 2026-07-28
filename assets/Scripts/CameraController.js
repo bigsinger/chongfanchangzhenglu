@@ -69,6 +69,10 @@ var i, n = this && this.__extends || (i = function (t, e) {
             e.prototype.restoreCamera = function (t, e) {
                 if (e) {
                     var o = !0;
+                    if ("" != e.ss) this.camera_ts.zoomRatio = Number(e.ss); else {
+                        o = !1;
+                        this.camera_ts.zoomRatio = 1;
+                    }
                     if ("" != e.x && "" != e.y) {
                         this.dif_x = Number(e.x) - t.x;
                         this.dif_y = Number(e.y) - t.y;
@@ -76,10 +80,6 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     } else {
                         o = !1;
                         this.checkCamera(t.x, t.y);
-                    }
-                    if ("" != e.ss) this.camera_ts.zoomRatio = Number(e.ss); else {
-                        o = !1;
-                        this.camera_ts.zoomRatio = 1;
                     }
                     o && "" != e.se && "" != e.time && "" != e.mod && this.zoom(Number(e.mod), Number(e.se), null, Number(e.time));
                 } else {

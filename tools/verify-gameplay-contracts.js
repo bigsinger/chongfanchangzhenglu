@@ -6,6 +6,7 @@ const path = require('path');
 
 const root = path.resolve(__dirname, '..');
 const source = (name) => fs.readFileSync(path.join(root, 'assets', 'Scripts', name), 'utf8');
+const releaseVersion = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8')).version;
 
 class LocalStorage {
   constructor(seed = {}) {
@@ -130,13 +131,17 @@ assert(
 );
 assert(/changeMap/.test(scene) && /saveItemConf/.test(scene), 'map transition save contract');
 assert(
-  /restoreCamera\(\{\s*x: o\.hero\.x,\s*y: o\.hero\.y \+ 275/.test(scene) &&
+  /restoreCamera\(o\.cameraTargetForHero\(o\.hero\)/.test(scene) &&
+    /cameraTargetForHero/.test(scene) &&
+    /Math\.min\(120, o\.height \/ \(2 \* e\) \* \.28\)/.test(scene) &&
     /var r = this\.mapWidth \/ 2, c = this\.showWidth \/ \(2 \* i\)/.test(camera),
-  'same-map door transitions and zoomed map bounds must recenter the gameplay camera'
+  'same-map doors and zoomed foreground/background views must keep hero and ground visible'
 );
 assert(
     /setFootstepSound/.test(player) &&
     /footsteps-walk/.test(player) &&
+    /if \(this\.m_soundVal === e\) return/.test(player) &&
+    !/=m_soundVal==/.test(player) &&
     /soundVolumes/.test(audioManager) &&
     /refreshSoundVolumes/.test(audioManager) &&
     /baseVolume \* numberInRange\(GameState\.default\.MUSIC_SOUND, 1\)/.test(audioManager) &&
@@ -152,9 +157,25 @@ assert(
   'all primary scenes must share fixed-height landscape adaptation'
 );
 assert(
-  /this\.cg\.node\.active = !1/.test(loading) &&
+  /this\.cg\.node\.active = !0/.test(loading) &&
+    /this\.cg\.setCompleteListener/.test(loading) &&
+    /scheduleOnce\(t\.m_openingGateCallback, 65\)/.test(loading) &&
     /finishOpeningGate/.test(loading),
-  'wide-screen startup must use the stable illustrated splash instead of the broken restored Spine title'
+  'startup must play the complete repaired Spine opening with an idempotent watchdog'
+);
+assert(
+  !/y = cc\.v2\(\(y\.x - s\.x\) \/ P/.test(scene) &&
+    /点击命中交互气泡/.test(scene) &&
+    /reachSquared: 520 \* 520/.test(event),
+  'visible world interaction bubbles and obstructed NPCs must remain touch reachable'
+);
+assert(
+  /this\.setSwitchLoad\(this\.m_goods\)/.test(player) &&
+    /Spine attachment missing/.test(source('SpineAnimationManager.js')) &&
+    /return this\.setAttachment\("body_prop", "prop\/prop" \+ t\)/.test(source('SpineAnimationManager.js')) &&
+    /return this\.setAttachment\("hand_prop", "prop\/prop" \+ t\)/.test(source('SpineAnimationManager.js')) &&
+    /DragonBones slot missing/.test(source('DragonBonesAnimationManager.js')),
+  'held buckets, supply boxes, and dynamic character slots must survive attachment timelines and missing assets'
 );
 assert(
   /prototype\.stopNodeRuntime/.test(scene) &&
@@ -183,7 +204,7 @@ assert(
 );
 assert(/releasePrefix\("gk\/d"\)/.test(menu), 'menu must release the active chapter scope');
 assert(
-  /V_S_1\.1\.1/.test(gameInfo) && /V_S_1\.1\.1/.test(gameStateSource),
+  gameInfo.includes(`V_S_${releaseVersion}`) && gameStateSource.includes(`V_S_${releaseVersion}`),
   'main-menu display version must match the Android/package release version'
 );
 assert(/_releasedEpochs/.test(resourceManagerSource) && /_bundleInflight/.test(resourceManagerSource), 'late resource load cancellation contract');

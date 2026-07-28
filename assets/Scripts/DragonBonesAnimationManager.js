@@ -111,14 +111,21 @@ var i, n = this && this.__extends || (i = function (t, e) {
             };
             e.prototype.switchSolt = function (t) {
                 void 0 === t && (t = 0);
-                this.m_dragonDisplay.armature().getSlot("body_prop").displayIndex = t;
+                var e = this.m_dragonDisplay && this.m_dragonDisplay.armature && this.m_dragonDisplay.armature(), o = e && e.getSlot("body_prop");
+                if (!o) return console.warn("DragonBones slot missing: body_prop path=" + this.m_path), !1;
+                o.displayIndex = t;
+                return !0;
             };
             e.prototype.switchHand = function (t) {
                 void 0 === t && (t = 0);
-                this.m_dragonDisplay.armature().getSlot("hand_prop").displayIndex = t;
+                var e = this.m_dragonDisplay && this.m_dragonDisplay.armature && this.m_dragonDisplay.armature(), o = e && e.getSlot("hand_prop");
+                if (!o) return console.warn("DragonBones slot missing: hand_prop path=" + this.m_path), !1;
+                o.displayIndex = t;
+                return !0;
             };
             e.prototype.setSlotColor = function (t) {
-                this.m_dragonDisplay.armature().getSlot("body_prop")._setColor(t);
+                var e = this.m_dragonDisplay && this.m_dragonDisplay.armature && this.m_dragonDisplay.armature(), o = e && e.getSlot("body_prop");
+                o && o._setColor(t);
             };
             return a([r], e);
         }(cc.Component));

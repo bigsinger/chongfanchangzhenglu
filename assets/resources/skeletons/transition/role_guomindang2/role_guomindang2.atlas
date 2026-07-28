@@ -8,209 +8,209 @@ repeat: none
   rotate: true
   xy: 1640, 529
   size: 825, 375
-  orig: 1650, 750
+  orig: 825, 375
   offset: 0, 0
   index: -1
 4444444
   rotate: false
   xy: 1, 19
   size: 1111, 509
-  orig: 2221, 1018
+  orig: 1111, 509
   offset: 0, 0
   index: -1
 5-03
   rotate: false
   xy: 1, 529
   size: 1261, 825
-  orig: 2523, 1652
+  orig: 1262, 826
   offset: 1, 1
   index: -1
 98k
   rotate: false
   xy: 1113, 39
   size: 148, 22
-  orig: 295, 44
+  orig: 148, 22
   offset: 0, 0
   index: -1
 bozi
   rotate: true
   xy: 1759, 27
   size: 36, 45
-  orig: 71, 90
+  orig: 36, 45
   offset: 0, 0
   index: -1
 dayishang
   rotate: false
   xy: 1585, 1
   size: 54, 61
-  orig: 110, 128
-  offset: 2, 0
+  orig: 55, 64
+  offset: 1, 0
   index: -1
 dayixiace
   rotate: false
   xy: 1699, 20
   size: 60, 42
-  orig: 119, 84
+  orig: 60, 42
   offset: 0, 0
   index: -1
 dise
   rotate: true
   xy: 1263, 528
   size: 826, 376
-  orig: 1652, 752
+  orig: 826, 376
   offset: 0, 0
   index: -1
 guan
   rotate: true
   xy: 1585, 63
   size: 464, 416
-  orig: 930, 833
+  orig: 465, 417
   offset: 1, 1
   index: -1
 guangyun
   rotate: false
   xy: 1113, 62
   size: 471, 465
-  orig: 1216, 934
-  offset: 182, 2
+  orig: 608, 467
+  offset: 91, 1
   index: -1
 houbei
   rotate: false
   xy: 1188, 2
   size: 33, 36
-  orig: 66, 72
+  orig: 33, 36
   offset: 0, 0
   index: -1
 paodan
   rotate: false
   xy: 1805, 28
   size: 33, 35
-  orig: 68, 71
+  orig: 34, 36
   offset: 1, 1
   index: -1
 tou
   rotate: false
   xy: 1839, 29
   size: 30, 33
-  orig: 60, 66
+  orig: 30, 33
   offset: 0, 0
   index: -1
 toukui
   rotate: false
   xy: 1113, 1
   size: 37, 37
-  orig: 74, 74
+  orig: 37, 37
   offset: 0, 0
   index: -1
 woqiangshou
   rotate: false
   xy: 1941, 46
   size: 19, 16
-  orig: 37, 32
+  orig: 19, 16
   offset: 0, 0
   index: -1
 woqiangypushou
   rotate: true
   xy: 1, 1
   size: 17, 24
-  orig: 35, 47
+  orig: 18, 24
   offset: 1, 0
   index: -1
 yaodai
   rotate: false
   xy: 1640, 6
   size: 58, 57
-  orig: 116, 113
+  orig: 58, 57
   offset: 0, 0
   index: -1
 yiling
   rotate: true
   xy: 50, 1
   size: 17, 23
-  orig: 34, 48
+  orig: 17, 24
   offset: 0, 0
   index: -1
 youdabi
   rotate: true
   xy: 1870, 37
   size: 25, 34
-  orig: 50, 67
+  orig: 25, 34
   offset: 0, 0
   index: -1
 youdatui
   rotate: false
   xy: 1151, 1
   size: 36, 37
-  orig: 72, 74
+  orig: 36, 37
   offset: 0, 0
   index: -1
 youjiao
   rotate: false
   xy: 1333, 50
   size: 20, 11
-  orig: 39, 22
+  orig: 20, 11
   offset: 0, 0
   index: -1
 youshou
   rotate: true
   xy: 26, 1
   size: 17, 23
-  orig: 35, 46
+  orig: 18, 23
   offset: 1, 0
   index: -1
 youxiaobi
   rotate: true
   xy: 1759, 1
   size: 25, 37
-  orig: 49, 73
+  orig: 25, 37
   offset: 0, 0
   index: -1
 youxiaotui
   rotate: true
   xy: 1261, 42
   size: 20, 39
-  orig: 39, 77
+  orig: 20, 39
   offset: 0, 0
   index: -1
 zuodabi
   rotate: true
   xy: 1905, 43
   size: 20, 35
-  orig: 39, 70
+  orig: 20, 35
   offset: 0, 0
   index: -1
 zuodatui
   rotate: false
   xy: 1222, 4
   size: 30, 35
-  orig: 60, 69
+  orig: 30, 35
   offset: 0, 0
   index: -1
 zuojiao
   rotate: false
   xy: 111, 8
   size: 20, 11
-  orig: 40, 22
+  orig: 20, 11
   offset: 0, 0
   index: -1
 zuoshou
   rotate: false
   xy: 1699, 1
   size: 17, 18
-  orig: 33, 36
+  orig: 17, 18
   offset: 0, 0
   index: -1
 zuoxiaobi
   rotate: true
   xy: 1301, 40
   size: 21, 32
-  orig: 42, 63
+  orig: 21, 32
   offset: 0, 0
   index: -1
 zuoxiaotui
   rotate: true
   xy: 73, 4
   size: 14, 37
-  orig: 28, 73
+  orig: 14, 37
   offset: 0, 0
   index: -1

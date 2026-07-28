@@ -1,6 +1,6 @@
 {
   "name": "chongfanchangzhenglu",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "private": true,
   "description": "重返长征路 Cocos Creator 2.4.15 迁移与质量验证",
   "scripts": {
@@ -10,7 +10,7 @@
     "check:content": "node tools/verify-published-content.js",
     "check:contracts": "node tools/verify-gameplay-contracts.js && node tools/test-gameplay-support.js",
     "check:naming": "node tools/apply-readable-names.js --verify",
-    "check:textures": "node tools/verify-texture-budget.js",
+    "check:textures": "node tools/verify-texture-budget.js && node tools/verify-spine-atlas-integrity.js",
     "test": "npm run check:syntax && npm run check:requires && npm run check:config && npm run check:content && npm run check:contracts && npm run check:naming && npm run check:textures"
   }
 }

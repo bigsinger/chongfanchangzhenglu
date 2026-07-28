@@ -8,132 +8,132 @@ repeat: none
   rotate: true
   xy: 1, 222
   size: 825, 375
-  orig: 1650, 750
+  orig: 825, 375
   offset: 0, 0
   index: -1
 dise
   rotate: true
   xy: 377, 222
   size: 825, 375
-  orig: 1652, 752
+  orig: 826, 376
   offset: 1, 1
   index: -1
 houtui
   rotate: false
   xy: 823, 117
   size: 40, 105
-  orig: 80, 209
+  orig: 40, 105
   offset: 0, 0
   index: -1
 liemen1
   rotate: false
   xy: 841, 22
   size: 44, 94
-  orig: 89, 189
+  orig: 45, 95
   offset: 1, 1
   index: -1
 liemen2
   rotate: true
   xy: 454, 4
   size: 59, 86
-  orig: 120, 174
+  orig: 60, 87
   offset: 1, 1
   index: -1
 liemen3
   rotate: true
   xy: 541, 7
   size: 56, 70
-  orig: 113, 142
+  orig: 57, 71
   offset: 1, 1
   index: -1
 liemen4
   rotate: true
   xy: 693, 8
   size: 64, 102
-  orig: 130, 206
+  orig: 65, 103
   offset: 1, 1
   index: -1
 men
   rotate: false
   xy: 158, 17
   size: 61, 204
-  orig: 123, 410
+  orig: 62, 205
   offset: 1, 1
   index: -1
 niu
   rotate: true
   xy: 1, 15
   size: 207, 156
-  orig: 419, 312
-  offset: 6, 0
+  orig: 210, 156
+  offset: 3, 0
   index: -1
 niupeng
   rotate: true
   xy: 753, 222
   size: 825, 375
-  orig: 1652, 752
+  orig: 826, 376
   offset: 1, 1
   index: -1
 qiantui
   rotate: false
   xy: 864, 139
   size: 31, 83
-  orig: 65, 165
+  orig: 33, 83
   offset: 0, 0
   index: -1
 shengzi
   rotate: false
   xy: 750, 79
   size: 38, 143
-  orig: 76, 285
+  orig: 38, 143
   offset: 0, 0
   index: -1
 tanzi
   rotate: false
   xy: 220, 19
   size: 136, 203
-  orig: 273, 407
+  orig: 137, 204
   offset: 1, 1
   index: -1
 weiba
   rotate: false
   xy: 789, 111
   size: 33, 111
-  orig: 69, 224
-  offset: 1, 2
+  orig: 35, 112
+  offset: 1, 1
   index: -1
 zacao1
   rotate: true
   xy: 356, 1
   size: 62, 97
-  orig: 127, 196
+  orig: 64, 98
   offset: 1, 1
   index: -1
 zacao2
   rotate: true
   xy: 789, 77
   size: 33, 51
-  orig: 67, 104
+  orig: 34, 52
   offset: 1, 1
   index: -1
 zacao3
   rotate: false
   xy: 678, 73
   size: 71, 149
-  orig: 143, 300
+  orig: 72, 150
   offset: 1, 1
   index: -1
 zacao4
   rotate: false
   xy: 612, 11
   size: 80, 52
-  orig: 163, 106
-  offset: 3, 1
+  orig: 82, 53
+  offset: 2, 1
   index: -1
 zuoqiangqianjing
   rotate: true
   xy: 356, 64
   size: 158, 321
-  orig: 317, 644
+  orig: 159, 322
   offset: 1, 1
   index: -1
