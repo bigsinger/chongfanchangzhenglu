@@ -306,7 +306,11 @@ var i = {
         if (i && i.distance >= 260) s += i.deltaX >= 0 ? "  →" : "  ←";
         return {
             objective: s,
-            action: i && !i.navigationOnly && i.distance < 520 ? this._actionText(i, o, t.mapName) : "",
+            // Required NPCs can sit behind authored queues or invisible
+            // blockers. Advertise them as actionable from a forgiving mobile
+            // distance; GameplayInteractionQuery still prioritizes the current
+            // objective so unrelated nearby props cannot steal the button.
+            action: i && !i.navigationOnly && i.distance < 1e3 ? this._actionText(i, o, t.mapName) : "",
             candidate: i
         };
     },

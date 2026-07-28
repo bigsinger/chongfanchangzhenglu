@@ -61,8 +61,8 @@ node .\tools\restore-original-resources.js --verify
 ```powershell
 .\tools\build-android-release.ps1 `
   -SigningProperties E:\安全目录\longmarch-signing.properties `
-  -VersionCode 2026072701 `
-  -VersionName 1.1.2
+  -VersionCode 2026072802 `
+  -VersionName 1.1.3
 ```
 
 发布流程使用 AGP 8.9.2、Gradle 8.11.1、JDK 17、targetSdk 36，执行 R8、签名、
@@ -116,7 +116,7 @@ APK/AAB 属于可重复生成的构建产物，不提交到 Git；本地最终 A
 
 1.1.1 的手机横屏、镜头、BGM/音效和脚步声专项证据见
 [`docs/testing/mobile-audio-landscape-camera-validation-2026-07-27.md`](docs/testing/mobile-audio-landscape-camera-validation-2026-07-27.md)。
-1.1.2 的 Spine 完整性、持有物、兑换交互和前后景镜头复测见
+1.1.3 的真机/模拟器开场、Spine 完整性、持有物、兑换交互和前后景镜头复测见
 [`docs/testing/mobile-spine-interaction-camera-regression-2026-07-28.md`](docs/testing/mobile-spine-interaction-camera-regression-2026-07-28.md)。
 
 ## 通关文档

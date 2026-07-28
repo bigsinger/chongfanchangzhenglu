@@ -1016,6 +1016,11 @@ var i, n = this && this.__extends || (i = function (t, e) {
                             o == t.btn_user ? t.startBack() : o == t.btn_climb ? t.startClimbBack() : o == t.btn_throw && t.throwBack();
                             return !1;
                         }
+                        o = t.getCurrentInteractionTouch(e);
+                        if (o) {
+                            t.startBack();
+                            return !1;
+                        }
                         o = t.getInteractiveBubble(e);
                         if (o) {
                             o.bubbleBack();
@@ -1036,6 +1041,17 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     }
                 });
                 cc.eventManager.addListener(this.m_globalTouchListener, -1);
+            };
+            e.prototype.getCurrentInteractionTouch = function (t) {
+                var e = u.default.cItem, o = e && e.activeInHierarchy && e.getComponent("InteractiveObject"), i = o && o.getOpType();
+                if (!e || !o || !i || !this.hero || !this.camera_master) return null;
+                var n = e.x - this.hero.x, a = e.y - this.hero.y;
+                if (n * n + a * a > 1e3 * 1e3) return null;
+                var s = this.camera_master.getComponent(cc.Camera), r = e.parent ? e.parent.convertToWorldSpaceAR(e.position) : e.position, c = s ? s.getWorldToScreenPoint(r) : r, l = t.getLocation();
+                // Include the full visible NPC body and its overhead bubble.
+                // This is deliberately tied to cItem, so enlarging the target
+                // cannot make unrelated scenery consume road taps.
+                return cc.rect(c.x - 145, c.y - 95, 290, 390).contains(l) ? o : null;
             };
             e.prototype.getInteractiveBubble = function (t) {
                 if (!this.itemMap) return null;
@@ -1094,7 +1110,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     if (p && p.activeInHierarchy) {
                         var u = p.getBoundingBoxToWorld();
                         if (o) {
-                            var m = o.getWorldToScreenPoint(cc.v2(u.xMin, u.yMin)), _ = o.getWorldToScreenPoint(cc.v2(u.xMax, u.yMax)), f = 22, g = cc.rect(Math.min(m.x, _.x) - f, Math.min(m.y, _.y) - f, Math.abs(_.x - m.x) + 2 * f, Math.abs(_.y - m.y) + 2 * f);
+                            var m = o.getWorldToScreenPoint(cc.v2(u.xMin, u.yMin)), _ = o.getWorldToScreenPoint(cc.v2(u.xMax, u.yMax)), f = 48, g = cc.rect(Math.min(m.x, _.x) - f, Math.min(m.y, _.y) - f, Math.abs(_.x - m.x) + 2 * f, Math.abs(_.y - m.y) + 2 * f);
                             for (var v = 0; v < l.length; v++) if (g.contains(l[v])) {
                                 var b = l[v].x - (g.xMin + g.xMax) / 2, y = l[v].y - (g.yMin + g.yMax) / 2, w = b * b + y * y;
                                 w < a && (a = w, n = p);
@@ -1116,7 +1132,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     // 30%-wide lower-screen fallback swallowed ordinary road
                     // taps while carrying an item, making the hero appear
                     // unable to move and repeatedly activating the nearby prop.
-                    if (e.y <= .24 * C.height && e.x >= .78 * C.width && e.x <= C.width) {
+                    if (e.y <= .32 * C.height && e.x >= .7 * C.width && e.x <= C.width) {
                         this.btn_user && this.btn_user.activeInHierarchy ? n = this.btn_user : this.btn_climb && this.btn_climb.activeInHierarchy ? n = this.btn_climb : this.btn_throw && this.btn_throw.activeInHierarchy && (n = this.btn_throw);
                         n && console.log("------------ 可见区域命中操作按钮 " + n.name);
                     }
@@ -1227,7 +1243,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     previousTouchActive: this.m_touchProximityActive,
                     touchOperation: c.default.OP_TOUCH,
                     touchReachSquared: 320 * 320,
-                    operationReachSquared: 520 * 520,
+                    operationReachSquared: 650 * 650,
                     resolveComponent: function (t) {
                         return t.getComponent("InteractiveObject");
                     }

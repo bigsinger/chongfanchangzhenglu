@@ -157,23 +157,33 @@ assert(
   'all primary scenes must share fixed-height landscape adaptation'
 );
 assert(
-  /this\.cg\.node\.active = !0/.test(loading) &&
+  /this\.m_useStableOpening = !!\(cc\.sys && cc\.sys\.isNative\)/.test(loading) &&
+    /this\.cg\.node\.active = !this\.m_useStableOpening/.test(loading) &&
+    /prepareStableOpening/.test(loading) &&
+    /startStableOpening/.test(loading) &&
+    /e && \(e\.active = !1\)/.test(loading) &&
     /this\.cg\.setCompleteListener/.test(loading) &&
-    /scheduleOnce\(t\.m_openingGateCallback, 65\)/.test(loading) &&
+    /t\.m_useStableOpening \? 52 : 65/.test(loading) &&
     /finishOpeningGate/.test(loading),
-  'startup must play the complete repaired Spine opening with an idempotent watchdog'
+  'native startup must avoid the corrupted legacy Spine mesh while preserving narration, subtitles, skip and an idempotent watchdog'
 );
 assert(
   !/y = cc\.v2\(\(y\.x - s\.x\) \/ P/.test(scene) &&
     /点击命中交互气泡/.test(scene) &&
-    /reachSquared: 520 \* 520/.test(event),
-  'visible world interaction bubbles and obstructed NPCs must remain touch reachable'
+    /getCurrentInteractionTouch/.test(scene) &&
+    /operationReachSquared: 650 \* 650/.test(scene) &&
+    /preferredReachSquared: 1e3 \* 1e3/.test(event) &&
+    /i\.distance < 1e3/.test(source('ObjectiveManager.js')),
+  'visible NPC bodies, large operation controls and obstructed objective targets must remain touch reachable'
 );
 assert(
   /this\.setSwitchLoad\(this\.m_goods\)/.test(player) &&
     /Spine attachment missing/.test(source('SpineAnimationManager.js')) &&
-    /return this\.setAttachment\("body_prop", "prop\/prop" \+ t\)/.test(source('SpineAnimationManager.js')) &&
-    /return this\.setAttachment\("hand_prop", "prop\/prop" \+ t\)/.test(source('SpineAnimationManager.js')) &&
+    /prototype\.clearAttachment/.test(source('SpineAnimationManager.js')) &&
+    /-1 != o\.indexOf\(a\) \? this\.setAttachment\(a, a \+ i\) : this\.clearAttachment\(a\)/.test(source('SpineAnimationManager.js')) &&
+    !/this\.setAttachment\(this\.m_loadAry\[n\], this\.m_loadAry\[n\] \+ 0\)/.test(source('SpineAnimationManager.js')) &&
+    /t \? this\.setAttachment\("body_prop", "prop\/prop" \+ t\) : this\.clearAttachment\("body_prop"\)/.test(source('SpineAnimationManager.js')) &&
+    /t \? this\.setAttachment\("hand_prop", "prop\/prop" \+ t\) : this\.clearAttachment\("hand_prop"\)/.test(source('SpineAnimationManager.js')) &&
     /DragonBones slot missing/.test(source('DragonBonesAnimationManager.js')),
   'held buckets, supply boxes, and dynamic character slots must survive attachment timelines and missing assets'
 );

@@ -1,127 +1,70 @@
 'use strict';
 
+/*
+ * Skeleton texture safety gate.
+ *
+ * Spine and DragonBones atlases are authored together with mesh UVs, trim
+ * offsets and attachment geometry. Resizing their already-packed PNG pages
+ * independently is unsafe: odd dimensions have to be rounded and native GPU
+ * drivers do not all tolerate the resulting UV seams in the same way.
+ */
+
 const fs = require('fs');
 const path = require('path');
-const { spawnSync } = require('child_process');
 
 const root = path.resolve(__dirname, '..');
-const dragonRoot = path.join(root, 'assets', 'resources', 'skeletons');
-const maxDimension = 2048;
-const changedImages = new Set();
+const skeletonRoot = path.join(root, 'assets', 'resources', 'skeletons');
+const maxAuthoredDimension = 4096;
 
-function walk(dir) {
-  return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
-    const target = path.join(dir, entry.name);
+function walk(directory) {
+  return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+    const target = path.join(directory, entry.name);
     return entry.isDirectory() ? walk(target) : [target];
   });
 }
 
-function insideProject(target) {
-  const resolved = path.resolve(target);
-  if (!resolved.startsWith(`${root}${path.sep}`)) throw new Error(`拒绝修改工作区外文件：${resolved}`);
-  return resolved;
+function pngDimensions(file) {
+  const buffer = Buffer.alloc(24);
+  const descriptor = fs.openSync(file, 'r');
+  fs.readSync(descriptor, buffer, 0, buffer.length, 0);
+  fs.closeSync(descriptor);
+  if (buffer.toString('ascii', 1, 4) !== 'PNG') throw new Error(`不是 PNG：${file}`);
+  return { width: buffer.readUInt32BE(16), height: buffer.readUInt32BE(20) };
 }
 
-function resizePng(file, width, height) {
-  file = insideProject(file);
-  const temporary = `${file}.optimizing.png`;
-  const result = spawnSync('ffmpeg', [
-    '-hide_banner', '-loglevel', 'error', '-y', '-i', file,
-    '-vf', `scale=${width}:${height}:flags=lanczos`,
-    '-frames:v', '1', temporary
-  ], { stdio: 'inherit' });
-  if (result.status !== 0 || !fs.existsSync(temporary)) throw new Error(`ffmpeg 缩放失败：${file}`);
-  fs.renameSync(temporary, file);
-  changedImages.add(file);
-}
-
-function scaleNumber(value, factor) {
-  return Math.round(Number(value) * factor);
-}
-
-function updatePngMeta(file, targetWidth, targetHeight, factor) {
-  const metaFile = `${file}.meta`;
-  if (!fs.existsSync(metaFile)) return;
-  const meta = JSON.parse(fs.readFileSync(metaFile, 'utf8'));
-  meta.width = targetWidth;
-  meta.height = targetHeight;
-  for (const sub of Object.values(meta.subMetas || {})) {
-    for (const key of ['trimX', 'trimY', 'width', 'height', 'rawWidth', 'rawHeight', 'offsetX', 'offsetY']) {
-      if (typeof sub[key] === 'number') sub[key] = scaleNumber(sub[key], factor);
-    }
-    sub.rawWidth = targetWidth;
-    sub.rawHeight = targetHeight;
+function assertDimension(file, width, height) {
+  if (Math.max(width, height) > maxAuthoredDimension) {
+    throw new Error(
+      `骨骼图集 ${path.relative(root, file)} 为 ${width}x${height}，超过 ` +
+      `${maxAuthoredDimension}px；请重新打包为多页面图集，禁止直接缩放 PNG。`
+    );
   }
-  fs.writeFileSync(metaFile, `${JSON.stringify(meta, null, 2)}\n`);
 }
 
-function optimizeDragonBones(file) {
-  const data = JSON.parse(fs.readFileSync(file, 'utf8'));
-  const width = Number(data.width);
-  const height = Number(data.height);
-  if (!width || !height || Math.max(width, height) <= maxDimension || Number(data.scale) < 1) return 0;
-  const factor = 0.5;
-  const targetWidth = scaleNumber(width, factor);
-  const targetHeight = scaleNumber(height, factor);
-  for (const texture of data.SubTexture || []) {
-    for (const key of ['x', 'y', 'width', 'height', 'frameX', 'frameY', 'frameWidth', 'frameHeight']) {
-      if (typeof texture[key] === 'number') texture[key] = scaleNumber(texture[key], factor);
-    }
-  }
-  data.width = targetWidth;
-  data.height = targetHeight;
-  data.scale = factor;
-  const image = path.resolve(path.dirname(file), data.imagePath);
-  resizePng(image, targetWidth, targetHeight);
-  updatePngMeta(image, targetWidth, targetHeight, factor);
-  fs.writeFileSync(file, `${JSON.stringify(data, null, 2)}\n`);
-  return 1;
-}
-
-function optimizeSpineAtlas(file) {
-  const eol = fs.readFileSync(file, 'utf8').includes('\r\n') ? '\r\n' : '\n';
-  const lines = fs.readFileSync(file, 'utf8').split(/\r?\n/);
-  let currentFactor = 1;
-  let pageCount = 0;
+let spinePages = 0;
+for (const atlas of walk(skeletonRoot).filter((file) => file.endsWith('.atlas'))) {
+  const lines = fs.readFileSync(atlas, 'utf8').split(/\r?\n/);
   for (let index = 0; index < lines.length; index++) {
-    if (/^\S.*\.png$/.test(lines[index]) && /^size:\s*\d+,\d+$/.test(lines[index + 1] || '')) {
-      const match = /^size:\s*(\d+),(\d+)$/.exec(lines[index + 1]);
-      const width = Number(match[1]);
-      const height = Number(match[2]);
-      currentFactor = Math.max(width, height) > maxDimension ? 0.5 : 1;
-      if (currentFactor < 1) {
-        const targetWidth = scaleNumber(width, currentFactor);
-        const targetHeight = scaleNumber(height, currentFactor);
-        const image = path.resolve(path.dirname(file), lines[index]);
-        resizePng(image, targetWidth, targetHeight);
-        updatePngMeta(image, targetWidth, targetHeight, currentFactor);
-        pageCount++;
-      }
-      continue;
-    }
-    if (currentFactor < 1) {
-      // Spine uses orig/offset together with the packed size to rebuild every
-      // region attachment. Scaling only size/xy leaves the UVs on the smaller
-      // texture but keeps the old attachment geometry, which scatters body
-      // parts and props on native renderers.
-      const match = /^(\s*)(size|xy|orig|offset|split|pad):\s*(-?\d+),\s*(-?\d+)(?:,\s*(-?\d+),\s*(-?\d+))?$/.exec(lines[index]);
-      if (match) {
-        const values = [match[3], match[4], match[5], match[6]]
-          .filter((value) => value != null)
-          .map((value) => scaleNumber(value, currentFactor));
-        lines[index] = `${match[1]}${match[2]}: ${values.join(', ')}`;
-      }
-    }
+    if (!/^\S.*\.png$/.test(lines[index]) ||
+        !/^size:\s*\d+,\s*\d+$/.test(lines[index + 1] || '')) continue;
+    const page = path.join(path.dirname(atlas), lines[index].trim());
+    const dimensions = pngDimensions(page);
+    assertDimension(page, dimensions.width, dimensions.height);
+    spinePages++;
   }
-  if (pageCount) fs.writeFileSync(file, `${lines.join(eol).replace(/\s+$/, '')}${eol}`);
-  return pageCount;
 }
 
-let atlasPages = 0;
-let dragonAtlases = 0;
-for (const file of walk(dragonRoot)) {
-  if (file.endsWith('.atlas')) atlasPages += optimizeSpineAtlas(file);
-  if (file.endsWith('_tex.json')) dragonAtlases += optimizeDragonBones(file);
+let dragonBonesPages = 0;
+for (const textureData of walk(skeletonRoot).filter((file) => file.endsWith('_tex.json'))) {
+  const data = JSON.parse(fs.readFileSync(textureData, 'utf8'));
+  if (!data.imagePath) continue;
+  const page = path.join(path.dirname(textureData), data.imagePath);
+  const dimensions = pngDimensions(page);
+  assertDimension(page, dimensions.width, dimensions.height);
+  dragonBonesPages++;
 }
-console.log(`纹理优化：${atlasPages} 个 Spine 页面、${dragonAtlases} 个 DragonBones 图集降至 ${maxDimension}px 内`);
-console.log(`已更新图片：${changedImages.size}`);
+
+console.log(
+  `骨骼纹理安全门禁：${spinePages} 个 Spine 页面、${dragonBonesPages} 个 ` +
+  'DragonBones 页面保持原始分辨率（不执行破坏性缩放）'
+);

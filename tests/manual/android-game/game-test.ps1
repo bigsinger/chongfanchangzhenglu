@@ -25,9 +25,13 @@ $Package = 'com.game.longmarch.creator243'
 $Activity = 'org.cocos2dx.javascript.AppActivity'
 $ResultDir = Join-Path $PSScriptRoot '..\results'
 $ResultDir = [System.IO.Path]::GetFullPath($ResultDir)
+$DeviceSqlite = Join-Path $PSScriptRoot 'device-sqlite.py'
 
 if (-not (Test-Path -LiteralPath $Adb)) {
     throw "ADB 不存在：$Adb"
+}
+if (-not (Test-Path -LiteralPath $DeviceSqlite)) {
+    throw "真机 SQLite 桥接工具不存在：$DeviceSqlite"
 }
 if ($Name -notmatch '^[A-Za-z0-9_.-]+$') {
     throw 'Name 只能包含字母、数字、点、下划线和短横线'
@@ -46,6 +50,89 @@ function Invoke-Adb {
     }
 }
 
+function Invoke-PreciseTap {
+    param([Parameter(Mandatory)][int]$TapX, [Parameter(Mandatory)][int]$TapY)
+    # Xiaomi/HyperOS can deny `adb shell input` unless the separate
+    # "USB debugging (Security settings)" toggle is enabled. Android's Monkey
+    # raw-event replay runs through the system-authorized input path and still
+    # lets the test specify an exact, deterministic coordinate.
+    $sizeLine = (Invoke-Adb -Arguments @('shell', 'wm', 'size') |
+        Select-String 'Physical size:' | Select-Object -First 1).Line
+    $orientationLine = (Invoke-Adb -Arguments @('shell', 'dumpsys', 'display') |
+        Select-String 'mCurrentOrientation=' | Select-Object -First 1).Line
+    $sizeMatch = [regex]::Match($sizeLine, '(\d+)x(\d+)')
+    $orientationMatch = [regex]::Match($orientationLine, 'mCurrentOrientation=(\d)')
+    if (-not $sizeMatch.Success -or -not $orientationMatch.Success) {
+        throw '无法读取真机物理尺寸或旋转方向'
+    }
+    $physicalWidth = [int]$sizeMatch.Groups[1].Value
+    $physicalHeight = [int]$sizeMatch.Groups[2].Value
+    $orientation = [int]$orientationMatch.Groups[1].Value
+    $monkeyX = $TapX
+    $monkeyY = $TapY
+    switch ($orientation) {
+        1 {
+            # This device's rotation-90 landscape surface maps the portrait
+            # panel counter-clockwise: display=(physicalHeight-naturalY,
+            # naturalX). Convert screenshot coordinates back to panel space.
+            $monkeyX = $TapY
+            $monkeyY = $physicalHeight - $TapX
+        }
+        2 {
+            $monkeyX = $physicalWidth - $TapX
+            $monkeyY = $physicalHeight - $TapY
+        }
+        3 {
+            $monkeyX = $physicalWidth - $TapY
+            $monkeyY = $TapX
+        }
+    }
+    $localScript = Join-Path $ResultDir "$Name-tap.monkey"
+    $remoteScript = "/data/local/tmp/longmarch-$Name-tap.monkey"
+    $content = @(
+        'type= raw events',
+        'count= 1',
+        'speed= 1.0',
+        'start data >>',
+        "Tap($monkeyX,$monkeyY)"
+    ) -join "`n"
+    [System.IO.File]::WriteAllText($localScript, $content, [System.Text.UTF8Encoding]::new($false))
+    Invoke-Adb -Arguments @('push', $localScript, $remoteScript)
+    try {
+        $output = Invoke-Adb -Arguments @(
+            'shell', 'monkey', '-p', $Package, '-f', $remoteScript,
+            '--throttle', '0', '-v', '1'
+        )
+        if (($output -join "`n") -match 'Dropped:.*pointers=[1-9]') {
+            throw "Monkey 精确触摸被系统丢弃：$TapX,$TapY"
+        }
+    } finally {
+        Invoke-Adb -Arguments @('shell', 'rm', '-f', $remoteScript)
+    }
+}
+
+function Invoke-DeviceSqlite {
+    param(
+        [Parameter(Mandatory)][ValidateSet('query', 'execute', 'export', 'import')][string]$Action,
+        [string]$Sql,
+        [string]$File,
+        [ValidateSet('rows', 'scalar')][string]$Format = 'rows'
+    )
+    $arguments = @(
+        $DeviceSqlite, $Action,
+        '--adb', $Adb,
+        '--serial', $Serial,
+        '--package', $Package
+    )
+    if ($Sql) { $arguments += @('--sql', $Sql) }
+    if ($File) { $arguments += @('--file', $File) }
+    if ($Format) { $arguments += @('--format', $Format) }
+    & python @arguments
+    if ($LASTEXITCODE -ne 0) {
+        throw "真机 SQLite 操作失败：$Action"
+    }
+}
+
 function Stop-Game {
     Invoke-Adb -Arguments @('shell', 'am', 'force-stop', $Package)
 }
@@ -58,12 +145,11 @@ function Start-Game {
 }
 
 function Get-GameState {
-    $focus = (Invoke-Adb -Arguments @('shell', 'dumpsys', 'window', 'windows') |
+    $focus = (Invoke-Adb -Arguments @('shell', 'dumpsys', 'window') |
         Select-String 'mCurrentFocus|mFocusedApp' |
         ForEach-Object { $_.Line.Trim() })
     $sql = 'select key,value from data where key in (''chapter'',''mapIndex'',''unlockchapters'',''heroSpine'') union all select key,''bytes='' || length(value) from data where key in (''longmarch_save_v2_current'',''longmarch_save_v2_previous'') order by key;'
-    $remote = "run-as $Package sqlite3 databases/jsb.sqlite `"$sql`""
-    $save = Invoke-Adb -Arguments @('shell', $remote)
+    $save = Invoke-DeviceSqlite -Action query -Sql $sql
     [pscustomobject]@{
         serial = $Serial
         focus = @($focus)
@@ -90,9 +176,15 @@ function Save-Screenshot {
 
 function Save-Logs {
     $localPath = Join-Path $ResultDir "$Name.log"
-    $lines = Invoke-Adb -Arguments @('logcat', '-d', '-v', 'time', '-t', '3000')
+    $pidLine = @((Invoke-Adb -Arguments @('shell', 'pidof', $Package)))[0]
+    $logArguments = @('logcat', '-d', '-v', 'time', '-t', '3000')
+    if ($pidLine) {
+        $appPid = ($pidLine.Trim() -split '\s+')[0]
+        if ($appPid -match '^\d+$') { $logArguments += @('--pid', $appPid) }
+    }
+    $lines = Invoke-Adb -Arguments $logArguments
     $lines | Set-Content -LiteralPath $localPath -Encoding utf8
-    $errors = $lines | Select-String 'TypeError|ReferenceError|FATAL EXCEPTION|Fatal signal|SIGSEGV|SIGABRT|crash_dump|tombstone|ANR in|Uncaught Exception|asset.*failed|load.*failed|Error processing arguments|Failed to invoke'
+    $errors = $lines | Select-String 'TypeError|ReferenceError|FATAL EXCEPTION|Fatal signal|SIGSEGV|SIGABRT|crash_dump|tombstone|ANR in|Uncaught Exception|JS:.*(?:asset|load).*failed|Error processing arguments|Failed to invoke'
     if ($errors) {
         $errors | ForEach-Object { Write-Error $_.Line }
         throw "运行日志包含错误，完整日志：$localPath"
@@ -101,13 +193,18 @@ function Save-Logs {
 }
 
 function Save-Checkpoint {
-    $remote = "run-as $Package mkdir -p files/checkpoints"
-    Invoke-Adb -Arguments @('shell', $remote)
-    # SQLite online backup keeps the running game in place and includes WAL data.
-    $remote = "run-as $Package sqlite3 databases/jsb.sqlite `".backup 'files/checkpoints/$Name.sqlite'`""
-    Invoke-Adb -Arguments @('shell', $remote)
-    $remote = "run-as $Package ls -l files/checkpoints/$Name.sqlite"
-    Invoke-Adb -Arguments @('shell', $remote)
+    $wasRunning = @((Invoke-Adb -Arguments @('shell', 'pidof', $Package))).Count -gt 0
+    Stop-Game
+    Invoke-Adb -Arguments @('shell', 'run-as', $Package, 'mkdir', '-p', 'files/checkpoints')
+    Invoke-Adb -Arguments @(
+        'shell', 'run-as', $Package, 'cp',
+        'databases/jsb.sqlite', "files/checkpoints/$Name.sqlite"
+    )
+    Invoke-Adb -Arguments @(
+        'shell', 'run-as', $Package, 'ls', '-l',
+        "files/checkpoints/$Name.sqlite"
+    )
+    if ($wasRunning) { Start-Game }
 }
 
 function Restore-Checkpoint {
@@ -121,8 +218,7 @@ function Restore-Checkpoint {
     Invoke-Adb -Arguments @('shell', $remote)
     if ($DirectToGame) {
         $sql = "insert or replace into data(key,value) values('codex_direct_scene','gameScene');"
-        $remote = "run-as $Package sqlite3 databases/jsb.sqlite `"$sql`""
-        Invoke-Adb -Arguments @('shell', $remote)
+        Invoke-DeviceSqlite -Action execute -Sql $sql
     }
     Start-Game
 }
@@ -131,15 +227,14 @@ function Set-MapStart {
     Stop-Game
     $sql = @"
 begin;
-delete from data where key in ('tempData','cross','heroItem','heroFollow','heroSpine');
+delete from data where key in ('tempData','cross','heroItem','heroFollow','heroSpine','longmarch_save_v2_current','longmarch_save_v2_previous');
   insert or replace into data(key,value) values('chapter','$Chapter');
   insert or replace into data(key,value) values('mapIndex','$Map');
   insert or replace into data(key,value) values('unlockchapters','$([Math]::Max(0, $Chapter - 1))');
   insert or replace into data(key,value) values('codex_direct_scene','gameScene');
   commit;
 "@ -replace "`r?`n", ' '
-    $remote = "run-as $Package sqlite3 databases/jsb.sqlite `"$sql`""
-    Invoke-Adb -Arguments @('shell', $remote)
+    Invoke-DeviceSqlite -Action execute -Sql $sql
     Start-Game
 }
 
@@ -147,8 +242,8 @@ function Set-HeroPosition {
     Stop-Game
     $sceneKey = "scenes_d${Chapter}_${Map}"
     $query = "select value from data where key='tempData';"
-    $json = $query | & $Adb -s $Serial shell run-as $Package sqlite3 databases/jsb.sqlite
-    if ($LASTEXITCODE -ne 0 -or -not $json) {
+    $json = Invoke-DeviceSqlite -Action query -Sql $query -Format scalar
+    if (-not $json) {
         throw '读取 tempData 失败'
     }
     $tempData = $json | ConvertFrom-Json
@@ -167,10 +262,7 @@ insert or replace into data(key,value) values('mapIndex','$Map');
 insert or replace into data(key,value) values('codex_direct_scene','gameScene');
 commit;
 "@ -replace "`r?`n", ' '
-    $sql | & $Adb -s $Serial shell run-as $Package sqlite3 databases/jsb.sqlite
-    if ($LASTEXITCODE -ne 0) {
-        throw '写入重定位存档失败'
-    }
+    Invoke-DeviceSqlite -Action execute -Sql $sql
     Start-Game
 }
 
@@ -197,8 +289,7 @@ function Test-CorruptSaveRecovery {
     try {
         Stop-Game
         $sql = "update data set value='{`"schemaVersion`":2,`"revision`":' where key='longmarch_save_v2_current';"
-        $remote = "run-as $Package sqlite3 databases/jsb.sqlite `"$sql`""
-        Invoke-Adb -Arguments @('shell', $remote)
+        Invoke-DeviceSqlite -Action execute -Sql $sql
         Invoke-Adb -Arguments @('logcat', '-c')
         Start-Game
         Start-Sleep -Seconds $WaitSeconds
@@ -224,8 +315,8 @@ function Test-OldSaveMigration {
     try {
         Stop-Game
         $tempQuery = "select value from data where key='tempData';"
-        $tempJson = $tempQuery | & $Adb -s $Serial shell run-as $Package sqlite3 databases/jsb.sqlite
-        if ($LASTEXITCODE -ne 0 -or -not $tempJson) {
+        $tempJson = Invoke-DeviceSqlite -Action query -Sql $tempQuery -Format scalar
+        if (-not $tempJson) {
             throw '读取 tempData 失败'
         }
         $tempData = $tempJson | ConvertFrom-Json
@@ -246,8 +337,8 @@ function Test-OldSaveMigration {
         })
 
         $longmarchQuery = "select value from data where key='longmarch';"
-        $longmarchJson = $longmarchQuery | & $Adb -s $Serial shell run-as $Package sqlite3 databases/jsb.sqlite
-        if ($LASTEXITCODE -ne 0 -or -not $longmarchJson) {
+        $longmarchJson = Invoke-DeviceSqlite -Action query -Sql $longmarchQuery -Format scalar
+        if (-not $longmarchJson) {
             throw '读取 longmarch 失败'
         }
         $longmarch = $longmarchJson | ConvertFrom-Json
@@ -267,16 +358,13 @@ insert or replace into data(key,value) values('mapIndex','3');
 insert or replace into data(key,value) values('codex_direct_scene','gameScene');
 commit;
 "@ -replace "`r?`n", ' '
-        $sql | & $Adb -s $Serial shell run-as $Package sqlite3 databases/jsb.sqlite
-        if ($LASTEXITCODE -ne 0) {
-            throw '构造旧版本存档失败'
-        }
+        Invoke-DeviceSqlite -Action execute -Sql $sql
 
         Invoke-Adb -Arguments @('logcat', '-c')
         Start-Game
         Start-Sleep -Seconds $WaitSeconds
-        $migratedJson = $tempQuery | & $Adb -s $Serial shell run-as $Package sqlite3 databases/jsb.sqlite
-        if ($LASTEXITCODE -ne 0 -or -not $migratedJson) {
+        $migratedJson = Invoke-DeviceSqlite -Action query -Sql $tempQuery -Format scalar
+        if (-not $migratedJson) {
             throw '读取迁移后 tempData 失败'
         }
         $migratedScene = ($migratedJson | ConvertFrom-Json).$sceneKey
@@ -381,7 +469,7 @@ switch ($Command) {
         Stop-Game
     }
     'tap' {
-        Invoke-Adb -Arguments @('shell', 'input', 'tap', "$X", "$Y")
+        Invoke-PreciseTap -TapX $X -TapY $Y
     }
     'swipe' {
         Invoke-Adb -Arguments @('shell', 'input', 'swipe', "$X", "$Y", "$X2", "$Y2", "$DurationMs")

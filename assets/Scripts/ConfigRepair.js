@@ -85,9 +85,21 @@ var i = {
         height: 84,
         color: ""
     }]
+}, geometryRepairs = {
+    scenes_d3_3: {
+        13: {
+            // The recovered invisible blocker ended 249 units before the
+            // exchange clerk. On narrow mobile viewports it made the character
+            // look stuck behind the queue. Keep a slim boundary at the counter
+            // while allowing the hero to walk visibly beside the clerk.
+            name: "阻挡",
+            x: 710,
+            boxWidth: 30
+        }
+    }
 }, a = {
     repairScene: function (t, e, o) {
-        var a = i[t], s = n[t], r = 0;
+        var a = i[t], s = n[t], geometry = geometryRepairs[t], r = 0;
         if (!e || !Array.isArray(e.confArr)) return r;
         if (a) for (var c = 0; c < e.confArr.length; c++) {
             var l = e.confArr[c], h = l.eventTrigger || [];
@@ -105,10 +117,18 @@ var i = {
             // reinsert a compatibility placement after permanent collection.
             f || o && o[_] || (e.confArr.push(JSON.parse(JSON.stringify(m))), r++);
         }
+        if (geometry) for (var w = 0; w < e.confArr.length; w++) {
+            var item = e.confArr[w], patch = geometry[item.index];
+            if (patch && (!patch.name || patch.name === item.name)) {
+                item.x !== patch.x && (item.x = patch.x, r++);
+                item.box && item.box.width !== patch.boxWidth && (item.box.width = patch.boxWidth, r++);
+            }
+        }
         return r;
     },
     repairs: i,
-    placements: n
+    placements: n,
+    geometryRepairs: geometryRepairs
 };
 
 o.default = a;

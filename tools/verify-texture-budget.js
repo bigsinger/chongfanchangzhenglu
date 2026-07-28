@@ -5,8 +5,10 @@ const path = require('path');
 
 const root = path.resolve(__dirname, '..');
 const assetRoot = path.join(root, 'assets');
-const maxAtlasDimension = 2048;
-const maxDecodedBytes = 32 * 1024 * 1024;
+// Recovered skeletal atlases were authored up to 4096px. Resizing an
+// already-packed atlas corrupts odd-sized mesh UVs on real Mali devices.
+const maxAtlasDimension = 4096;
+const maxDecodedBytes = 64 * 1024 * 1024;
 
 function walk(dir) {
   return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
@@ -60,6 +62,6 @@ if (oversizeAtlases.length) {
   process.exitCode = 1;
 }
 if (overBudget.length) {
-  console.error('单张纹理解码内存超过 32MiB：', overBudget);
+  console.error('单张纹理解码内存超过 64MiB：', overBudget);
   process.exitCode = 1;
 }

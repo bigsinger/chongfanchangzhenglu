@@ -6,8 +6,8 @@ const path = require('path');
 const root = path.resolve(__dirname, '..');
 const androidProject = path.join(root, 'build', 'jsb-link', 'frameworks', 'runtime-src', 'proj.android-studio');
 const engineRoot = process.env.LONGMARCH_COCOS_ENGINE || 'E:/temp/CocosCreator-2.4.15/resources/cocos2d-x';
-const versionCode = Number(process.env.LONGMARCH_VERSION_CODE || 2026072701);
-const versionName = process.env.LONGMARCH_VERSION_NAME || '1.1.2';
+const versionCode = Number(process.env.LONGMARCH_VERSION_CODE || 2026072802);
+const versionName = process.env.LONGMARCH_VERSION_NAME || '1.1.3';
 const packageName = 'com.game.longmarch.creator243';
 
 if (!Number.isInteger(versionCode) || versionCode < 1 || versionCode > 2100000000) {

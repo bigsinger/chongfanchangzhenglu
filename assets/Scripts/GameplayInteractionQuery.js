@@ -56,6 +56,7 @@ function operationPriority(component, heldGoods) {
 function selectClosestOperation(options) {
     var hero = options.hero;
     var reachSquared = options.reachSquared;
+    var preferredReachSquared = options.preferredReachSquared || reachSquared;
     var resolveComponent = options.resolveComponent;
     var preferredNode = options.preferredNode;
     var candidates = collectCandidates(options.stack, options.nearby);
@@ -81,7 +82,8 @@ function selectClosestOperation(options) {
         if (!operation) continue;
         var candidateDistance = distanceSquared(node, hero);
         var candidatePriority = operationPriority(component, options.heldGoods) + (node === preferredNode ? 100 : 0);
-        if (candidateDistance < reachSquared &&
+        var candidateReach = node === preferredNode ? preferredReachSquared : reachSquared;
+        if (candidateDistance < candidateReach &&
             (candidatePriority > selectedPriority ||
                 candidatePriority === selectedPriority && candidateDistance < selectedDistance)) {
             selectedPriority = candidatePriority;

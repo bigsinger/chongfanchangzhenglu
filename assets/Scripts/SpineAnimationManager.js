@@ -138,11 +138,11 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 };
                 e.prototype.switchSolt = function (t) {
                     void 0 === t && (t = 0);
-                    return this.setAttachment("body_prop", "prop/prop" + t);
+                    return t ? this.setAttachment("body_prop", "prop/prop" + t) : this.clearAttachment("body_prop");
                 };
                 e.prototype.switchHand = function (t) {
                     void 0 === t && (t = 0);
-                    return this.setAttachment("hand_prop", "prop/prop" + t);
+                    return t ? this.setAttachment("hand_prop", "prop/prop" + t) : this.clearAttachment("hand_prop");
                 };
                 e.prototype.setSlotColor = function (t) {
                     void 0 === t && (t = null);
@@ -166,18 +166,20 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 };
                 e.prototype.switchLoad = function (t, e) {
                     if (!this.m_skeleton || !t) return;
-                    var o, i = t.loadorder.split(",");
+                    var o = String(t.loadorder || "").split(",").map(function (t) {
+                        return t.trim();
+                    }).filter(function (t) {
+                        return !!t;
+                    }), i = e ? t.number : 0;
                     for (var n in this.m_loadAry) {
-                        var a = 0;
-                        for (var s in i) {
-                            if (this.m_loadAry[n] == i[s]) {
-                                o = e ? t.number : 0;
-                                this.setAttachment(this.m_loadAry[n], this.m_loadAry[n] + o);
-                                break;
-                            }
-                            ++a >= i.length && this.setAttachment(this.m_loadAry[n], this.m_loadAry[n] + 0);
-                        }
+                        var a = this.m_loadAry[n];
+                        -1 != o.indexOf(a) ? this.setAttachment(a, a + i) : this.clearAttachment(a);
                     }
+                };
+                e.prototype.clearAttachment = function (t) {
+                    if (!this.m_skeleton) return !1;
+                    var e = this.m_skeleton.findSlot(t);
+                    return !!e && (e.setAttachment(null), !0);
                 };
                 e.prototype.setAttachment = function (t, e) {
                     console.log(t + "==插槽=图片=" + e);

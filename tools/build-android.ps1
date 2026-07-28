@@ -195,8 +195,8 @@ if ($LASTEXITCODE -ne 0) {
 Assert-File -Path (Join-Path $androidProject 'gradlew.bat') -Description 'Generated Gradle wrapper'
 
 $env:LONGMARCH_COCOS_ENGINE = 'E:/temp/CocosCreator-2.4.15/resources/cocos2d-x'
-$env:LONGMARCH_VERSION_CODE = '2026072801'
-$env:LONGMARCH_VERSION_NAME = '1.1.2'
+$env:LONGMARCH_VERSION_CODE = '2026072802'
+$env:LONGMARCH_VERSION_NAME = '1.1.3'
 & node (Join-Path $projectRoot 'tools\modernize-android-project.js')
 if ($LASTEXITCODE -ne 0) {
     throw 'Android modernization failed.'

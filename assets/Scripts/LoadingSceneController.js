@@ -43,11 +43,12 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 e.m_isFirst = !1;
                 e.m_asideIndex = 1;
                 e.m_timeIndex = 0;
-                e.m_index = 0;
-                e.m_openingGateDone = !1;
-                e.m_openingGateCallback = null;
-                return e;
-            }
+                 e.m_index = 0;
+                 e.m_openingGateDone = !1;
+                 e.m_openingGateCallback = null;
+                 e.m_useStableOpening = !1;
+                 return e;
+             }
             e.prototype.onLoad = function () {
                 displayAdapter.default.apply(this.node, {
                     referenceWidth: 1650,
@@ -59,17 +60,21 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 if (e && "object" == typeof e && !Array.isArray(e)) {
                     for (var i in o) null == e[i] && (e[i] = o[i]);
                     c.default.playData = e;
-                }
-                cc.sys.localStorage.getItem("longmarch_first") && (this.m_isFirst = !0);
-                this.btn_skip.active = this.m_isFirst;
-                // Keep the complete authored opening. Its five-page atlas is
-                // repaired during the 2.4.15 migration, so native wide-screen
-                // rendering no longer needs the temporary static fallback.
-                this.cg.node.active = !0;
-                this.cg.setCompleteListener(function () {
-                    t._onPlayComplete();
-                });
-                this.btn_skip.active && this.btn_skip.runAction(cc.fadeIn(1.2));
+                 }
+                 cc.sys.localStorage.getItem("longmarch_first") && (this.m_isFirst = !0);
+                 // Creator 2.4's native Spine mesh renderer corrupts the later
+                 // frames of this legacy five-page opening on both modern Mali
+                 // hardware and the Android emulator. Keep the original Spine
+                 // presentation for web/editor preview, but use a deterministic
+                 // static-art presentation with the authored narration,
+                 // subtitles and timing on Android/iOS.
+                 this.m_useStableOpening = !!(cc.sys && cc.sys.isNative);
+                 this.btn_skip.active = this.m_isFirst || this.m_useStableOpening;
+                 this.cg.node.active = !this.m_useStableOpening;
+                 this.m_useStableOpening ? this.prepareStableOpening() : this.cg.setCompleteListener(function () {
+                     t._onPlayComplete();
+                 });
+                 this.btn_skip.active && this.btn_skip.runAction(cc.fadeIn(1.2));
                 h.default.init();
                 cc.debug.setDisplayStats(!1);
             };
@@ -81,24 +86,48 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 c.default.MUSIC_SOUND = cc.sys.localStorage.getItem("MUSIC_SOUND") || 1;
                 c.default.MUSIC_VOICE = cc.sys.localStorage.getItem("MUSIC_VOICE") || 1;
                 c.default.loadMapInfo();
-                r.default.loadTempData();
-                this.m_callBack = function () {
-                    t.m_playName = "await";
-                    t.cg.setAnimation(0, "await", !1);
-                    l.default.gamePlayBGM("cg/cgbgm");
-                    t.m_titleData = c.default.cgtitleData[0];
-                    t.schedule(t.execute, 1);
+                 r.default.loadTempData();
+                 this.m_callBack = function () {
+                     t.m_playName = "await";
+                     t.m_useStableOpening ? t.startStableOpening() : t.cg.setAnimation(0, "await", !1);
+                     l.default.gamePlayBGM("cg/cgbgm");
+                     t.m_titleData = c.default.cgtitleData[0];
+                     t.schedule(t.execute, 1);
                     t.m_openingGateCallback = function () {
                         t.finishOpeningGate();
                     };
-                    // The complete opening lasts about 56 seconds. This is a
-                    // watchdog for a missing native completion callback, not a
-                    // short presentation timer.
-                    t.scheduleOnce(t.m_openingGateCallback, 65);
-                };
+                     // The final authored subtitle ends at 49 seconds. Native
+                     // fallback exits just after it; the Spine path keeps a
+                     // wider watchdog for a missing completion callback.
+                     t.scheduleOnce(t.m_openingGateCallback, t.m_useStableOpening ? 52 : 65);
+                 };
                 y.default.loadDir("sound/effect/ui", function () { }, function () { }, "core:ui-sound");
-                this.loadGameConfig();
-            };
+                 this.loadGameConfig();
+             };
+             e.prototype.prepareStableOpening = function () {
+                 var t = this.node.getChildByName("bg"), e = this.node.getChildByName("loding"), o = this.node.getChildByName("image_logo2");
+                 t && (t.active = !0, t.opacity = 255);
+                 // Do not leave any native Spine renderer alive behind the
+                 // fallback; even an obscured mesh can emit corrupted geometry.
+                 e && (e.active = !1);
+                 if (o) {
+                     o.active = !0;
+                     o.opacity = 0;
+                     o.scale = .94;
+                 }
+             };
+             e.prototype.startStableOpening = function () {
+                 var t = this.node.getChildByName("sprite_parent"), e = this.node.getChildByName("bg"), o = this.node.getChildByName("image_logo2");
+                 t && (t.active = !1);
+                 if (e) {
+                     e.stopAllActions();
+                     e.runAction(cc.repeatForever(cc.sequence(cc.fadeTo(8, 224), cc.fadeTo(8, 255))));
+                 }
+                 if (o) {
+                     o.stopAllActions();
+                     o.runAction(cc.spawn(cc.fadeIn(1.2), cc.sequence(cc.scaleTo(8, 1.02), cc.scaleTo(8, .96))));
+                 }
+             };
             e.prototype.execute = function () {
                 var t = this;
                 if (this.m_titleData[this.m_index]) {

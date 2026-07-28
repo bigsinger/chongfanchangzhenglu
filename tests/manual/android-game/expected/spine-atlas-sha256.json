@@ -1,9 +1,11 @@
 {
-  "assets/resources/skeletons/loadcg/dengluCG.atlas": "7a3ba4541fa1597d8d78da38f7cede588d762b73885b9662d97ec5b7dace917a",
-  "assets/resources/skeletons/role_guomindang1/role_guomindang1.atlas": "20a68337909536dd0be3a3646768da60beaf31bba38bea9832b1c674e680ae32",
-  "assets/resources/skeletons/role_hongjun1/role_hongjun1.atlas": "82b157b04f3b81910a4ad8d84321db09e34e68184198e8ff152dbbb8a1ab5c25",
-  "assets/resources/skeletons/transition/chapter1/ui_ditu.atlas": "5a96a07970f2340a5fce7f2c9a622e0769f92a75828579ced6120d6834b12f31",
-  "assets/resources/skeletons/transition/niupeng/niupeng.atlas": "ff4a1a3416ab1b8666a6a7e963990e70a13e7bc0487b47a3673d066cca9bae6a",
-  "assets/resources/skeletons/transition/niupeng2/niupeng2.atlas": "92ab396d7221c5b96a2cb37c406eb53677b4bd41fba884745857477f8ca2211f",
-  "assets/resources/skeletons/transition/role_guomindang2/role_guomindang2.atlas": "d1c8c7791311bb33b461582f34152f193abac5adece567a33079b55ddf391043"
+  "assets/resources/skeletons/loadcg/dengluCG.atlas": "a86452d0785069548f412c60deb6b2d2b935d9ae6db659c2f0b8adca4c0931de",
+  "assets/resources/skeletons/role_guomindang1/role_guomindang1.atlas": "36bda03126e93c3c4c79fa50a65352d7b9c3b80465eaf631732df9262880750a",
+  "assets/resources/skeletons/role_hongjun1/role_hongjun1.atlas": "ed4c65fff6a997155be500c83769d501c67cb8e0059955db5cfda60aab9936e0",
+  "assets/resources/skeletons/transition/chapter1/ui_ditu.atlas": "50dfc7dd5f17f5dbf4cd1f0640313705648ab0745ef3171580e1a687798313d8",
+  "assets/resources/skeletons/transition/niupeng/niupeng.atlas": "0749fc383a2461cb7bdb3bbce178f8ced3a2051962ff4fbe1de80bd01fea5cfe",
+  "assets/resources/skeletons/transition/niupeng2/niupeng2.atlas": "9d43c6a4c9bf7a360995f0a314bb924374e3cb2c74bb5eab020ecdefb395cbad",
+  "assets/resources/skeletons/transition/role_guomindang2/role_guomindang2.atlas": "1e2737710e667688918e8caaf4c275188b3bc38652b21864d47bf055b68d1dae",
+  "assets/resources/skeletons/scani3/scani3_tex.json": "54234984e50531a8c7ff0aedd7a7ccae6f5628febe5fb81bbeeaa040801cda15",
+  "assets/resources/skeletons/scani3/scani3_tex.png": "205ef2143e37e30d6f1dfe7837d9d898402a3f52c83961706b6c469fe3c931a0"
 }

@@ -1,6 +1,6 @@
 # Android 通关回归工具
 
-这组脚本通过 ADB 控制雷电模拟器，不会抢占桌面鼠标和键盘。截图与日志保存在
+这组脚本通过 ADB 控制雷电模拟器或已连接的 Android 真机，不会抢占桌面鼠标和键盘。截图与日志保存在
 `tests/manual/results/`，游戏检查点保存在应用私有目录
 `files/checkpoints/`，重新安装 `-r` 构建后仍可恢复。
 
@@ -42,6 +42,23 @@
 `inspect` 会先在本机生成压缩预览并执行 OCR，原始 ADB 截图不会上传。
 `oldsave` 和 `stability` 都会先保存当前数据库检查点，并在测试结束或失败后自动恢复，
 不会覆盖测试人员原有进度。
+
+Android 16 等不再提供系统 `sqlite3` 的设备由
+[`android-game/device-sqlite.py`](android-game/device-sqlite.py)
+在电脑本地执行 SQLite 查询和事务。导出会同时读取主数据库和 WAL，但不会复制瞬态 SHM；
+写回前停止应用并保存本地检查点，再通过 `adb push` 和 `run-as cp` 原样安装数据库，随后
+执行完整性检查。这样既包含未合并事务，也不会被 shell 二进制流的长度限制截断。
+真机测试时必须显式指定序列号：
+
+```powershell
+.\tests\manual\android-game\game-test.ps1 state `
+  -Serial CEYXGMZXBM79SS8L
+```
+
+`tap` 优先使用 Monkey raw-event 精确回放，以兼容会拒绝 `adb shell input` 的
+Xiaomi/HyperOS。脚本读取设备物理尺寸和当前旋转，把横屏截图坐标转换为面板坐标；调用方
+始终传入原始 ADB 截图坐标，不要使用压缩预览坐标。模拟器与真机可同时连接时必须显式传
+`-Serial`，防止把状态写入错误设备。
 
 ## 通关范围
 

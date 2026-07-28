@@ -107,4 +107,4 @@ for (const file of walk(skeletonRoot).filter((entry) => entry.endsWith('.atlas')
   regions += result.regionCount;
 }
 
-console.log(`Spine 图集完整性：${atlases} 个 atlas、${pages} 个页面、${regions} 个附件；7 个缩放修复基准通过`);
+console.log(`骨骼图集完整性：${atlases} 个 Spine atlas、${pages} 个页面、${regions} 个附件；9 个原始分辨率基准通过`);
