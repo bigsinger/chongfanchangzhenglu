@@ -293,7 +293,7 @@ var i = {
         i || (i = n);
         if (o && i && i.event.limit === o.nameid) s = this._actionText(i, o, t.mapName); else if (o && i && i.event.limit) s = "当前目标需要【" + this._goodsName({
             nameid: i.event.limit
-        }) + "】，当前携带【" + this._goodsName(o) + "】"; else if (o) s = "携带【" + this._goodsName(o) + "】，寻找需要它的人"; else if (i && i.navigationOnly) s = "前往下一处剧情点"; else if (i && i.distance < 520) s = this._actionText(i, o, t.mapName);
+        }) + "】，当前携带【" + this._goodsName(o) + "】"; else if (o) s = "携带【" + this._goodsName(o) + "】，寻找需要它的人"; else if (i && i.navigationOnly) s = "前往下一处剧情点"; else if (i && i.distance <= 300) s = this._actionText(i, o, t.mapName);
         if (!o && a && a.done === a.total) {
             var r = this._candidate(t, e, function (t) {
                 return /医生/.test(t.name || "");
@@ -306,11 +306,7 @@ var i = {
         if (i && i.distance >= 260) s += i.deltaX >= 0 ? "  →" : "  ←";
         return {
             objective: s,
-            // Required NPCs can sit behind authored queues or invisible
-            // blockers. Advertise them as actionable from a forgiving mobile
-            // distance; GameplayInteractionQuery still prioritizes the current
-            // objective so unrelated nearby props cannot steal the button.
-            action: i && !i.navigationOnly && i.distance < 1e3 ? this._actionText(i, o, t.mapName) : "",
+            action: i && !i.navigationOnly && i.distance <= 300 ? this._actionText(i, o, t.mapName) : "",
             candidate: i
         };
     },
@@ -370,10 +366,6 @@ var i = {
     update: function (t, e) {
         if (!t || !t.m_objectiveLabel) return;
         var o = this.describe(t, e);
-        if (e) {
-            e.preferredNode = o.action && o.candidate ? o.candidate.node : null;
-            e.preferredOperation = o.action && o.candidate ? Number(o.candidate.event.trigger) : null;
-        }
         var n = "当前目标：" + o.objective;
         t.m_objectiveLabel.string !== n && (t.m_objectiveLabel.string = n);
         if (t.m_actionTargetNode && t.m_actionTargetLabel) {

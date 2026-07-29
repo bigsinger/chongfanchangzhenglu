@@ -1,6 +1,6 @@
 # 《重返长征路》完整通关测试流程
 
-版本：2026-07-28
+版本：2026-07-29（适用 1.2.0）
 
 适用工程：`F:\bigsinger\chongfanchangzhenglu`
 
@@ -47,7 +47,7 @@
 | 音频 | 主菜单、片头、章节和游戏 BGM 连续；走/跑脚步声随移动启停；动作、武器、取水、UI 音效可辨认 |
 | 横屏 | Android 强制横屏；16:9、20:9/21:9 下片头、主菜单、章节卡和游戏 HUD 不裁切、不重叠 |
 | 镜头 | 人物处于地图边缘时，镜头仍显示可行动道路和必要交互，不把人物长期卡在画面边缘 |
-| 交互 | 靠近目标后，右下操作按钮显示正确动作和目标；世界气泡可点击 |
+| 交互 | 角色与目标碰撞接触后，右下操作按钮显示正确动作和目标；远处点击只移动、不执行任务；世界气泡可点击 |
 | 拾取 | 物品被拾取、携带状态更新、任务追踪更新并自动保存 |
 | 投递 | 正确物品推进任务并清空携带；错误物品不消耗，并说明“需要什么、当前拿着什么” |
 | 弹窗 | 任务卡、物品卡、对白、答题和暂停弹窗不遮住关闭入口；弹窗打开时不得穿透移动 |
@@ -63,7 +63,7 @@
 - Cocos Creator：`E:\temp\CocosCreator-2.4.15\CocosCreator.exe`
 - ADB：`D:\Android\Sdk\platform-tools\adb.exe`
 - 默认设备：`emulator-5554`
-- 调试 APK：`dist\chongfanchangzhenglu-armv7-arm64-debug.apk`
+- 调试 APK：`dist\chongfanchangzhenglu-arm64-debug.apk`
 - ADB 工具：`tests\manual\android-game\game-test.ps1`
 - 截图分析：`tests\manual\android-game\analyze-screenshot.py`
 - 测试输出：`tests\manual\results\`
@@ -85,8 +85,13 @@ Set-Location F:\bigsinger\chongfanchangzhenglu
 git status --short
 npm test
 node .\tools\restore-original-resources.js --verify
+node .\tools\verify-android-branding.js
 .\tools\build-android.ps1 -IncrementalGenerate
 ```
+
+构建后用 `aapt dump badging` 确认 `native-code` 只包含 `arm64-v8a`，四档
+`application-icon` 都指向 `ic_launcher.png`，且没有 `uses-permission`。图标门禁会把
+源码和生成工程的四档 PNG 与原 APK 基准逐字节比较。
 
 `npm test` 应同时通过：
 
@@ -440,10 +445,10 @@ try {
 }
 ```
 
-原生片头预期稳定播放 52 秒的横屏历史插画叙事，同时显示标题、原配乐、历史字幕、进度条
-和跳过按钮；Web/编辑器才继续验证旧 Spine 动画。回归玩家可以跳过，但自动化不得以跳过
-代替完整时序验证。至少在 6 秒、20 秒和后段取证，不得出现附件散落、黑块、标题越界或
-不能自然进入主菜单。检查 Android 工程的 Activity 清单包含
+原生片头预期播放原版五页 Spine 横屏历史动画，同时显示标题、原配乐、历史字幕、进度条
+和跳过按钮；若设备丢失 Spine 完成回调，65 秒幂等看门狗负责收束。回归玩家可以跳过，
+但自动化不得以跳过代替完整时序验证。至少在 6 秒、20 秒和后段取证，不得出现附件散落、
+黑块、标题越界或不能自然进入主菜单。检查 Android 工程的 Activity 清单包含
 `android:screenOrientation="landscape"`。
 
 镜头专项至少自然操作一次“同图前后景门”和一次“跨地图门”。进入后立即检查：

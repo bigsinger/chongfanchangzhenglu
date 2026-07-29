@@ -7,9 +7,9 @@ param(
     [Parameter(Mandatory)]
     [string]$SigningProperties,
     [ValidateRange(1, 2100000000)]
-    [int]$VersionCode = 2026072901,
+    [int]$VersionCode = 2026072902,
     [ValidatePattern('^\d+\.\d+\.\d+(?:[-+][A-Za-z0-9.-]+)?$')]
-    [string]$VersionName = '1.1.4',
+    [string]$VersionName = '1.2.0',
     [ValidatePattern('^[A-Z]$')]
     [string]$DriveLetter = 'S',
     [switch]$SkipGenerate,
@@ -59,7 +59,7 @@ $buildRoot = Join-Path $projectRoot 'build\jsb-link'
 $runtimeSource = Join-Path $buildRoot 'frameworks\runtime-src'
 $androidProject = Join-Path $runtimeSource 'proj.android-studio'
 $packageName = 'com.game.longmarch.creator243'
-$expectedAbis = @('arm64-v8a', 'armeabi-v7a')
+$expectedAbis = @('arm64-v8a')
 $sourceCommit = (& git -C $projectRoot rev-parse HEAD).Trim()
 if ($LASTEXITCODE -ne 0) { throw '无法读取 Git 源码版本' }
 $sourceChanges = @(& git -C $projectRoot status --porcelain)
@@ -147,6 +147,9 @@ $env:LONGMARCH_VERSION_CODE = "$VersionCode"
 $env:LONGMARCH_VERSION_NAME = $VersionName
 & node (Join-Path $projectRoot 'tools\modernize-android-project.js')
 if ($LASTEXITCODE -ne 0) { throw 'Android 现代化迁移失败' }
+& node (Join-Path $projectRoot 'tools\verify-android-branding.js') `
+    "--generated-root=$(Join-Path $androidProject 'res')"
+if ($LASTEXITCODE -ne 0) { throw '原版 Android 图标验证失败' }
 
 $localProperties = Join-Path $androidProject 'local.properties'
 Set-Utf8Text -Path $localProperties -Text (
@@ -156,13 +159,26 @@ Set-Utf8Text -Path $localProperties -Text (
 $nativeRoot = Join-Path $buildRoot 'native-release'
 $nativeObjectRoot = Join-Path $nativeRoot 'obj'
 $nativeLibraryRoot = Join-Path $nativeRoot 'lib'
+$nativeRootPrefix = [System.IO.Path]::GetFullPath($nativeRoot).TrimEnd('\') + '\'
+foreach ($staleAbiDirectory in @(
+    (Join-Path $nativeObjectRoot 'local\armeabi-v7a'),
+    (Join-Path $nativeLibraryRoot 'armeabi-v7a')
+)) {
+    $resolvedStaleAbiDirectory = [System.IO.Path]::GetFullPath($staleAbiDirectory)
+    if (-not $resolvedStaleAbiDirectory.StartsWith($nativeRootPrefix, [StringComparison]::OrdinalIgnoreCase)) {
+        throw "拒绝清理构建目录之外的旧 ABI：$resolvedStaleAbiDirectory"
+    }
+    if (Test-Path -LiteralPath $resolvedStaleAbiDirectory) {
+        Remove-Item -LiteralPath $resolvedStaleAbiDirectory -Recurse -Force
+    }
+}
 $cocosEngineRoot = 'E:/temp/CocosCreator-2.4.15/resources/cocos2d-x'
 $modulePath = @($cocosEngineRoot, "$cocosEngineRoot/cocos", "$cocosEngineRoot/external") -join ';'
 $nativeArguments = @(
     'NDK_PROJECT_PATH=null',
     ('APP_BUILD_SCRIPT=' + (Join-Path $androidProject 'app\jni\Android.mk').Replace('\', '/')),
     ('NDK_APPLICATION_MK=' + (Join-Path $androidProject 'app\jni\Application.mk').Replace('\', '/')),
-    'APP_ABI=armeabi-v7a arm64-v8a',
+    'APP_ABI=arm64-v8a',
     'APP_PLATFORM=android-21',
     ('NDK_OUT=' + $nativeObjectRoot.Replace('\', '/')),
     ('NDK_LIBS_OUT=' + $nativeLibraryRoot.Replace('\', '/')),
@@ -176,9 +192,9 @@ if (-not $SkipNative) {
     if ($LASTEXITCODE -ne 0) { throw "NDK 正式清理失败：$LASTEXITCODE" }
     $nativeJobs = [Math]::Max(2, [Math]::Floor([Environment]::ProcessorCount / 2))
     & $ndkBuild @nativeArguments "-j$nativeJobs" cocos2djs
-    if ($LASTEXITCODE -ne 0) { throw "NDK 双 ABI 正式构建失败：$LASTEXITCODE" }
+    if ($LASTEXITCODE -ne 0) { throw "NDK arm64 正式构建失败：$LASTEXITCODE" }
 } else {
-    Write-Host '复用已验证的双 ABI release 原生库'
+    Write-Host '复用已验证的 arm64 release 原生库'
 }
 foreach ($abi in $expectedAbis) {
     $linkedLibrary = Join-Path $nativeObjectRoot "local\$abi\libcocos2djs.so"

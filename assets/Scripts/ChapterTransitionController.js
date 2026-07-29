@@ -352,14 +352,17 @@ var i, n = this && this.__extends || (i = function (t, e) {
             };
             e.prototype.showTitles = function (t) {
                 var e = this;
+                this.layer_black.stopAllActions();
+                this.layer_black.color = cc.color(126, 25, 32);
+                this.layer_black.opacity = 0;
                 this.layer_black.active = !0;
                 this.layer_black.runAction(cc.sequence(cc.fadeIn(.4), cc.callFunc(function () {
-                    e.titles_label.string = t;
+                    e.titles_label.string = "历史坐标｜" + t;
                     e.titles_label.node.active = !0;
-                    e.scheduleOnce(function () {
-                        e.titles_label.node.active = !1;
-                        e.Complete();
-                    }, 3);
+                }), cc.delayTime(2.6), cc.fadeOut(.4), cc.callFunc(function () {
+                    e.titles_label.node.active = !1;
+                    e.layer_black.active = !1;
+                    e.Complete();
                 })));
             };
             e.prototype.setPlot = function () {

@@ -25,7 +25,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
         Object.defineProperty(o, "__esModule", {
             value: !0
         });
-        var s = require("./BaseView"), r = require("./GameConfigManager"), c = require("./GameState"), l = require("./AudioManager"), h = require("./GameUtilities"), d = require("./DialogManager"), p = require("./SpineAnimationManager"), u = require("./GameplayEventController"), v = require("./SaveManager"), w = require("./ObjectiveManager"), timingEvent = require("./TimingEvent"), interactionQuery = require("./GameplayInteractionQuery"), gameplayPersistence = require("./GameplayPersistence"), displayAdapter = require("./DisplayAdapter"), m = cc._decorator, _ = m.ccclass, f = m.property, g = function (t) {
+        var s = require("./BaseView"), r = require("./GameConfigManager"), c = require("./GameState"), l = require("./AudioManager"), h = require("./GameUtilities"), d = require("./DialogManager"), p = require("./SpineAnimationManager"), u = require("./GameplayEventController"), v = require("./SaveManager"), w = require("./ObjectiveManager"), timingEvent = require("./TimingEvent"), gameplayPersistence = require("./GameplayPersistence"), displayAdapter = require("./DisplayAdapter"), m = cc._decorator, _ = m.ccclass, f = m.property, g = function (t) {
             n(e, t);
             function e() {
                 var e = null !== t && t.apply(this, arguments) || this;
@@ -125,8 +125,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 e.m_canvasNode = null;
                 e.m_canvasTouchStart = null;
                 e.m_isRestoredScene = !1;
-                e.m_touchProximityFrame = 0;
-                e.m_touchProximityActive = {};
+                e.m_interactionValidationFrame = 0;
                 e.m_lastParallaxX = null;
                 e.m_lastParallaxY = null;
                 e.m_chapterTransitionPending = !1;
@@ -1072,7 +1071,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 var e = u.default.cItem, o = e && e.activeInHierarchy && e.getComponent("InteractiveObject"), i = o && o.getOpType();
                 if (!e || !o || !i || !this.hero || !this.camera_master) return null;
                 var n = e.x - this.hero.x, a = e.y - this.hero.y;
-                if (n * n + a * a > 720 * 720) return null;
+                if (Math.abs(n) > 300 || Math.abs(a) > 300) return null;
                 var s = this.camera_master.getComponent(cc.Camera), r = e.parent ? e.parent.convertToWorldSpaceAR(e.position) : e.position, c = s ? s.getWorldToScreenPoint(r) : r, l = t.getLocation();
                 // Include the visible torso and legs, but leave the surrounding
                 // road available for movement. This is deliberately tied to
@@ -1245,40 +1244,27 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     this.hero_ts.stopMove();
                 }
             };
-            e.prototype.scanTouchProximity = function () {
-                if (!this.hero || !this.itemMap || this.isCheck || this.gameOperate || d.default.hasOpenPopup && d.default.hasOpenPopup()) return;
-                var t = interactionQuery.scanProximity({
-                    hero: this.hero,
-                    itemMap: this.itemMap,
-                    previousTouchActive: this.m_touchProximityActive,
-                    touchOperation: c.default.OP_TOUCH,
-                    touchReachSquared: 320 * 320,
-                    operationReachSquared: 520 * 520,
-                    resolveComponent: function (t) {
-                        return t.getComponent("InteractiveObject");
+            e.prototype.revalidateInteractionStack = function () {
+                if (!this.hero || this.isCheck || this.gameOperate || d.default.hasOpenPopup && d.default.hasOpenPopup()) return;
+                // Begin/end contact remains the sole source of interaction
+                // candidates, matching the original APK. This pass only clears
+                // stale contacts after a destroyed node, teleport or missed
+                // physics callback; it never discovers distant map objects.
+                for (var t = u.default.itemStack.length - 1; t >= 0; t--) {
+                    var e = u.default.itemStack[t];
+                    if (!e || !e.activeInHierarchy || Math.abs(e.x - this.hero.x) > 300 || Math.abs(e.y - this.hero.y) > 300) {
+                        u.default.itemStack.splice(t, 1);
                     }
-                });
-                for (var e = 0; e < t.touchEntries.length; e++) {
-                    var o = t.touchEntries[e];
-                    console.log("------------ 近场补偿触发剧情物 " + o.key);
-                    u.default.triggerEvent(o.node, c.default.OP_TOUCH);
                 }
-                this.m_touchProximityActive = t.touchActive;
-                // Re-evaluate normal operations as well.  Legacy small props can
-                // be visually beside the hero while their high collider never
-                // enters the physics contact stack (the dug potato is about 205
-                // units above the hero's feet).  selectClosestItem uses a
-                // bounded manual-operation search and picks one deterministic
-                // target.
-                u.default.selectClosestItem(t.nearby);
+                u.default.selectClosestItem();
             };
             e.prototype.upGame = function () {
                 this.m_isTimeTouch++;
                 36e3 == this.m_isTimeTouch && this.passBack();
                 this.btnShield > 0 && this.btnShield--;
-                if (++this.m_touchProximityFrame >= 12) {
-                    this.m_touchProximityFrame = 0;
-                    this.scanTouchProximity();
+                if (++this.m_interactionValidationFrame >= 12) {
+                    this.m_interactionValidationFrame = 0;
+                    this.revalidateInteractionStack();
                 }
                 if (++this.m_objectiveFrame >= 30) {
                     this.m_objectiveFrame = 0;

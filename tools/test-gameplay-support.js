@@ -35,9 +35,9 @@ const receiver = interactiveNode('receiver', 300, 0, 3, [
 const ordinary = interaction.selectClosestOperation({
   hero,
   heldGoods: null,
-  stack: [nearBox],
-  nearby: [nearBox, receiver],
-  reachSquared: 420 * 420,
+  stack: [receiver, nearBox],
+  maxDeltaX: 300,
+  maxDeltaY: 300,
   resolveComponent: (node) => node.getComponent('InteractiveObject')
 });
 assert.strictEqual(ordinary.node, nearBox, '未持物时应选择最近交互物');
@@ -45,9 +45,9 @@ assert.strictEqual(ordinary.node, nearBox, '未持物时应选择最近交互物
 const carrying = interaction.selectClosestOperation({
   hero,
   heldGoods: { nameid: 'prop_newspaper' },
-  stack: [nearBox],
-  nearby: { receiver },
-  reachSquared: 420 * 420,
+  stack: [nearBox, receiver],
+  maxDeltaX: 300,
+  maxDeltaY: 300,
   resolveComponent: (node) => node.getComponent('InteractiveObject')
 });
 assert.strictEqual(carrying.node, receiver, '携带任务物时应优先选择匹配接收者');
@@ -61,78 +61,49 @@ const visibleCollectible = interactiveNode('红星报', 200, 0, 6, [
 const taskBeforeDoor = interaction.selectClosestOperation({
   hero,
   heldGoods: null,
-  stack: [nearbyDoor],
-  nearby: [nearbyDoor, visibleCollectible],
-  reachSquared: 420 * 420,
+  stack: [nearbyDoor, visibleCollectible],
+  maxDeltaX: 300,
+  maxDeltaY: 300,
   resolveComponent: (node) => node.getComponent('InteractiveObject')
 });
 assert.strictEqual(taskBeforeDoor.node, visibleCollectible, '循环地图门不得抢占附近任务或收藏交互');
 
-const edgeCollectible = interactiveNode('红星报', 447, 0, 6, [
+const outsideCollider = interactiveNode('碰撞体外红星报', 301, 0, 6, [
   { isFinish: false, trigger: 6 }
 ]);
-const edgeTaskBeforeDoor = interaction.selectClosestOperation({
+const strictOriginalRange = interaction.selectClosestOperation({
   hero,
   heldGoods: null,
-  stack: [nearbyDoor],
-  nearby: [nearbyDoor, edgeCollectible],
-  reachSquared: 460 * 460,
-  resolveComponent: (node) => node.getComponent('InteractiveObject')
-});
-assert.strictEqual(edgeTaskBeforeDoor.node, edgeCollectible, '可见任务边缘的收藏品应可操作且优先于地图门');
-
-const accessibleNpc = interactiveNode('兑换员', 500, 0, 2);
-const accessibleNpcSelection = interaction.selectClosestOperation({
-  hero,
-  heldGoods: null,
-  nearby: [accessibleNpc],
-  reachSquared: 520 * 520,
-  resolveComponent: (node) => node.getComponent('InteractiveObject')
-});
-assert.strictEqual(accessibleNpcSelection.node, accessibleNpc, '被障碍挡住但仍可见的 NPC 应在 520 单位内可交互');
-
-const queuedExchangeNpc = interactiveNode('兑换员', 700, 0, 2);
-const queuedExchangeSelection = interaction.selectClosestOperation({
-  hero,
-  heldGoods: null,
+  stack: [outsideCollider],
   nearby: [nearBox],
-  preferredNode: queuedExchangeNpc,
-  preferredOperation: 2,
-  reachSquared: 520 * 520,
-  preferredReachSquared: 720 * 720,
+  maxDeltaX: 300,
+  maxDeltaY: 300,
   resolveComponent: (node) => node.getComponent('InteractiveObject')
 });
-assert.strictEqual(queuedExchangeSelection.node, queuedExchangeNpc, '队伍或阻挡后的当前任务 NPC 应在 720 单位内优先可交互');
+assert.strictEqual(strictOriginalRange.node, null, '原版 300 单位轴向范围之外不得出现交互');
 
-const restoredObjectiveOnly = interactiveNode('存档修复后的红星报', 447, 0, null, []);
-const restoredTaskBeforeDoor = interaction.selectClosestOperation({
+const unreportedExchangeNpc = interactiveNode('未接触的兑换员', 100, 0, 2);
+const colliderOnlySelection = interaction.selectClosestOperation({
   hero,
   heldGoods: null,
-  stack: [nearbyDoor],
-  nearby: [nearbyDoor],
-  preferredNode: restoredObjectiveOnly,
-  preferredOperation: 6,
-  reachSquared: 460 * 460,
+  stack: [],
+  nearby: [unreportedExchangeNpc],
+  maxDeltaX: 300,
+  maxDeltaY: 300,
   resolveComponent: (node) => node.getComponent('InteractiveObject')
 });
-assert.strictEqual(restoredTaskBeforeDoor.node, restoredObjectiveOnly, '存档修复后的目标事件应与操作按钮保持一致');
-assert.strictEqual(restoredTaskBeforeDoor.operation, 6);
+assert.strictEqual(colliderOnlySelection.node, null, '未进入物理碰撞栈的 NPC 不得远程交互');
 
-const touchNode = interactiveNode('touch', 200, 0, 1, [
-  { isFinish: false, key: 100, trigger: 7 }
-]);
-const proximity = interaction.scanProximity({
+const touchingExchangeNpc = interactiveNode('兑换员', 120, 0, 2);
+const touchingExchangeSelection = interaction.selectClosestOperation({
   hero,
-  itemMap: { touch: touchNode, receiver },
-  previousTouchActive: {},
-  touchOperation: 7,
-  touchReachSquared: 320 * 320,
-  operationReachSquared: 520 * 520,
+  heldGoods: null,
+  stack: [touchingExchangeNpc],
+  maxDeltaX: 300,
+  maxDeltaY: 300,
   resolveComponent: (node) => node.getComponent('InteractiveObject')
 });
-assert.deepStrictEqual(Object.keys(proximity.touchActive), ['touch']);
-assert.strictEqual(proximity.touchEntries.length, 1);
-assert.strictEqual(proximity.nearby.length, 2);
+assert.strictEqual(touchingExchangeSelection.node, touchingExchangeNpc, '物理接触兑换员后应可正常交互');
 
 function objectiveNode(name, x, trigger, limit, param, events) {
   const component = {
@@ -205,7 +176,7 @@ const edgeCollectibleObjective = objective.describe({
   hero_ts: { goods: null },
   itemMap: { collectible: objectiveNode('收藏品-红星报', 447, 6, null, 'prop113') }
 }, null);
-assert.strictEqual(edgeCollectibleObjective.action, '拾取【红星报】');
+assert.strictEqual(edgeCollectibleObjective.action, '');
 
 const exchangeBeforeOptionalCollection = objective.describe({
   mapName: 'scenes_d3_3',
@@ -225,7 +196,7 @@ const distantQueuedExchange = objective.describe({
   hero_ts: { goods: null },
   itemMap: { exchange: objectiveNode('兑换员', 900, 2) }
 }, null);
-assert.strictEqual(distantQueuedExchange.action, '操作【兑换员】');
+assert.strictEqual(distantQueuedExchange.action, '');
 
 const storyNavigation = objective.describe({
   mapName: 'scenes_d2_1',
@@ -331,4 +302,4 @@ assert.strictEqual(persistedItems.length, 1);
 assert.strictEqual(saved[0][0], 'temp');
 assert.deepStrictEqual(saved[saved.length - 1], ['commit', 'game-scene', { chapter: 3 }]);
 
-console.log('Gameplay support modules: audio routing, interaction selection, proximity scan, and persistence passed');
+console.log('Gameplay support modules: audio routing, collider-scoped interaction selection, and persistence passed');

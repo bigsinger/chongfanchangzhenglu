@@ -139,8 +139,8 @@ if (chapterThreeBase) {
   ).length;
   if (!added || newspaperCount !== 1) fail(`旧档迁移后红星报应恰好出现一次，实际 ${newspaperCount}`);
   const exchangeBlocker = oldSave.confArr.find((item) => item.index === 13 && item.name === '阻挡');
-  if (!exchangeBlocker || exchangeBlocker.x !== 710 || !exchangeBlocker.box || exchangeBlocker.box.width !== 30) {
-    fail('第三章兑换员前的旧档阻挡应迁移到 x=710 且宽度缩小为 30');
+  if (!exchangeBlocker || exchangeBlocker.x !== 835 || !exchangeBlocker.box || exchangeBlocker.box.width !== 30) {
+    fail('第三章兑换员后的旧档阻挡应迁移到 x=835 且宽度缩小为 30');
   }
 
   const collectedSave = JSON.parse(chapterThreeBase.content);

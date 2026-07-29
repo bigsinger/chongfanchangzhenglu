@@ -4,22 +4,6 @@
 // engine mutations outside this module makes target selection deterministic
 // and lets the behaviour run in Node-based regression tests.
 
-function appendUnique(target, candidate) {
-    candidate && target.indexOf(candidate) < 0 && target.push(candidate);
-}
-
-function collectCandidates(stack, nearby) {
-    var result = Array.isArray(stack) ? stack.slice() : [];
-    if (Array.isArray(nearby)) {
-        for (var index = 0; index < nearby.length; index++) appendUnique(result, nearby[index]);
-    } else if (nearby) {
-        for (var key in nearby) {
-            if (Object.prototype.hasOwnProperty.call(nearby, key)) appendUnique(result, nearby[key]);
-        }
-    }
-    return result;
-}
-
 function distanceSquared(node, hero) {
     var offsetX = node.x - hero.x;
     var offsetY = node.y - hero.y;
@@ -56,14 +40,13 @@ function operationPriority(component, heldGoods) {
 function selectClosestOperation(options) {
     var hero = options.hero;
     var reachSquared = options.reachSquared;
-    var preferredReachSquared = options.preferredReachSquared || reachSquared;
+    var maxDeltaX = Number(options.maxDeltaX);
+    var maxDeltaY = Number(options.maxDeltaY);
     var resolveComponent = options.resolveComponent;
-    var preferredNode = options.preferredNode;
-    var candidates = collectCandidates(options.stack, options.nearby);
-    appendUnique(candidates, preferredNode);
+    var candidates = Array.isArray(options.stack) ? options.stack.slice() : [];
     var selectedNode = null;
     var selectedOperation = null;
-    var selectedDistance = reachSquared;
+    var selectedDistance = Number.isFinite(reachSquared) ? reachSquared : Number.POSITIVE_INFINITY;
     var selectedPriority = -1;
 
     if (!hero || typeof resolveComponent !== 'function') {
@@ -74,16 +57,19 @@ function selectClosestOperation(options) {
         var node = candidates[index];
         var component = node && node.activeInHierarchy && resolveComponent(node);
         var operation = component && component.getOpType();
-        // ObjectiveManager derives its target from the repaired authored
-        // event configuration. A legacy component can temporarily expose a
-        // stale eventArr after restoring a save, so allow that already
-        // validated objective operation to bridge the one-frame mismatch.
-        node === preferredNode && !operation && (operation = options.preferredOperation);
         if (!operation) continue;
         var candidateDistance = distanceSquared(node, hero);
-        var candidatePriority = operationPriority(component, options.heldGoods) + (node === preferredNode ? 100 : 0);
-        var candidateReach = node === preferredNode ? preferredReachSquared : reachSquared;
-        if (candidateDistance < candidateReach &&
+        var candidatePriority = operationPriority(component, options.heldGoods);
+        var deltaX = Math.abs(node.x - hero.x);
+        var deltaY = Math.abs(node.y - hero.y);
+        // The original APK only kept collider candidates while both axes
+        // stayed within 300 design units. Prefer that authored contact model
+        // when axis limits are supplied; radial reach remains available for
+        // isolated non-gameplay callers.
+        var isReachable = Number.isFinite(maxDeltaX) && Number.isFinite(maxDeltaY) ?
+            deltaX <= maxDeltaX && deltaY <= maxDeltaY :
+            candidateDistance < reachSquared;
+        if (isReachable &&
             (candidatePriority > selectedPriority ||
                 candidatePriority === selectedPriority && candidateDistance < selectedDistance)) {
             selectedPriority = candidatePriority;
@@ -101,44 +87,9 @@ function selectClosestOperation(options) {
     };
 }
 
-function scanProximity(options) {
-    var hero = options.hero;
-    var itemMap = options.itemMap || {};
-    var previousTouchActive = options.previousTouchActive || {};
-    var touchActive = {};
-    var nearby = [];
-    var touchEntries = [];
-    if (!hero) return { touchActive: touchActive, nearby: nearby, touchEntries: touchEntries };
-
-    for (var key in itemMap) {
-        if (!Object.prototype.hasOwnProperty.call(itemMap, key)) continue;
-        var node = itemMap[key];
-        var component = node && node.activeInHierarchy && options.resolveComponent(node);
-        if (!component || !component.itemConf || component.itemConf.lockCount > 0 || !component.eventArr) continue;
-        var itemDistance = distanceSquared(node, hero);
-        if (itemDistance <= options.operationReachSquared) nearby.push(node);
-        var event = unfinishedEvent(component);
-        if (event && Number(event.key) <= 1000 && Number(event.trigger) === Number(options.touchOperation) &&
-            itemDistance <= options.touchReachSquared) {
-            touchActive[key] = true;
-            if (!previousTouchActive[key]) {
-                touchEntries.push({ key: key, node: node, event: event });
-            }
-        }
-    }
-
-    return {
-        touchActive: touchActive,
-        nearby: nearby,
-        touchEntries: touchEntries
-    };
-}
-
 module.exports = {
-    collectCandidates: collectCandidates,
     distanceSquared: distanceSquared,
     operationPriority: operationPriority,
-    selectClosestOperation: selectClosestOperation,
-    scanProximity: scanProximity
+    selectClosestOperation: selectClosestOperation
 };
 module.exports.default = module.exports;

@@ -6,8 +6,8 @@ const path = require('path');
 const root = path.resolve(__dirname, '..');
 const androidProject = path.join(root, 'build', 'jsb-link', 'frameworks', 'runtime-src', 'proj.android-studio');
 const engineRoot = process.env.LONGMARCH_COCOS_ENGINE || 'E:/temp/CocosCreator-2.4.15/resources/cocos2d-x';
-const versionCode = Number(process.env.LONGMARCH_VERSION_CODE || 2026072901);
-const versionName = process.env.LONGMARCH_VERSION_NAME || '1.1.4';
+const versionCode = Number(process.env.LONGMARCH_VERSION_CODE || 2026072902);
+const versionName = process.env.LONGMARCH_VERSION_NAME || '1.2.0';
 const packageName = 'com.game.longmarch.creator243';
 
 if (!Number.isInteger(versionCode) || versionCode < 1 || versionCode > 2100000000) {
@@ -141,7 +141,7 @@ PROP_COMPILE_SDK_VERSION=36
 PROP_MIN_SDK_VERSION=21
 PROP_TARGET_SDK_VERSION=36
 PROP_BUILD_TOOLS_VERSION=35.0.0
-PROP_APP_ABI=armeabi-v7a:arm64-v8a
+PROP_APP_ABI=arm64-v8a
 android.injected.testOnly=false
 `);
 
@@ -426,10 +426,25 @@ let appManifest = read(appManifestFile)
   .replace(/\s*<uses-permission android:name="android\.permission\.(?:INTERNET|ACCESS_NETWORK_STATE|ACCESS_WIFI_STATE)"\/>\s*/g, '\n');
 write(appManifestFile, appManifest);
 
+// Use the exact four density-specific launcher icons recovered from the
+// original APK. Keeping them outside Creator's assets tree prevents the
+// launcher artwork from being duplicated in the game resource bundles.
+const launcherIconRoot = path.join(root, 'native', 'android');
+for (const density of ['mdpi', 'hdpi', 'xhdpi', 'xxhdpi']) {
+  const relativeIcon = path.join(`mipmap-${density}`, 'ic_launcher.png');
+  const sourceIcon = path.join(launcherIconRoot, relativeIcon);
+  const generatedIcon = path.join(androidProject, 'res', relativeIcon);
+  if (!fs.existsSync(sourceIcon)) {
+    throw new Error(`原版启动图标不存在：${sourceIcon}`);
+  }
+  fs.mkdirSync(path.dirname(generatedIcon), { recursive: true });
+  fs.copyFileSync(sourceIcon, generatedIcon);
+}
+
 const libManifestFile = path.join(localLib, 'AndroidManifest.xml');
 let libManifest = read(libManifestFile)
   .replace(/\s+package="[^"]+"/, '')
   .replace(/\s*<uses-permission android:name="android\.permission\.(?:INTERNET|ACCESS_NETWORK_STATE|ACCESS_WIFI_STATE)"\/>\s*/g, '\n');
 write(libManifestFile, libManifest);
 
-console.log(`Android 正式工程：AGP 8.9.2 / Gradle 8.11.1 / API 36 / ${versionName} (${versionCode})`);
+console.log(`Android 正式工程：AGP 8.9.2 / Gradle 8.11.1 / API 36 / arm64-v8a / 原版图标 / ${versionName} (${versionCode})`);

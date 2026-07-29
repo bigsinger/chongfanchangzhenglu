@@ -88,12 +88,12 @@ var i = {
 }, geometryRepairs = {
     scenes_d3_3: {
         13: {
-            // The recovered invisible blocker ended 249 units before the
-            // exchange clerk. On narrow mobile viewports it made the character
-            // look stuck behind the queue. Keep a slim boundary at the counter
-            // while allowing the hero to walk visibly beside the clerk.
+            // Keep the original collider-driven interaction range. Move the
+            // stale queue boundary just behind the exchange clerk so the hero
+            // can physically enter the clerk's authored 100x100 sensor. The
+            // story later hides this boundary before the supply box is used.
             name: "阻挡",
-            x: 710,
+            x: 835,
             boxWidth: 30
         }
     }

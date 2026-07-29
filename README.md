@@ -13,7 +13,7 @@
 - 调试 Android SDK：API 28 / Build Tools 28.0.3
 - 发布 Android SDK：API/target 36 / Build Tools 35.0.0
 - 业务逻辑：JavaScript（恢复模块已改为描述职责的 PascalCase 名称）
-- 目标 ABI：`armeabi-v7a`、`arm64-v8a`
+- 目标 ABI：仅 `arm64-v8a`
 - Android 包名：`com.game.longmarch.creator243`（保留以兼容既有安装数据和升级链）
 
 ## 源文件恢复
@@ -61,14 +61,14 @@ node .\tools\restore-original-resources.js --verify
 ```powershell
 .\tools\build-android-release.ps1 `
   -SigningProperties E:\安全目录\longmarch-signing.properties `
-  -VersionCode 2026072901 `
-  -VersionName 1.1.4
+  -VersionCode 2026072902 `
+  -VersionName 1.2.0
 ```
 
 发布流程使用 AGP 8.9.2、Gradle 8.11.1、JDK 17、targetSdk 36，执行 R8、签名、
-`zipalign`、`apksigner`、双 ABI、零权限及离线依赖核验。调试产物：
+`zipalign`、`apksigner`、arm64 单 ABI、零权限及离线依赖核验。调试产物：
 
-`dist/chongfanchangzhenglu-armv7-arm64-debug.apk`
+`dist/chongfanchangzhenglu-arm64-debug.apk`
 
 APK/AAB 属于可重复生成的构建产物，不提交到 Git；本地最终 APK 仍输出到 `dist/`。
 
@@ -90,7 +90,8 @@ APK/AAB 属于可重复生成的构建产物，不提交到 Git；本地最终 A
 ## 已完成验证
 
 - Creator 2.4.15 Web Mobile 构建成功，无资源缺失警告。
-- Android 双 ARM 原生库与 APK 构建成功，APK 内无 x86/x86_64。
+- Android arm64 原生库与 APK 构建成功，APK 内无 arm32/x86/x86_64。
+- Android 四档启动图标逐字节复用原 APK 图标，并由构建门禁自动核验。
 - 雷电模拟器安装、启动和触控成功；已用 ADB 点击与长按滑动回归验证角色移动及镜头跟随。
 - Android Activity 已强制横屏，16:9 与 20:9 的片头、加载、主菜单及 HUD 使用统一的
   fixed-height 适配；不再运行在 2.4.15 下附件错位的旧片头 Spine。
@@ -101,7 +102,11 @@ APK/AAB 属于可重复生成的构建产物，不提交到 Git；本地最终 A
 - 已修复运行时地图遮住 UI/触摸控制层的问题，并在首关实测点击地面后角色和镜头正常移动。
 - 方向输入会跟踪仍按住的键，避免按键重复、多键切换、触摸取消或剧情短暂锁定时意外停止角色。
 - 已修复 Android 原生端触点与世界气泡投影坐标缩放不一致的问题，物品气泡不再吞掉右侧大块道路点击，底部操作键和道路移动可同时正常使用。
-- 已修复搬运物资时道路点击误触操作键、交互距离不足、旧 Spine `Slot.color` API 在新版原生运行时抛错或崩溃等问题。
+- 任务交互恢复为原作的碰撞接触范围，不再扫描远处任务物品；实际接触范围内仍按手持物和
+  当前任务做确定性排序，避免错交给相邻人物。
+- 已修复兑换员前方阻挡导致无法贴近的问题；无需扩大交互半径也能正常对话和答题。
+- 原版纯亮红转场牌已明确为带“历史坐标”标题、淡入淡出的深红史实牌，避免被误认为故障。
+- 已修复搬运物资时道路点击误触操作键、旧 Spine `Slot.color` API 在新版原生运行时抛错或崩溃等问题。
 - 已逐项验证拾取、搬运、投递、答题、收藏卡、跨图跟随、剧情跳过、章节结算和终局返回主菜单。
 - `settings.js`、主资源包、ARM32/ARM64 原生库均已核验存在。
 - 已通过 ADB 安装并启动最新 APK；地面触摸回归未再出现 JavaScript 异常。
@@ -120,6 +125,8 @@ APK/AAB 属于可重复生成的构建产物，不提交到 Git；本地最终 A
 [`docs/testing/mobile-spine-interaction-camera-regression-2026-07-28.md`](docs/testing/mobile-spine-interaction-camera-regression-2026-07-28.md)。
 1.1.4 的原版动态片头、任务道具回收、第二章出口和七关任选回归见
 [`docs/testing/opening-item-progression-level-selection-regression-2026-07-29.md`](docs/testing/opening-item-progression-level-selection-regression-2026-07-29.md)。
+1.2.0 的原版图标、碰撞范围、深红史实牌、arm64 单 ABI 和原版对照全量通关见
+[`docs/testing/original-apk-parity-and-full-playthrough-2026-07-29.md`](docs/testing/original-apk-parity-and-full-playthrough-2026-07-29.md)。
 
 ## 通关文档
 
@@ -127,10 +134,14 @@ APK/AAB 属于可重复生成的构建产物，不提交到 Git；本地最终 A
   [`docs/testing/full-playthrough-test-process.md`](docs/testing/full-playthrough-test-process.md)
 - 玩家：
   [`docs/guides/player-walkthrough.md`](docs/guides/player-walkthrough.md)
+- 整体故事与逐关叙事：
+  [`docs/story/complete-story-and-levels.md`](docs/story/complete-story-and-levels.md)
+- 爱国主义教育定位与使用建议：
+  [`docs/education/patriotic-education-and-design.md`](docs/education/patriotic-education-and-design.md)
 
 ## 工程原则
 
 - 场景、预制体、动画、配置、图片、音频、Spine 与 DragonBones 数据均来自 APK 原始资源。
-- 不重新设计玩法，不使用此前复刻版 TypeScript 逻辑。
+- 尊重原作玩法和叙事，同时保留经过验证的修复、横屏适配、自动存档与七关任选等维护增强。
 - 不编写 C++ 游戏逻辑；Android 原生包只使用 Creator 2.4.15 自带运行时。
-- 构建时只启用 ARM32 与 ARM64。
+- 构建时只启用 `arm64-v8a`。

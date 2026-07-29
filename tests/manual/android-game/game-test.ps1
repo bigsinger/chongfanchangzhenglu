@@ -17,12 +17,12 @@ param(
     [int]$Minutes = 30,
     [switch]$RequireArm64,
     [string]$Serial = 'emulator-5554',
-    [string]$Adb = 'D:\Android\Sdk\platform-tools\adb.exe'
+    [string]$Adb = 'D:\Android\Sdk\platform-tools\adb.exe',
+    [string]$Package = 'com.game.longmarch.creator243',
+    [string]$Activity = 'org.cocos2dx.javascript.AppActivity'
 )
 
 $ErrorActionPreference = 'Stop'
-$Package = 'com.game.longmarch.creator243'
-$Activity = 'org.cocos2dx.javascript.AppActivity'
 $ResultDir = Join-Path $PSScriptRoot '..\results'
 $ResultDir = [System.IO.Path]::GetFullPath($ResultDir)
 $DeviceSqlite = Join-Path $PSScriptRoot 'device-sqlite.py'
@@ -195,29 +195,32 @@ function Save-Logs {
 }
 
 function Save-Checkpoint {
-    $wasRunning = @((Invoke-Adb -Arguments @('shell', 'pidof', $Package))).Count -gt 0
+    $pidOutput = & $Adb -s $Serial shell pidof $Package 2>$null
+    $wasRunning = $LASTEXITCODE -eq 0 -and @($pidOutput).Count -gt 0
     Stop-Game
-    Invoke-Adb -Arguments @('shell', 'run-as', $Package, 'mkdir', '-p', 'files/checkpoints')
-    Invoke-Adb -Arguments @(
-        'shell', 'run-as', $Package, 'cp',
-        'databases/jsb.sqlite', "files/checkpoints/$Name.sqlite"
-    )
-    Invoke-Adb -Arguments @(
-        'shell', 'run-as', $Package, 'ls', '-l',
-        "files/checkpoints/$Name.sqlite"
-    )
+    $checkpointPath = Join-Path $ResultDir "$Package.$Name.sqlite"
+    Invoke-DeviceSqlite -Action export -File $checkpointPath
+    Get-Item -LiteralPath $checkpointPath | Select-Object FullName, Length, LastWriteTime
     if ($wasRunning) { Start-Game }
 }
 
 function Restore-Checkpoint {
     param([switch]$DirectToGame)
     Stop-Game
-    $remote = "run-as $Package test -s files/checkpoints/$Name.sqlite"
-    Invoke-Adb -Arguments @('shell', $remote)
-    $remote = "run-as $Package cp files/checkpoints/$Name.sqlite databases/jsb.sqlite"
-    Invoke-Adb -Arguments @('shell', $remote)
-    $remote = "run-as $Package rm -f databases/jsb.sqlite-wal databases/jsb.sqlite-shm"
-    Invoke-Adb -Arguments @('shell', $remote)
+    $checkpointPath = Join-Path $ResultDir "$Package.$Name.sqlite"
+    if (Test-Path -LiteralPath $checkpointPath -PathType Leaf) {
+        Invoke-DeviceSqlite -Action import -File $checkpointPath
+    } else {
+        # Compatibility path for checkpoints created before host-side WAL-safe
+        # export was introduced. Most older checkpoints were taken after an
+        # app stop and therefore contain a complete main database.
+        $remote = "run-as $Package test -s files/checkpoints/$Name.sqlite"
+        Invoke-Adb -Arguments @('shell', $remote)
+        $remote = "run-as $Package cp files/checkpoints/$Name.sqlite databases/jsb.sqlite"
+        Invoke-Adb -Arguments @('shell', $remote)
+        $remote = "run-as $Package rm -f databases/jsb.sqlite-wal databases/jsb.sqlite-shm"
+        Invoke-Adb -Arguments @('shell', $remote)
+    }
     if ($DirectToGame) {
         $sql = "insert or replace into data(key,value) values('codex_direct_scene','gameScene');"
         Invoke-DeviceSqlite -Action execute -Sql $sql
@@ -392,10 +395,19 @@ function Test-CorruptSaveRecovery {
 function Test-OldSaveMigration {
     $checkpointName = "$Name-before-oldsave"
     $originalName = $Name
+    $originalChapter = $Chapter
+    $originalMap = $Map
     $sceneKey = 'scenes_d3_3'
     $script:Name = $checkpointName
     Save-Checkpoint
     try {
+        # Make the migration case independent of the user's current progress.
+        # A fresh direct scene creates the authored d3_3 snapshot; the test can
+        # then remove prop113 to emulate an older save deterministically.
+        $script:Chapter = 3
+        $script:Map = 3
+        Set-MapStart
+        Start-Sleep -Seconds $WaitSeconds
         Stop-Game
         $tempQuery = "select value from data where key='tempData';"
         $tempJson = Invoke-DeviceSqlite -Action query -Sql $tempQuery -Format scalar
@@ -480,6 +492,8 @@ commit;
         $script:Name = $checkpointName
         Restore-Checkpoint
         $script:Name = $originalName
+        $script:Chapter = $originalChapter
+        $script:Map = $originalMap
     }
 }
 

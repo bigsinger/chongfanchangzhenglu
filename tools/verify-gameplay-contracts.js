@@ -111,12 +111,20 @@ assert(
     /case 1004:/.test(scene),
   'web A/D/W/S and Creator Android DPAD keyboard movement contract'
 );
-assert(/manual-operation reach/.test(event) && /pickEvent/.test(event), 'nearby pickup contract');
 assert(
-  /GameplayInteractionQuery/.test(event + scene) &&
+  /only nodes reported by physics/.test(event) &&
+    /maxDeltaX: 300/.test(event) &&
+    /maxDeltaY: 300/.test(event) &&
+    /this\.outStack\(e\)/.test(event) &&
+    /pickEvent/.test(event),
+  'original collider-scoped pickup contract'
+);
+assert(
+  /GameplayInteractionQuery/.test(event) &&
     /selectClosestOperation/.test(interactionQuery) &&
-    /scanProximity/.test(interactionQuery),
-  'nearby scan and operation selection must use the isolated query module'
+    !/scanProximity/.test(interactionQuery) &&
+    !/preferredReachSquared/.test(interactionQuery),
+  'interaction selection must remain isolated and must not scan distant map objects'
 );
 assert(/showRequirementHint/.test(event) && /onRequiredItemDelivered/.test(event), 'wrong/right delivery contract');
 assert(/require\("\.\/BaseEvent"\)/.test(fireMiniGame), 'fire mini-game must use the case-correct BaseEvent module path');
@@ -189,11 +197,20 @@ assert(
   !/y = cc\.v2\(\(y\.x - s\.x\) \/ P/.test(scene) &&
     /点击命中交互气泡/.test(scene) &&
     /getCurrentInteractionTouch/.test(scene) &&
-    /operationReachSquared: 520 \* 520/.test(scene) &&
-    /preferredReachSquared: 720 \* 720/.test(event) &&
+    /Math\.abs\(n\) > 300 \|\| Math\.abs\(a\) > 300/.test(scene) &&
+    /revalidateInteractionStack/.test(scene) &&
+    !/operationReachSquared/.test(scene) &&
+    !/preferredReachSquared/.test(event) &&
+    /x: 835/.test(source('ConfigRepair.js')) &&
     /p <= 84 \* 84/.test(scene) &&
-    /i\.distance < 1e3/.test(source('ObjectiveManager.js')),
-  'visible NPC bodies, precise operation controls and obstructed objective targets must remain touch reachable'
+    /i\.distance <= 300/.test(source('ObjectiveManager.js')),
+  'touch routing must be precise while the exchange clerk remains physically reachable'
+);
+assert(
+  /this\.layer_black\.color = cc\.color\(126, 25, 32\)/.test(chapterTransition) &&
+    /历史坐标｜/.test(chapterTransition) &&
+    /cc\.delayTime\(2\.6\), cc\.fadeOut\(\.4\)/.test(chapterTransition),
+  'the original red date slate must read as an intentional historical transition instead of a rendering flash'
 );
 assert(
   /this\.setSwitchLoad\(this\.m_goods\)/.test(player) &&

@@ -413,7 +413,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
             e.isTest = !0;
             e.isConfNet = !1;
             e.mapKey = "";
-            e._version = "V_S_1.1.4";
+            e._version = "V_S_1.2.0";
             e.SPEED_RUN = 4.5;
             e.SPEED_WALK = 2.2;
             e.SPEED_SQUAT = 1.8;

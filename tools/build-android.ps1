@@ -76,7 +76,7 @@ $buildRoot = Join-Path $projectRoot 'build\jsb-link'
 $runtimeSource = Join-Path $buildRoot 'frameworks\runtime-src'
 $androidProject = Join-Path $runtimeSource 'proj.android-studio'
 $packageName = 'com.game.longmarch.creator243'
-$expectedAbis = @('arm64-v8a', 'armeabi-v7a')
+$expectedAbis = @('arm64-v8a')
 
 if ($SkipGenerate -and $IncrementalGenerate) {
     throw '-SkipGenerate and -IncrementalGenerate cannot be used together.'
@@ -195,11 +195,16 @@ if ($LASTEXITCODE -ne 0) {
 Assert-File -Path (Join-Path $androidProject 'gradlew.bat') -Description 'Generated Gradle wrapper'
 
 $env:LONGMARCH_COCOS_ENGINE = 'E:/temp/CocosCreator-2.4.15/resources/cocos2d-x'
-$env:LONGMARCH_VERSION_CODE = '2026072901'
-$env:LONGMARCH_VERSION_NAME = '1.1.4'
+$env:LONGMARCH_VERSION_CODE = '2026072902'
+$env:LONGMARCH_VERSION_NAME = '1.2.0'
 & node (Join-Path $projectRoot 'tools\modernize-android-project.js')
 if ($LASTEXITCODE -ne 0) {
     throw 'Android modernization failed.'
+}
+& node (Join-Path $projectRoot 'tools\verify-android-branding.js') `
+    "--generated-root=$(Join-Path $androidProject 'res')"
+if ($LASTEXITCODE -ne 0) {
+    throw 'Original Android launcher icon verification failed.'
 }
 
 $localProperties = Join-Path $androidProject 'local.properties'
@@ -210,13 +215,26 @@ Set-Utf8Text -Path $localProperties -Text (
 $nativeRoot = Join-Path $buildRoot 'native-debug'
 $nativeObjectRoot = Join-Path $nativeRoot 'obj'
 $nativeLibraryRoot = Join-Path $nativeRoot 'lib'
+$nativeRootPrefix = [System.IO.Path]::GetFullPath($nativeRoot).TrimEnd('\') + '\'
+foreach ($staleAbiDirectory in @(
+    (Join-Path $nativeObjectRoot 'local\armeabi-v7a'),
+    (Join-Path $nativeLibraryRoot 'armeabi-v7a')
+)) {
+    $resolvedStaleAbiDirectory = [System.IO.Path]::GetFullPath($staleAbiDirectory)
+    if (-not $resolvedStaleAbiDirectory.StartsWith($nativeRootPrefix, [StringComparison]::OrdinalIgnoreCase)) {
+        throw "Refusing to clean stale ABI outside native build root: $resolvedStaleAbiDirectory"
+    }
+    if (Test-Path -LiteralPath $resolvedStaleAbiDirectory) {
+        Remove-Item -LiteralPath $resolvedStaleAbiDirectory -Recurse -Force
+    }
+}
 $cocosEngineRoot = 'E:/temp/CocosCreator-2.4.15/resources/cocos2d-x'
 $modulePath = @($cocosEngineRoot, "$cocosEngineRoot/cocos", "$cocosEngineRoot/external") -join ';'
 $nativeArguments = @(
     'NDK_PROJECT_PATH=null',
     ('APP_BUILD_SCRIPT=' + (Join-Path $androidProject 'app\jni\Android.mk').Replace('\', '/')),
     ('NDK_APPLICATION_MK=' + (Join-Path $androidProject 'app\jni\Application.mk').Replace('\', '/')),
-    'APP_ABI=armeabi-v7a arm64-v8a',
+    'APP_ABI=arm64-v8a',
     'APP_PLATFORM=android-21',
     ('NDK_OUT=' + $nativeObjectRoot.Replace('\', '/')),
     ('NDK_LIBS_OUT=' + $nativeLibraryRoot.Replace('\', '/')),
@@ -235,10 +253,10 @@ if (-not $SkipNative) {
     $nativeJobs = [Math]::Max(2, [Math]::Floor([Environment]::ProcessorCount / 2))
     & $ndkBuild @nativeArguments "-j$nativeJobs" cocos2djs
     if ($LASTEXITCODE -ne 0) {
-        throw "NDK dual-ABI debug build failed: $LASTEXITCODE"
+        throw "NDK arm64 debug build failed: $LASTEXITCODE"
     }
 } else {
-    Write-Host 'Reusing verified dual-ABI debug native libraries.'
+    Write-Host 'Reusing verified arm64 debug native libraries.'
 }
 foreach ($abi in $expectedAbis) {
     $linkedLibrary = Join-Path $nativeObjectRoot "local\$abi\libcocos2djs.so"
@@ -374,7 +392,7 @@ try {
 
 $dist = Join-Path $projectRoot 'dist'
 New-Item -ItemType Directory -Path $dist -Force | Out-Null
-$distApk = Join-Path $dist 'chongfanchangzhenglu-armv7-arm64-debug.apk'
+$distApk = Join-Path $dist 'chongfanchangzhenglu-arm64-debug.apk'
 Copy-Item -LiteralPath $apk.FullName -Destination $distApk -Force
 
 Write-Output "APK: $distApk"

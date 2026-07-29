@@ -49,8 +49,6 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     this.isGround = !0;
                     this.isDrop = !1;
                     this.tempHeroLeft = !1;
-                    this.preferredNode = null;
-                    this.preferredOperation = null;
                     this.hero = null;
                     this.hero_ts = null;
                 };
@@ -82,37 +80,21 @@ var i, n = this && this.__extends || (i = function (t, e) {
                         this.selectClosestItem();
                     }
                 };
-                e.selectClosestItem = function (t) {
-                    // Some authored blockers stop the hero just outside the
-                    // legacy collider of an intended prop (the chapter-3
-                    // supply box is about 368 units from the nearest reachable
-                    // point, while the chapter-3 newspaper is about 447 units
-                    // from the closest saved walk position). Use a slightly
-                    // larger manual-operation reach aligned with the
-                    // 520-unit navigation/scan radius. The active objective
-                    // gets a little more tolerance for an authored blocker or
-                    // queue without exposing a near full-screen hit target.
-                    // When carrying supplies, a matching task receiver wins
-                    // over nearby boxes; distance breaks ties deterministically.
+                e.selectClosestItem = function () {
+                    // Match the original APK: only nodes reported by physics
+                    // collider contact may become actionable. Deterministic
+                    // priority inside that contact stack preserves the newer
+                    // correct-receiver fix without exposing distant scenery.
                     var e = interactionQuery.selectClosestOperation({
                         hero: this.hero,
                         heldGoods: this.hero_ts.goods,
                         stack: this.itemStack,
-                        nearby: Array.isArray(t) ? t : this.gameManager.itemMap,
-                        preferredNode: this.preferredNode,
-                        preferredOperation: this.preferredOperation,
-                        reachSquared: 520 * 520,
-                        preferredReachSquared: 720 * 720,
+                        maxDeltaX: 300,
+                        maxDeltaY: 300,
                         resolveComponent: function (t) {
                             return t.getComponent("InteractiveObject");
                         }
                     });
-                    // Several legacy props use a small collider centered high
-                    // above the walkable ground (for example the rescue shovel
-                    // is about 200 units above the hero).  They are visibly in
-                    // reach but never enter the physics contact stack in the
-                    // migrated runtime. Include nearby map items and keep the
-                    // closest valid operation.
                     this.cItem = e.node;
                     e.node ? this.gameManager.setInteract(e.operation) : this.hero_ts.heroState != r.default.STATE_DRAG && this.gameManager.setInteract(0);
                 };
@@ -192,6 +174,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                         if (t.tag == r.default.CO_ITEM) {
                             o.setBubble(!1, 0, !0);
                             this.checkLeave(e);
+                            this.outStack(e);
                         }
                         if (this.hero_ts.heroState != r.default.STATE_DRAG && this.hero_ts.heroState != r.default.STATE_LADDER && this.hero_ts.isEntity()) {
                             if (this.blockItem == e) {
