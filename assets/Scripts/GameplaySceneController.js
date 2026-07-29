@@ -130,6 +130,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 e.m_lastParallaxX = null;
                 e.m_lastParallaxY = null;
                 e.m_chapterTransitionPending = !1;
+                e.m_transitionSceneLoadStarted = !1;
                 e.m_cameraTrackPosition = {
                     x: 0,
                     y: 0
@@ -597,11 +598,15 @@ var i, n = this && this.__extends || (i = function (t, e) {
             e.prototype.goTransitionScene = function (t) {
                 void 0 === t && (t = "");
                 var transitionHost = this;
+                var e = t.split("_"), o = Number(e[0]), i = Number(e[1]);
+                if (t && (e.length != 2 || !c.default.publishedMapCounts[i] || i != o + 1)) {
+                    console.error("------------ 无效的章节出口参数 " + t);
+                    t = "";
+                }
                 this.cleanGame();
                 r.default.cleanHeroItem();
                 r.default.cleanCorssData();
                 r.default.cleanHeroFollow();
-                var e = t.split("_");
                 if (!t || "" == t) {
                     this.openEffect(.01, function () {
                         var t = require("./CompletionTracker").default.endingText();
@@ -623,24 +628,45 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     return console.log("111关卡结束未配置参数");
                 }
                 c.default.Smallplot = t;
+                // Persist the destination before entering the transition
+                // scene. If Android kills the process during the chapter
+                // animation, the next launch resumes the new chapter instead
+                // of returning to an already-completed ending.
+                c.default.chapter = i;
                 c.default.mapIndex = 1;
-                if (Number(e[1]) > c.default.chapterCur) {
-                    c.default.chapterCur = Number(e[1]);
+                if (i > c.default.chapterCur) {
+                    c.default.chapterCur = i;
                     console.log("------------- chapterCur " + c.default.chapterCur);
                 }
-                Number(e[0]) > c.default.unlockchapters && (c.default.unlockchapters = Number(e[0]));
+                o > c.default.unlockchapters && (c.default.unlockchapters = o);
+                c.default.saveMapInfo(!0);
                 c.default.saveUnlockChapter();
                 l.default.stopBGM();
                 this.layer_black.opacity = 0;
                 this.layer_black.active = !0;
                 this.layer_black.runAction(cc.fadeIn(1.5));
-                cc.director.preloadScene("transitionScene", function () { }, function () {
+                var n = function () {
+                    if (transitionHost.m_transitionSceneLoadStarted) return;
+                    transitionHost.m_transitionSceneLoadStarted = !0;
                     transitionHost.delayHold(.2, function () {
                         cc.director.loadScene("transitionScene", function () {
-                            console.log("==1111== gameScene==success=====");
+                            console.log("==章节过场 transitionScene==success=====");
                         });
                     });
+                };
+                cc.director.preloadScene("transitionScene", function () { }, function (t) {
+                    t && console.warn("------------ 章节过场预加载失败，将直接加载", t);
+                    n();
                 });
+                // Some Android graphics drivers lose the preload completion
+                // callback while tearing down the old scene. Never leave the
+                // player on an inert black frame.
+                this.scheduleOnce(function () {
+                    if (!transitionHost.m_transitionSceneLoadStarted) {
+                        console.warn("------------ 章节过场预加载超时，直接进入");
+                        n();
+                    }
+                }, 4);
             };
             Object.defineProperty(e.prototype, "gameOperate", {
                 get: function () {
@@ -1516,8 +1542,11 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     w.default.update(this, u.default);
                 }
             };
-            e.prototype.onRequiredItemDelivered = function () {
+            e.prototype.onRequiredItemDelivered = function (deliveredItem) {
                 var t = this;
+                r.default.cleanHeroItem();
+                this.requestProgressSave();
+                console.log("[Gameplay] delivered task item and cleared carry state: " + deliveredItem);
                 if ("scenes_d3_2" === this.mapName) this.delayHold(1.1, function () {
                     var e = w.default._distributionProgress(t);
                     if (e && e.done >= 2 && e.done < e.total && !t.gameOperate && t.hero_ts && !t.hero_ts.goods) {

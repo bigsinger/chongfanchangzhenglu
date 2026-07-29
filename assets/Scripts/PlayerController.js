@@ -849,12 +849,17 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 })));
             };
             e.prototype.setRoleGoods = function () {
-                if (this.goods) if (3 == this.goods.isthrow) {
+                return this.clearTaskGoods();
+            };
+            e.prototype.clearTaskGoods = function () {
+                if (!this.goods) return !1;
+                if (3 == this.goods.isthrow) {
                     this.hero_state = s.default.STATE_NORMAL;
                     this.m_state = null;
                     this.setGoods(null);
                     this.setState(s.default.HERO_STANDBY);
                 } else this.setGoods(null);
+                return !0;
             };
             e.prototype.squatSwitch = function (t, e) {
                 var o = this;

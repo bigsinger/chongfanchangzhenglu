@@ -134,6 +134,7 @@ node .\tools\restore-original-resources.js --verify
 | 从地图初始状态检查 | `jump -Chapter n -Map n` | 否，会清理当轮临时状态 |
 | 从已保存节点继续 | `direct -Name checkpoint` | 是，推荐修复后复测 |
 | 只调整人物位置 | `relocate -Chapter n -Map n -X x -Y y` | 是，要求该地图已有存档 |
+| 验证第二章结算出口 | `chapter2exit -WaitSeconds 7` | 否，构造最小合法出口状态 |
 
 示例：
 
@@ -142,6 +143,7 @@ node .\tools\restore-original-resources.js --verify
 .\tests\manual\android-game\game-test.ps1 checkpoint -Name d3-2-before-silver
 .\tests\manual\android-game\game-test.ps1 direct -Name d3-2-before-silver
 .\tests\manual\android-game\game-test.ps1 relocate -Chapter 3 -Map 2 -X 4249 -Y -291
+.\tests\manual\android-game\game-test.ps1 chapter2exit -WaitSeconds 7
 ```
 
 使用原则：
@@ -150,8 +152,22 @@ node .\tools\restore-original-resources.js --verify
 2. 主线节点复测优先使用 `direct`，因为它会恢复事件、物品、跨图、角色、章节和快照状态。
 3. 人物被旧存档留在超远边缘时，先保存原检查点，再用 `relocate` 把人物移回目标附近。
 4. 不直接手工拼接零散 LocalStorage 键；构造状态时使用脚本的事务写入和完整检查点。
+5. `chapter2exit` 只替换第二章最终事件为可碰撞的等价出口，用于验证
+   `2_3 → transitionScene → scenes_d3_1`；看到“点击任意位置继续”后必须点击并确认第三章
+   实际可操作，不能只检查章节键已经变化。
 
-### 4.2 检查点命名
+### 4.2 玩家可见的七关任选入口
+
+主菜单左侧“章节”现在列出七张已发布地图。拖动路线图可看到后半段卡片，点击卡片后右侧
+必须显示准确的“第 N 章·第 M 关”和地图名，再点击“进入关卡”确认。至少回归：
+
+1. 第一张 `1-1 村庄主路`；
+2. 中间的 `2-2 村屋水源`；
+3. 最后一张 `3-3 小学堂兑换点`；
+4. 每次确认后经过章节过渡，最终存档章节/地图与所选卡片一致；
+5. 章节面板首次触摸不得出现 `ScrollView.content` 空引用。
+
+### 4.3 检查点命名
 
 建议格式：
 
@@ -172,7 +188,7 @@ d<章>-<图>-<before|after>-<节点>-<序号>
 每完成一个高风险交互，就保存 `after` 检查点。修复代码、重装 APK 后，从最近的
 `before` 检查点继续。
 
-### 4.3 ADB 输入与无干扰取证
+### 4.4 ADB 输入与无干扰取证
 
 只通过 ADB 操作模拟器，不使用桌面鼠标，不抢占用户当前窗口。
 

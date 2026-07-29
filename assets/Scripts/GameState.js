@@ -347,11 +347,24 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 a.default.writeIfChanged("unlockchapters", this.unlockchapters);
                 a.default.commit("unlock-chapter-critical", this.playData);
             };
-            e.initMapInfo = function (t) {
+            e.initMapInfo = function (t, e) {
                 void 0 === t && (t = 1);
-                this.chapter = Number(t);
-                this.mapIndex = 1;
+                void 0 === e && (e = 1);
+                var o = Math.floor(Number(t)), i = Math.floor(Number(e)), n = this.publishedMapCounts[o];
+                n && i >= 1 && i <= n || (o = 1, i = 1);
+                this.chapter = o;
+                this.mapIndex = i;
+                this.Smallplot = "0_" + o;
                 this.saveMapInfo(!0);
+            };
+            e.getPublishedLevels = function () {
+                return this.publishedLevels.map(function (t) {
+                    return {
+                        chapter: t.chapter,
+                        map: t.map,
+                        title: t.title
+                    };
+                });
             };
             Object.defineProperty(e, "mapIndex", {
                 get: function () {
@@ -400,7 +413,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
             e.isTest = !0;
             e.isConfNet = !1;
             e.mapKey = "";
-            e._version = "V_S_1.1.3";
+            e._version = "V_S_1.1.4";
             e.SPEED_RUN = 4.5;
             e.SPEED_WALK = 2.2;
             e.SPEED_SQUAT = 1.8;
@@ -517,6 +530,35 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 2: 2,
                 3: 3
             };
+            e.publishedLevels = [{
+                chapter: 1,
+                map: 1,
+                title: "村庄主路"
+            }, {
+                chapter: 1,
+                map: 2,
+                title: "取水支路"
+            }, {
+                chapter: 2,
+                map: 1,
+                title: "战场主路"
+            }, {
+                chapter: 2,
+                map: 2,
+                title: "村屋水源"
+            }, {
+                chapter: 3,
+                map: 1,
+                title: "白石渡主路"
+            }, {
+                chapter: 3,
+                map: 2,
+                title: "医疗点"
+            }, {
+                chapter: 3,
+                map: 3,
+                title: "小学堂兑换点"
+            }];
             e.chapterName = ["第一节 ", "第二节 ", "第三节 ", "第四节 ", "第五节 "];
             return e;
         }(cc.Component);

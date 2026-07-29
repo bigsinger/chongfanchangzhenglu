@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
     [Parameter(Position = 0)]
-    [ValidateSet('state', 'launch', 'stop', 'tap', 'swipe', 'screenshot', 'inspect', 'logs', 'checkpoint', 'restore', 'direct', 'relocate', 'jump', 'smoke', 'background', 'corrupt', 'oldsave', 'stability')]
+    [ValidateSet('state', 'launch', 'stop', 'tap', 'swipe', 'screenshot', 'inspect', 'logs', 'checkpoint', 'restore', 'direct', 'relocate', 'jump', 'chapter2exit', 'smoke', 'background', 'corrupt', 'oldsave', 'stability')]
     [string]$Command = 'state',
 
     [string]$Name = 'current',
@@ -115,6 +115,7 @@ function Invoke-DeviceSqlite {
     param(
         [Parameter(Mandatory)][ValidateSet('query', 'execute', 'export', 'import')][string]$Action,
         [string]$Sql,
+        [string]$SqlFile,
         [string]$File,
         [ValidateSet('rows', 'scalar')][string]$Format = 'rows'
     )
@@ -125,6 +126,7 @@ function Invoke-DeviceSqlite {
         '--package', $Package
     )
     if ($Sql) { $arguments += @('--sql', $Sql) }
+    if ($SqlFile) { $arguments += @('--sql-file', $SqlFile) }
     if ($File) { $arguments += @('--file', $File) }
     if ($Format) { $arguments += @('--format', $Format) }
     & python @arguments
@@ -234,7 +236,17 @@ delete from data where key in ('tempData','cross','heroItem','heroFollow','heroS
   insert or replace into data(key,value) values('codex_direct_scene','gameScene');
   commit;
 "@ -replace "`r?`n", ' '
-    Invoke-DeviceSqlite -Action execute -Sql $sql
+    $sqlFile = [System.IO.Path]::GetTempFileName()
+    try {
+        [System.IO.File]::WriteAllText(
+            $sqlFile,
+            $sql,
+            [System.Text.UTF8Encoding]::new($false)
+        )
+        Invoke-DeviceSqlite -Action execute -SqlFile $sqlFile
+    } finally {
+        Remove-Item -LiteralPath $sqlFile -Force -ErrorAction SilentlyContinue
+    }
     Start-Game
 }
 
@@ -262,7 +274,78 @@ insert or replace into data(key,value) values('mapIndex','$Map');
 insert or replace into data(key,value) values('codex_direct_scene','gameScene');
 commit;
 "@ -replace "`r?`n", ' '
-    Invoke-DeviceSqlite -Action execute -Sql $sql
+    $sqlFile = [System.IO.Path]::GetTempFileName()
+    try {
+        [System.IO.File]::WriteAllText(
+            $sqlFile,
+            $sql,
+            [System.Text.UTF8Encoding]::new($false)
+        )
+        Invoke-DeviceSqlite -Action execute -SqlFile $sqlFile
+    } finally {
+        Remove-Item -LiteralPath $sqlFile -Force -ErrorAction SilentlyContinue
+    }
+    Start-Game
+}
+
+function Start-ChapterTwoExitCheckpoint {
+    $Chapter = 2
+    $Map = 1
+    Set-MapStart
+    Start-Sleep -Seconds $WaitSeconds
+    Stop-Game
+
+    $query = "select value from data where key='tempData';"
+    $json = Invoke-DeviceSqlite -Action query -Sql $query -Format scalar
+    if (-not $json) {
+        throw '第二章出口测试无法读取 tempData'
+    }
+    $tempData = $json | ConvertFrom-Json
+    $scene = $tempData.scenes_d2_1
+    if (-not $scene -or -not $scene.itemArr) {
+        throw '第二章出口测试场景不存在'
+    }
+    $ending = @($scene.itemArr | Where-Object { $_.index -eq 33 })[0]
+    if (-not $ending) {
+        throw '第二章出口事件 33 不存在'
+    }
+    $ending.isHide = $false
+    $ending.eventTrigger = @([pscustomobject]@{
+        index = 7
+        key = '16'
+        param = '2_3'
+        next = ''
+        isLoop = $false
+        trigger = '1'
+        last = 0
+        delay = 0
+        isWait = $true
+        specialParam = ''
+    })
+    $scene.heroPos = [pscustomobject]@{ x = 1943; y = -275 }
+
+    $updated = ($tempData | ConvertTo-Json -Compress -Depth 100).Replace("'", "''")
+    $sql = @"
+begin;
+update data set value='$updated' where key='tempData';
+insert or replace into data(key,value) values('chapter','2');
+insert or replace into data(key,value) values('mapIndex','1');
+insert or replace into data(key,value) values('codex_direct_scene','gameScene');
+commit;
+"@ -replace "`r?`n", ' '
+    $sqlFile = [System.IO.Path]::GetTempFileName()
+    try {
+        [System.IO.File]::WriteAllText(
+            $sqlFile,
+            $sql,
+            [System.Text.UTF8Encoding]::new($false)
+        )
+        Invoke-DeviceSqlite -Action execute -SqlFile $sqlFile
+    } finally {
+        Remove-Item -LiteralPath $sqlFile -Force -ErrorAction SilentlyContinue
+    }
+
+    Invoke-Adb -Arguments @('logcat', '-c')
     Start-Game
 }
 
@@ -503,6 +586,9 @@ switch ($Command) {
     }
     'jump' {
         Set-MapStart
+    }
+    'chapter2exit' {
+        Start-ChapterTwoExitCheckpoint
     }
     'smoke' {
         Invoke-Adb -Arguments @('logcat', '-c')

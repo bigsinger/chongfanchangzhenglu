@@ -90,6 +90,7 @@ const popup = source('PopupView.js');
 const resourceManagerSource = source('ResourceManager.js');
 const saveManagerSource = source('SaveManager.js');
 const menu = source('MainMenuController.js');
+const chapterSelection = source('ChapterSelectionDialog.js');
 const gameInfo = source('GameInfo.js');
 const gameStateSource = source('GameState.js');
 const cloudSources = source('CloudSpawner.js') + source('AmbientCloudSpawner.js');
@@ -98,6 +99,7 @@ const timingMiniGame = source('TimingEvent.js');
 const audioManager = source('AudioManager.js');
 const settingsDialog = source('SettingsDialog.js');
 const player = source('PlayerController.js');
+const spine = source('SpineAnimationManager.js');
 const camera = source('CameraController.js');
 const displayAdapter = source('DisplayAdapter.js');
 assert(
@@ -157,15 +159,31 @@ assert(
   'all primary scenes must share fixed-height landscape adaptation'
 );
 assert(
-  /this\.m_useStableOpening = !!\(cc\.sys && cc\.sys\.isNative\)/.test(loading) &&
+  /this\.m_useStableOpening = !\(this\.cg && this\.cg\.skeletonData\)/.test(loading) &&
     /this\.cg\.node\.active = !this\.m_useStableOpening/.test(loading) &&
     /prepareStableOpening/.test(loading) &&
     /startStableOpening/.test(loading) &&
-    /e && \(e\.active = !1\)/.test(loading) &&
     /this\.cg\.setCompleteListener/.test(loading) &&
     /t\.m_useStableOpening \? 52 : 65/.test(loading) &&
     /finishOpeningGate/.test(loading),
-  'native startup must avoid the corrupted legacy Spine mesh while preserving narration, subtitles, skip and an idempotent watchdog'
+  'startup must restore the original animated Spine opening, with a missing-data fallback and idempotent watchdog'
+);
+assert(
+  /this\.hero_ts\.clearTaskGoods\(\)/.test(event) &&
+    /prototype\.clearTaskGoods/.test(player) &&
+    !/3 != d\.isthrow && "keepgoods"/.test(event) &&
+    /cleanHeroItem\(\)/.test(scene) &&
+    /e && -1 != o\.indexOf\(a\) \? this\.setAttachment\(a, a \+ i\) : this\.clearAttachment\(a\)/.test(spine),
+  'successful task delivery must clear normal and bulky held props unless explicitly configured to keep them'
+);
+assert(
+  /getPublishedLevels/.test(chapterSelection + gameStateSource) &&
+    /if \(v && !v\.content\)/.test(chapterSelection) &&
+    /v\.content = this\.pan_chapter/.test(chapterSelection) &&
+    /initMapInfo\(e\.chapter, e\.map\)/.test(chapterSelection) &&
+    /第" \+ e\.chapter \+ "章·第" \+ e\.map \+ "关/.test(chapterSelection) &&
+    /publishedLevels = \[\{/.test(gameStateSource),
+  'chapter dialog must expose every published chapter/map checkpoint'
 );
 assert(
   !/y = cc\.v2\(\(y\.x - s\.x\) \/ P/.test(scene) &&
@@ -198,13 +216,17 @@ assert(
 );
 assert(
   /var transitionHost = this;/.test(scene) &&
-    /transitionHost\.delayHold\(\.2/.test(scene),
-  'chapter preload callbacks must retain the gameplay controller instance'
+    /m_transitionSceneLoadStarted/.test(scene) &&
+    /saveMapInfo\(!0\)/.test(scene) &&
+    /章节过场预加载超时/.test(scene),
+  'chapter completion must persist its destination and recover from lost preload callbacks'
 );
 assert(
   /t\.node\.active = !1/.test(chapterTransition) &&
-    /cc\.Director\.EVENT_AFTER_DRAW/.test(chapterTransition),
-  'chapter transition renderers must detach for a full frame before gameplay loads'
+    /cc\.Director\.EVENT_AFTER_DRAW/.test(chapterTransition) &&
+    /finishRightAnimation/.test(chapterTransition) &&
+    /章节路线动画完成回调超时/.test(chapterTransition),
+  'chapter transition renderers must detach for a full frame and tolerate lost animation callbacks'
 );
 assert(/EVENT_HIDE/.test(scene) && /应用进入后台/.test(scene), 'background persistence contract');
 assert(/EVENT_SHOW/.test(scene) && /resetActiveInput/.test(scene), 'background input reset contract');

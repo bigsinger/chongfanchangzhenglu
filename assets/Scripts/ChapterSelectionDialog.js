@@ -50,10 +50,17 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 e.itemCount = {};
                 e.storyCount = {};
                 e.m_navigationPending = !1;
+                e.levelTargets = [];
+                e.selectedTarget = null;
                 return e;
             }
             e.prototype.initData = function () { };
             e.prototype.start = function () {
+                var v = this.scroll_chapter && this.scroll_chapter.getComponent(cc.ScrollView);
+                if (v && !v.content) {
+                    v.content = this.pan_chapter;
+                    console.warn("[ChapterSelectionDialog] repaired missing ScrollView content binding");
+                }
                 var t = r.default.itemData;
                 for (var e in t) {
                     var o = t[e].xjid;
@@ -74,30 +81,33 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 this.pan_chapter.on(cc.Node.EventType.TOUCH_END, this.scrollTouchEnd, this);
             };
             e.prototype.initChapter = function () {
+                this.levelTargets = r.default.getPublishedLevels();
                 for (var t = 1; t <= this.CHAPTER_MAX; t++) {
                     var e = this.pan_chapter.getChildByName("node_chapter" + t);
                     this.chapterMap[t] = e;
-                    var o = r.default.unlockchapters + 1, i = e.getChildByName("node_unlock"), n = e.getChildByName("node_lock"), a = Number(t);
+                    var o = this.levelTargets[t - 1], i = e.getChildByName("node_unlock"), n = e.getChildByName("node_lock"), a = Number(t);
+                    if (!o) {
+                        e.active = !1;
+                        continue;
+                    }
+                    e.active = !0;
                     e.chapterId = a;
-                    var s = r.default.chapterUiConf[a], c = s.chapterid.split("_");
-                    if (o < a) {
-                        i.active = !1;
-                        n.active = !0;
-                        s && (n.getChildByName("img_bg").getChildByName("label_num").getComponent(cc.Label).string = c[0] + ":" + c[1]);
-                    } else {
-                        i.active = !0;
-                        n.active = !1;
-                        e.isUnlock = !0;
-                        if (s) {
-                            var l = i.getChildByName("img_title");
-                            l.getChildByName("label_name").getComponent(cc.Label).string = s.chapter_name;
-                            l.getChildByName("label_num").getComponent(cc.Label).string = c[0] + ":" + c[1];
-                            var h = i.getChildByName("img_record"), d = s.chapter_prop.split("|"), p = null != this.storyCount[a] ? this.storyCount[a] : 0, u = null != this.itemCount[a] ? this.itemCount[a] : 0;
-                            h.getChildByName("rText_story").getComponent(cc.RichText).string = "<color=#8C2122><b>" + p + "</b></color><color=#212121> / " + d[0] + "</color>";
-                            h.getChildByName("rText_item").getComponent(cc.RichText).string = "<color=#8C2122><b>" + u + "</b></color><color=#212121> / " + d[1] + "</color>";
-                        }
+                    e.levelTarget = o;
+                    i.active = !0;
+                    n.active = !1;
+                    e.isUnlock = !0;
+                    var s = r.default.chapterUiConf[o.chapter], c = i.getChildByName("img_title");
+                    c.getChildByName("label_name").getComponent(cc.Label).string = o.title;
+                    c.getChildByName("label_num").getComponent(cc.Label).string = o.chapter + ":" + o.map;
+                    var l = i.getChildByName("img_record"), h = s && s.chapter_prop ? s.chapter_prop.split("|") : ["0", "0"], d = null != this.storyCount[o.chapter] ? this.storyCount[o.chapter] : 0, p = null != this.itemCount[o.chapter] ? this.itemCount[o.chapter] : 0;
+                    l.getChildByName("rText_story").getComponent(cc.RichText).string = "<color=#8C2122><b>" + d + "</b></color><color=#212121> / " + h[0] + "</color>";
+                    l.getChildByName("rText_item").getComponent(cc.RichText).string = "<color=#8C2122><b>" + p + "</b></color><color=#212121> / " + h[1] + "</color>";
+                    if (o.chapter == r.default.chapter && o.map == r.default.mapIndex) {
+                        this.touchChapter = a;
+                        this.selectedTarget = o;
                     }
                 }
+                this.selectedTarget && this.updateRight();
             };
             e.prototype.scrollCall = function (t) {
                 var e, o = t.getScrollOffset().x;
@@ -133,6 +143,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     var i = this.chapterMap[o];
                     if (i.isUnlock && Math.abs(i.x - e.x) < 150 && Math.abs(i.y - e.y) < 100) {
                         this.touchChapter = i.chapterId;
+                        this.selectedTarget = i.levelTarget;
                         break;
                     }
                 }
@@ -153,30 +164,30 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 }
             };
             e.prototype.updateRight = function () {
-                var t = r.default.chapterUiConf[this.touchChapter];
-                if (t) {
-                    this.label_name_r.string = t.chapter_name;
-                    this.label_info_r.string = "      " + t.chapter_txt + "\n\n" + p.default.shortText(this.touchChapter);
+                var t = this.selectedTarget, e = t && r.default.chapterUiConf[t.chapter];
+                if (t && e) {
+                    this.label_name_r.string = "第" + t.chapter + "章 " + r.default.maxchapterName[t.chapter - 1] + " · 第" + t.map + "关";
+                    this.label_info_r.string = "      " + t.title + "\n\n" + (e.chapter_txt || p.default.shortText(t.chapter));
                     this.label_info_r.enableWrapText = !0;
                     this.label_info_r.overflow = cc.Label.Overflow.SHRINK;
-                    var e = t.chapterid.split("_");
-                    this.label_num_r.string = e[0] + ":" + e[1];
-                    var o = t.chapter_prop.split("|");
-                    var i = null != this.storyCount[this.touchChapter] ? this.storyCount[this.touchChapter] : 0, n = null != this.itemCount[this.touchChapter] ? this.itemCount[this.touchChapter] : 0;
+                    this.label_num_r.string = t.chapter + ":" + t.map;
+                    var o = e.chapter_prop.split("|");
+                    var i = null != this.storyCount[t.chapter] ? this.storyCount[t.chapter] : 0, n = null != this.itemCount[t.chapter] ? this.itemCount[t.chapter] : 0;
                     this.rich_story_r.string = "<color=#8C2122>" + i + "</color><color=#F8E5D9> / " + o[0] + "</color>";
                     this.rich_item_r.string = "<color=#8C2122>" + n + "</color><color=#F8E5D9> / " + o[1] + "</color>";
                 }
             };
             e.prototype.goGameCall = function () {
-                var t = this;
+                var t = this, e = this.selectedTarget;
+                if (!e) return;
                 l.default.playSound("ui/start.mp3");
-                d.default.open("dialog/tipsDialog", ["是否载入<size=22> <size=30><b>" + r.default.chapterUiConf[this.touchChapter].chapter_name + "?</>", "", function () {
+                d.default.open("dialog/tipsDialog", ["是否载入<size=22> <size=30><b>第" + e.chapter + "章·第" + e.map + "关 " + e.title + "?</>", "", function () {
                     if (t.m_navigationPending) return;
                     t.m_navigationPending = !0;
                     s.default.clearRunState();
-                    console.log("==选择=" + r.default.chapterUiConf[t.touchChapter].chapter_name + "进入游戏");
-                    r.default.initMapInfo(t.touchChapter);
-                    r.default.Smallplot = "0_" + t.touchChapter;
+                    console.log("==选择=第" + e.chapter + "章·第" + e.map + "关 " + e.title + "进入游戏");
+                    r.default.initMapInfo(e.chapter, e.map);
+                    r.default.Smallplot = "0_" + e.chapter;
                     cc.director.preloadScene("transitionScene", function () { }, function () {
                         t.scheduleOnce(function () {
                             l.default.stopBGM();

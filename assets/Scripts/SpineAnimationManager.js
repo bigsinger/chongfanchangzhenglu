@@ -170,10 +170,10 @@ var i, n = this && this.__extends || (i = function (t, e) {
                         return t.trim();
                     }).filter(function (t) {
                         return !!t;
-                    }), i = e ? t.number : 0;
+                    }), i = t.number;
                     for (var n in this.m_loadAry) {
                         var a = this.m_loadAry[n];
-                        -1 != o.indexOf(a) ? this.setAttachment(a, a + i) : this.clearAttachment(a);
+                        e && -1 != o.indexOf(a) ? this.setAttachment(a, a + i) : this.clearAttachment(a);
                     }
                 };
                 e.prototype.clearAttachment = function (t) {

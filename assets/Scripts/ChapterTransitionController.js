@@ -56,6 +56,8 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 e.m_cgNameIndex = 2;
                 e.m_nowCgIndex = 0;
                 e.m_gameSceneTransitionPending = !1;
+                e.m_cgAnimationToken = 0;
+                e.m_rightAnimationToken = 0;
                 return e;
             }
             e.prototype.onLoad = function () {
@@ -150,6 +152,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
             };
             e.prototype.jumpBack = function () {
                 var t = this;
+                this.m_cgAnimationToken++;
                 l.default.playSound("ui/back.mp3");
                 console.log("---------------- layer_black 1m_isLoadIndx =", this.m_isLoadIndx);
                 console.log("---------------- layer_black2  m_isLoadNeed =", this.m_isLoadNeed);
@@ -179,15 +182,27 @@ var i, n = this && this.__extends || (i = function (t, e) {
             };
             e.prototype.setAnimation = function (t) {
                 void 0 === t && (t = 1);
+                var o = this, i = ++this.m_cgAnimationToken;
                 for (var e in this.m_animationAry) {
-                    var o = new cc.Node();
-                    this.cg_node.addChild(o);
-                    o.addComponent(p.default);
-                    var i = o.getComponent(p.default);
-                    i.m_specialParm = !0;
-                    this.m_cgTsAry.push(i);
-                    i.initData(o, "C002", "transition/" + this.m_animationAry[e], this.aniComplete.bind(this), 1);
+                    var n = new cc.Node();
+                    this.cg_node.addChild(n);
+                    n.addComponent(p.default);
+                    var a = n.getComponent(p.default);
+                    a.m_specialParm = !0;
+                    this.m_cgTsAry.push(a);
+                    a.initData(n, "C002", "transition/" + this.m_animationAry[e], this.aniComplete.bind(this), 1);
                 }
+                this.scheduleOnce(function () {
+                    if (i != o.m_cgAnimationToken || !o.cg_node.active) return;
+                    console.warn("------------ 章节 CG 完成回调超时，继续后续流程");
+                    o.m_cgAnimationToken++;
+                    o.btn_skip.active = !1;
+                    o.cg_node.runAction(cc.sequence(cc.fadeOut(.5), cc.callFunc(function () {
+                        o.Complete();
+                        o.openEffect();
+                        o.cg_node.active = !1;
+                    })));
+                }, 24);
                 if (this.m_isLoadIndx > this.m_isLoadNeed) {
                     console.log("====计数超出===11111111==");
                     this.gotoGk();
@@ -205,6 +220,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 }
                 if ("C006" == t) {
                     console.log("==全部播放完成==");
+                    this.m_cgAnimationToken++;
                     this.btn_skip.active = !1;
                     this.cg_node.runAction(cc.sequence(cc.fadeOut(.5), cc.callFunc(function () {
                         e.Complete();
@@ -214,13 +230,23 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 }
             };
             e.prototype.runRightAni = function () {
-                var t = this;
+                var t = this, e = ++this.m_rightAnimationToken;
                 this.animation_node.addComponent(p.default);
                 this.m_animationDbJs = this.animation_node.getComponent(p.default);
                 this.m_animationDbJs.m_specialParm = !0;
                 this.m_animationDbJs.initData(this.animation_node, "am0" + this.m_playSection, "transition/chapter" + this.m_playChapter, function () {
-                    t.aniOnStop();
+                    t.finishRightAnimation(e);
                 }, 1);
+                this.scheduleOnce(function () {
+                    if (e != t.m_rightAnimationToken) return;
+                    console.warn("------------ 章节路线动画完成回调超时，继续后续流程");
+                    t.finishRightAnimation(e);
+                }, 14);
+            };
+            e.prototype.finishRightAnimation = function (t) {
+                if (t != this.m_rightAnimationToken) return;
+                this.m_rightAnimationToken++;
+                this.aniOnStop();
             };
             e.prototype.aniOnStop = function () {
                 this.m_isLoadIndx++;

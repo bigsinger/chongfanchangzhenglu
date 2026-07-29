@@ -62,14 +62,13 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     c.default.playData = e;
                  }
                  cc.sys.localStorage.getItem("longmarch_first") && (this.m_isFirst = !0);
-                 // Creator 2.4's native Spine mesh renderer corrupts the later
-                 // frames of this legacy five-page opening on both modern Mali
-                 // hardware and the Android emulator. Keep the original Spine
-                 // presentation for web/editor preview, but use a deterministic
-                 // static-art presentation with the authored narration,
-                 // subtitles and timing on Android/iOS.
-                 this.m_useStableOpening = !!(cc.sys && cc.sys.isNative);
-                 this.btn_skip.active = this.m_isFirst || this.m_useStableOpening;
+                 // The five original Spine pages are now excluded from dynamic
+                 // atlas packing, so their authored atlas coordinates remain
+                 // valid on Creator 2.4.15 and Android. Prefer the complete
+                 // original animation everywhere; retain static art only as a
+                 // last-resort fallback when SkeletonData is genuinely absent.
+                 this.m_useStableOpening = !(this.cg && this.cg.skeletonData);
+                 this.btn_skip.active = this.m_isFirst;
                  this.cg.node.active = !this.m_useStableOpening;
                  this.m_useStableOpening ? this.prepareStableOpening() : this.cg.setCompleteListener(function () {
                      t._onPlayComplete();
@@ -96,9 +95,9 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     t.m_openingGateCallback = function () {
                         t.finishOpeningGate();
                     };
-                     // The final authored subtitle ends at 49 seconds. Native
-                     // fallback exits just after it; the Spine path keeps a
-                     // wider watchdog for a missing completion callback.
+                     // The final authored subtitle ends at 49 seconds. Keep an
+                     // idempotent watchdog in case a device loses the Spine
+                     // completion callback while backgrounding.
                      t.scheduleOnce(t.m_openingGateCallback, t.m_useStableOpening ? 52 : 65);
                  };
                 y.default.loadDir("sound/effect/ui", function () { }, function () { }, "core:ui-sound");

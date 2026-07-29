@@ -308,8 +308,8 @@ var i, n = this && this.__extends || (i = function (t, e) {
                                     l = Number(h) == this.hero_ts.heroState;
                                 } else if (o.includes("prop")) {
                                     var d = this.hero_ts.goods;
-                                    if (d && (l = o == d.nameid) && 3 != d.isthrow && "keepgoods" != i) {
-                                        this.hero_ts.setGoods(null);
+                                    if (d && (l = o == d.nameid) && "keepgoods" != i) {
+                                        this.hero_ts.clearTaskGoods();
                                         this.gameManager.onRequiredItemDelivered && this.gameManager.onRequiredItemDelivered(o);
                                     }
                                 } else "left" == o ? l = !this.hero_ts.heroDir : "right" == o && (l = this.hero_ts.heroDir);
