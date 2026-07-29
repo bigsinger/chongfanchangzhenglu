@@ -17,6 +17,8 @@
 道具回收、第二章出口、自动存档、任务提示、卡片缩放和七关任选。静态和运行日志中没有
 JavaScript 异常、Native fatal、ANR 或资源加载失败。
 
+![Release 中完整播放的原版动态长征片头](../images/release-1.2.0/dynamic-opening-long-march.jpg)
+
 ![原版图标](../images/release-1.2.0/original-app-icon.png)
 
 ## 原版事实基线
@@ -108,6 +110,8 @@ JavaScript 异常、Native fatal、ANR 或资源加载失败。
 | 版本 | `1.2.0 (2026072902)` |
 | Debug APK | `dist/chongfanchangzhenglu-arm64-debug.apk` |
 | Debug 大小 | 150,588,265 字节 |
+| Release APK | `dist/chongfanchangzhenglu-1.2.0-2026072902-release.apk` |
+| Release 大小 | 144,637,597 字节 |
 | ABI | 仅 `arm64-v8a` |
 | Android | minSdk 21、targetSdk 36、权限 0 |
 | 图标 | 四档原版 PNG，源码与生成工程一致 |
@@ -137,6 +141,8 @@ JavaScript 异常、Native fatal、ANR 或资源加载失败。
 - [x] 七张地图加载、移动、前后台恢复
 - [x] 全事件图、收藏、史实、答题与资源完整性
 - [x] 片头、道具回收、第二章出口、七关任选不回退
-- [ ] 最终签名 Release 构建、安装和不可调试复核
+- [x] 最终签名 Release 构建、安装和不可调试复核
 
-最后一项在正式签名包生成后填写；正式包路径和安装结论在本任务最终交付说明中给出。
+Release 已从干净的 `main` 提交完整重编，APK v1/v2/v3 签名、AAB JAR 签名、R8、lint、
+zipalign 和安装均通过。冷启动完整播放原版动态片头并自然进入 `V_S_1.2.0` 主菜单；
+`run-as` 返回 `package not debuggable`，焦点保持在游戏 Activity，最终日志无异常。
