@@ -121,6 +121,24 @@ if ($LASTEXITCODE -ne 0) { throw '资源 UUID 验证失败' }
 if ($LASTEXITCODE -ne 0) { throw '自动质量门禁失败' }
 
 if (-not $SkipGenerate) {
+    # Debug/Release 的现代化步骤会修改生成工程；正式全量构建必须从 Creator 原始模板
+    # 开始，避免在上一次已修补工程上重复注入 Java 或 Gradle 片段。
+    if (Test-Path -LiteralPath $buildRoot) {
+        $resolvedGeneratedBuild = [System.IO.Path]::GetFullPath($buildRoot)
+        $resolvedProject = [System.IO.Path]::GetFullPath($projectRoot)
+        if (-not $resolvedGeneratedBuild.StartsWith(
+            $resolvedProject + [System.IO.Path]::DirectorySeparatorChar,
+            [StringComparison]::OrdinalIgnoreCase
+        ) -or
+            [System.IO.Path]::GetFileName($resolvedGeneratedBuild) -ne 'jsb-link' -or
+            [System.IO.Path]::GetFileName(
+                [System.IO.Path]::GetDirectoryName($resolvedGeneratedBuild)
+            ) -ne 'build') {
+            throw "拒绝清理非预期生成目录：$resolvedGeneratedBuild"
+        }
+        Remove-Item -LiteralPath $resolvedGeneratedBuild -Recurse -Force
+    }
+
     $buildOptions = 'platform=android;template=link;debug=false;md5Cache=true;buildPath=' +
         $projectRoot.Replace('\', '/') +
         '/build;autoCompile=false;packageName=' +

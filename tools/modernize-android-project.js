@@ -206,11 +206,15 @@ const appActivityFile = path.join(
 );
 let appActivity = read(appActivityFile);
 const hardwareKeyMarker = 'LongMarch hardware key bridge';
-if (!appActivity.includes(hardwareKeyMarker)) {
-  appActivity = appActivity.replace(
-    'import android.content.res.Configuration;',
-    'import android.content.res.Configuration;\nimport android.view.KeyEvent;'
-  );
+const hardwareKeyInstalled = appActivity.includes(hardwareKeyMarker) ||
+  /private static int mapMovementKey\(int keyCode\)/.test(appActivity);
+if (!hardwareKeyInstalled) {
+  if (!appActivity.includes('import android.view.KeyEvent;')) {
+    appActivity = appActivity.replace(
+      'import android.content.res.Configuration;',
+      'import android.content.res.Configuration;\nimport android.view.KeyEvent;'
+    );
+  }
   const activityClass = 'public class AppActivity extends Cocos2dxActivity {';
   if (!appActivity.includes(activityClass)) {
     throw new Error(`无法定位 Android Activity：${appActivityFile}`);
@@ -219,6 +223,7 @@ if (!appActivity.includes(hardwareKeyMarker)) {
     activityClass,
     `${activityClass}
 
+    // LongMarch hardware key bridge
     // 实体键桥接：Cocos 原生只转发方向键，不直接转发 A/D/W/S。
     private static int mapMovementKey(int keyCode) {
         switch (keyCode) {

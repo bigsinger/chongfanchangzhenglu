@@ -105,6 +105,11 @@ const player = source('PlayerController.js');
 const spine = source('SpineAnimationManager.js');
 const camera = source('CameraController.js');
 const displayAdapter = source('DisplayAdapter.js');
+const modernizeAndroid = fs.readFileSync(
+  path.join(root, 'tools', 'modernize-android-project.js'),
+  'utf8'
+);
+const releaseBuild = fs.readFileSync(path.join(root, 'tools', 'build-android-release.ps1'), 'utf8');
 assert(
   /KEY_DOWN/.test(scene) &&
     /keyDirections/.test(scene) &&
@@ -202,6 +207,13 @@ assert(
   !/cc\.eventManager\.(?:addListener|removeListener)/.test(scene) &&
     /cc\.internal\s*&&\s*cc\.internal\.eventManager/.test(scene),
   'global touch controls must use the Creator 2.4.15-compatible internal dispatcher'
+);
+assert(
+  /const hardwareKeyMarker = 'LongMarch hardware key bridge'/.test(modernizeAndroid) &&
+    /const hardwareKeyInstalled =/.test(modernizeAndroid) &&
+    /private static int mapMovementKey\\\(int keyCode\\\)/.test(modernizeAndroid) &&
+    /Remove-Item -LiteralPath \$resolvedGeneratedBuild -Recurse -Force/.test(releaseBuild),
+  'Android generation must not inject the hardware-key bridge twice across debug/release builds'
 );
 assert(
   !/y = cc\.v2\(\(y\.x - s\.x\) \/ P/.test(scene) &&
