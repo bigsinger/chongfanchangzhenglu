@@ -17,9 +17,9 @@
 道具回收、第二章出口、自动存档、任务提示、卡片缩放和七关任选。静态和运行日志中没有
 JavaScript 异常、Native fatal、ANR 或资源加载失败。
 
-![Release 中完整播放的原版动态长征片头](../images/release-1.2.0/dynamic-opening-long-march.jpg)
+![Release 中完整播放的原版动态长征片头](../../screenshots/dynamic-opening-long-march.jpg)
 
-![原版图标](../images/release-1.2.0/original-app-icon.png)
+![原版图标](../../screenshots/original-app-icon.png)
 
 ## 原版事实基线
 
@@ -36,7 +36,7 @@ JavaScript 异常、Native fatal、ANR 或资源加载失败。
 原 APK 的纯红画面不是随机资源损坏，而是作者设置的章节年代地点牌。它缺少标题且颜色过
 亮，容易被玩家误认为渲染故障，因此采用“保留信息、改善表达”的修复。
 
-![深红历史坐标牌](../images/release-1.2.0/historical-coordinate-baishidu.jpg)
+![深红历史坐标牌](../../screenshots/historical-coordinate-baishidu.jpg)
 
 ## 交互范围专项
 
@@ -59,9 +59,9 @@ JavaScript 异常、Native fatal、ANR 或资源加载失败。
 - 再次点击操作键，正常进入蓝布包三题；
 - 领取物资箱阶段仍有完整可行走空间。
 
-![角色近身到达兑换员](../images/release-1.2.0/exchange-clerk-contact.jpg)
+![角色近身到达兑换员](../../screenshots/exchange-clerk-contact.jpg)
 
-![兑换员三题核对](../images/release-1.2.0/exchange-clerk-quiz.jpg)
+![兑换员三题核对](../../screenshots/exchange-clerk-quiz.jpg)
 
 ## 全量通关覆盖
 
@@ -84,9 +84,9 @@ JavaScript 异常、Native fatal、ANR 或资源加载失败。
 两分钟窗口覆盖前六图；第七图小学堂另有兑换员完整黑盒用例和日志，因此七图均有本构建
 运行证据。
 
-![第一章村庄道路](../images/release-1.2.0/chapter-1-village-road.jpg)
+![第一章村庄道路](../../screenshots/chapter-1-village-road.jpg)
 
-![第三章医疗点](../images/release-1.2.0/chapter-3-medical-point.jpg)
+![第三章医疗点](../../screenshots/chapter-3-medical-point.jpg)
 
 ## 章节过场验证
 
@@ -101,7 +101,7 @@ JavaScript 异常、Native fatal、ANR 或资源加载失败。
 
 画面没有碎片化、纯亮红闪屏或永久停留，日志无异常。
 
-![长征路线过场](../images/release-1.2.0/march-route-transition.jpg)
+![长征路线过场](../../screenshots/march-route-transition.jpg)
 
 ## 构建与体积
 

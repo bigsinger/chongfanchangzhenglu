@@ -4,6 +4,23 @@
 
 原 APK 的 `assets/src/cocos2d-jsb.js` 明确记录 `cc.ENGINE_VERSION = "2.4.3"`。当前维护运行时为 2.4.15；工程保持原始场景结构、美术、音频、动画、配置和 JavaScript 游戏逻辑，不重新设计玩法。
 
+## 画面速览
+
+| 主菜单与原版动态片头 | 历史坐标与长征路线 |
+| --- | --- |
+| ![红色山河中的主菜单](screenshots/main-menu.jpg) | ![原版动态长征片头](screenshots/dynamic-opening-long-march.jpg) |
+| ![白石渡历史坐标牌](screenshots/historical-coordinate-baishidu.jpg) | ![小二娃与二虎继续行军](screenshots/march-route-transition.jpg) |
+
+| 村庄与医疗点 | 白石渡交互 |
+| --- | --- |
+| ![第一章村庄道路](screenshots/chapter-1-village-road.jpg) | ![第三章医疗点](screenshots/chapter-3-medical-point.jpg) |
+| ![走近兑换员后出现操作提示](screenshots/exchange-clerk-contact.jpg) | ![根据蓝布包线索进行答题](screenshots/exchange-clerk-quiz.jpg) |
+
+![原版 APK 图标](screenshots/original-app-icon.png)
+
+全部发布截图位于 [`screenshots/`](screenshots/)；它们均来自 1.2.0 Release 验证或对应的
+最终回归场景。
+
 ## 固定工具链
 
 - Cocos Creator：`E:\temp\CocosCreator-2.4.15\CocosCreator.exe`

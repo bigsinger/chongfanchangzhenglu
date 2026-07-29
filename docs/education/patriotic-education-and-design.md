@@ -11,7 +11,7 @@
 游戏希望玩家理解：爱国主义既包含对国家和历史的情感，也落实在人民立场、责任担当、
 团结协作、严守纪律和面对困难继续前进的行动中。
 
-![原版应用图标中的红军战士与行军山路](../images/release-1.2.0/original-app-icon.png)
+![原版应用图标中的红军战士与行军山路](../../screenshots/original-app-icon.png)
 
 ## 学习目标
 
@@ -79,7 +79,7 @@
 - 过场历史时间牌使用明确的“历史坐标”标题和柔和过渡，使年代、地点成为叙事线索；
 - 本地离线运行且 Android 零权限，适合在受控教学设备上使用。
 
-![小二娃与二虎沿长征路线继续前进](../images/release-1.2.0/march-route-transition.jpg)
+![小二娃与二虎沿长征路线继续前进](../../screenshots/march-route-transition.jpg)
 
 ## 内容边界与教师提示
 
