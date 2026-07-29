@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * 模块职责：核验三章七图、主线出口、收藏和迁移修补。
+ * 关键约束：机器可读发布清单是通关测试与内容门禁的共同事实源。
+ */
+
 const fs = require('fs');
 const path = require('path');
 
@@ -14,17 +19,30 @@ const fail = (message) => {
 
 const manifestPath = path.join(root, 'tests', 'manual', 'android-game', 'published-maps.json');
 const manifest = readJson(manifestPath);
+const boundaryPath = path.join(
+  root,
+  'tests',
+  'manual',
+  'android-game',
+  'original-content-boundary.json'
+);
+const boundary = readJson(boundaryPath);
 const sceneRows = new Map(readConfig('czconfig.json').map((row) => [row.name, row]));
 const goods = readConfig('goodsConf.json');
 const stories = readConfig('story.json');
 const answers = readConfig('answer.json');
 const chapterUi = readConfig('chapterUi.json');
+const chapterMax = readConfig('chapterMax.json');
 const tips = readConfig('gametips.json');
 const ConfigRepair = require(path.join(root, 'assets', 'Scripts', 'ConfigRepair.js')).default;
 const SaveManager = require(path.join(root, 'assets', 'Scripts', 'SaveManager.js')).default;
 
 if (!Array.isArray(manifest) || manifest.length !== 7) {
   fail(`发布地图应为 7 张，实际为 ${Array.isArray(manifest) ? manifest.length : '非数组'}`);
+}
+
+if (!Array.isArray(boundary.plannedChapterCards) || boundary.plannedChapterCards.length !== 11) {
+  fail('原版章节规划基线应包含 11 张卡片');
 }
 
 const derivedMapCounts = {};
@@ -59,6 +77,97 @@ for (const entry of manifest) {
   const content = JSON.parse(row.content);
   ConfigRepair.repairScene(entry.scene, content);
   sceneContents.set(entry.scene, content);
+}
+
+// 原版界面预留 11 张卡片，但 APK 只发布了前三张故事和七张地图。把两种计数分别
+// 锁定，避免把空章节占位或缺少 prefab 的编辑草稿误开放成黑屏关卡。
+const plannedCardIds = new Set();
+for (const expected of boundary.plannedChapterCards) {
+  const id = Number(expected.id);
+  if (plannedCardIds.has(id)) fail(`原版章节规划重复：${id}`);
+  plannedCardIds.add(id);
+  const ui = chapterUi.find((entry) => Number(entry.id) === id);
+  const transition = chapterMax.find((entry) => Number(entry.id) === id);
+  if (!ui || !transition) {
+    fail(`原版章节卡 ${id} 缺少 UI 或过场配置`);
+    continue;
+  }
+  if (ui.chapterid !== expected.chapterId || ui.chapter_name !== expected.title) {
+    fail(
+      `原版章节卡 ${id} 应为 ${expected.chapterId} ${expected.title}，` +
+      `实际为 ${ui.chapterid} ${ui.chapter_name}`
+    );
+  }
+  if (transition.plotname !== expected.title) {
+    fail(`原版章节卡 ${id} 的过场标题应为 ${expected.title}，实际为 ${transition.plotname}`);
+  }
+}
+if (chapterUi.length !== 11 || chapterMax.length !== 11) {
+  fail(`原版章节配置应各有 11 行，实际 chapterUi=${chapterUi.length} chapterMax=${chapterMax.length}`);
+}
+
+const publishedStoryIds = new Set(boundary.publishedStoryCardIds.map(Number));
+const unpublishedStoryIds = new Set(boundary.unpublishedStoryCardIds.map(Number));
+for (const id of publishedStoryIds) {
+  const ui = chapterUi.find((entry) => Number(entry.id) === id);
+  const transition = chapterMax.find((entry) => Number(entry.id) === id);
+  if (!ui || !String(ui.chapter_txt || '').trim()) fail(`已发布故事卡 ${id} 缺少章节正文`);
+  if (!transition || !String(transition.start_order || '').trim()) {
+    fail(`已发布故事卡 ${id} 缺少开场顺序`);
+  }
+}
+const unpublishedFields = [
+  'start_role',
+  'start_txt',
+  'start_video',
+  'start_ani',
+  'start_order',
+  'end_role',
+  'end_txt',
+  'end_video',
+  'end_ani',
+  'end_order',
+  'chapter_video',
+  'start_zimu'
+];
+for (const id of unpublishedStoryIds) {
+  const ui = chapterUi.find((entry) => Number(entry.id) === id);
+  const transition = chapterMax.find((entry) => Number(entry.id) === id);
+  if (!ui || String(ui.chapter_txt || '').trim()) fail(`未发布故事卡 ${id} 不应伪造章节正文`);
+  if (!transition) {
+    fail(`未发布故事卡 ${id} 缺少原版占位配置`);
+    continue;
+  }
+  const populated = unpublishedFields.filter((field) => String(transition[field] || '').trim());
+  if (populated.length) fail(`未发布故事卡 ${id} 意外带有内容字段：${populated.join(', ')}`);
+}
+if (publishedStoryIds.size + unpublishedStoryIds.size !== plannedCardIds.size) {
+  fail('原版 11 张章节卡没有被完整划分为已发布与未发布状态');
+}
+
+const prefabDir = path.join(root, 'assets', 'resources', 'prefabs', 'view');
+const packagedScenePrefabs = fs.readdirSync(prefabDir)
+  .filter((name) => /^scenes_d.+\.prefab$/.test(name))
+  .map((name) => path.basename(name, '.prefab'))
+  .sort();
+const expectedScenePrefabs = Array.from(publishedScenes).sort();
+if (JSON.stringify(packagedScenePrefabs) !== JSON.stringify(expectedScenePrefabs)) {
+  fail(
+    `可加载地图 prefab 与发布清单不一致：` +
+    `${JSON.stringify(packagedScenePrefabs)} / ${JSON.stringify(expectedScenePrefabs)}`
+  );
+}
+for (const scene of boundary.unpublishedSceneDrafts) {
+  if (!sceneRows.has(scene)) fail(`缺少用于溯源的未发布地图草稿：${scene}`);
+  if (publishedScenes.has(scene) || packagedScenePrefabs.includes(scene)) {
+    fail(`缺少 prefab 的编辑草稿不得进入发布范围：${scene}`);
+  }
+}
+for (const scene of boundary.editorOnlyRows) {
+  if (!sceneRows.has(scene)) fail(`缺少原版编辑器遗留行：${scene}`);
+  if (publishedScenes.has(scene) || packagedScenePrefabs.includes(scene)) {
+    fail(`编辑器测试行不得进入发布范围：${scene}`);
+  }
 }
 
 const placedCollectibles = new Map();
@@ -127,9 +236,7 @@ for (const section of publishedSections) {
   }
 }
 
-// Upgrading a player who already visited chapter 3 must add the missing
-// newspaper exactly once, while a player who already collected it must never
-// see it respawn from the compatibility repair.
+// 已进入第三章的旧存档只补一次缺失报纸；已收藏玩家不能因兼容修补看到它重生。
 const chapterThreeBase = sceneRows.get('scenes_d3_3');
 if (chapterThreeBase) {
   const oldSave = JSON.parse(chapterThreeBase.content);
@@ -168,6 +275,7 @@ for (let index = 1; index <= manifest.length; index++) {
 
 if (!process.exitCode) {
   console.log(
+    `原版规划 ${boundary.plannedChapterCards.length} 张章节卡（前三张有完整故事）；` +
     `发布内容：${manifest.length} 张地图、${expectedCollectibles.length} 件收藏、` +
     `${expectedStories.length} 条史实、${answers.length} 道答题，配置与预制体完整`
   );

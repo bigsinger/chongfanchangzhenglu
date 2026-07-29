@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * 模块职责：计算横屏设计分辨率、宽屏安全区和界面缩放。
+ * 关键约束：布局以可视区域而非物理像素为准，统一真机与模拟器坐标。
+ */
+
 Object.defineProperty(exports, "__esModule", {
     value: !0
 });

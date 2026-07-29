@@ -1,12 +1,16 @@
 'use strict';
 
+/**
+ * 模块职责：统计纹理尺寸与解码内存并执行预算门禁。
+ * 关键约束：对骨骼图集保留原尺寸，对普通纹理限制单张解码峰值。
+ */
+
 const fs = require('fs');
 const path = require('path');
 
 const root = path.resolve(__dirname, '..');
 const assetRoot = path.join(root, 'assets');
-// Recovered skeletal atlases were authored up to 4096px. Resizing an
-// already-packed atlas corrupts odd-sized mesh UVs on real Mali devices.
+// 骨骼图集原始尺寸最高 4096 像素；缩放已打包图集会破坏真机 Mali 上的奇数网格 UV。
 const maxAtlasDimension = 4096;
 const maxDecodedBytes = 64 * 1024 * 1024;
 

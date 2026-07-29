@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * 模块职责：承载场景人物和物品的碰撞、事件链与交互气泡。
+ * 关键约束：事件选择以首个未完成可执行项为准，保证提示与实际按钮行为一致。
+ */
+
 var e = module;
 var o = exports;
 
@@ -53,12 +58,9 @@ var i, n = this && this.__extends || (i = function (t, e) {
             }
             e.prototype.start = function () {
                 this.node_Guide = [];
-                // Native cc.Button hit testing on a world-space bubble uses a
-                // stale pre-adaptation transform.  Its effective hit box can
-                // cover most of the screen (notably the house portal), causing
-                // a road tap to activate an interaction that was visibly far
-                // away.  gameScene's camera-aware global listener is now the
-                // sole dispatcher; disabling Button keeps the sprite visible.
+                // 原生 cc.Button 对世界气泡命中时会使用适配前的过期变换，房屋入口等
+                // 命中框可能覆盖大半屏幕。由感知镜头的全局监听统一分发，停用 Button
+                // 但保留图像可见，避免远处道路触摸误触交互。
                 var t = this.node_bubble && this.node_bubble.getComponent(cc.Button);
                 t && (t.enabled = !1);
             };
@@ -349,11 +351,8 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 }
             };
             e.prototype.bubbleBack = function () {
-                // World-space bubbles are also seen by the global ground-touch
-                // listener.  On Android that listener may set btnShield before
-                // cc.Button dispatches its click, which made a visible bubble
-                // impossible to use.  Debounce the bubble itself instead of
-                // rejecting it because another input path touched btnShield.
+                // 世界气泡也会被全局地面监听捕获；Android 上它可能先设置 btnShield，
+                // 使随后到达的点击失效。气泡单独防抖，不因另一输入路径碰过遮罩而拒绝。
                 var t = Date.now();
                 if (this.m_lastBubbleClick && t - this.m_lastBubbleClick < 180) return;
                 this.m_lastBubbleClick = t;
@@ -428,9 +427,8 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     var c = r[a], h = s.default.eventConf[c.key], d = Number(h.result);
                     if (40 == d) {
                         console.log("---------- enemy ai " + c.key);
-                        // Chapter data intentionally keeps historical component
-                        // IDs so old saves remain valid. Resolve the ID only at
-                        // the engine boundary after scripts are renamed.
+                        // 章节数据保留稳定组件 ID 以兼容既有存档，脚本改名后只在引擎
+                        // 边界解析该 ID。
                         this.m_baseEventJs = this.node.addComponent(assetCatalog.default.componentName(c.param));
                         this.m_baseEventJs.initData(c, this.node_mount, this);
                         break;
@@ -680,9 +678,8 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 }
                 this.hideTopImg(!0);
                 l.default.createPrefab("guide/guide_" + t, function (t) {
-                    // Guide prefabs were authored for the old camera scale.  In
-                    // the current native viewport their 283px task card obscures
-                    // nearby interaction bubbles, so keep the visual cue compact.
+                    // 引导预制体按旧镜头比例制作，283 像素任务卡在当前原生视口会遮住
+                    // 附近交互气泡，因此保持紧凑缩放。
                     t.scale = .55;
                     o.img_top && o.img_top.addChild(t);
                 });

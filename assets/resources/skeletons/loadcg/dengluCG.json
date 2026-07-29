@@ -7,7 +7,7 @@
     "width": 1650.84,
     "height": 750.3,
     "images": "./images/",
-    "audio": "./dengluCG/dengluCGpangbai/"
+    "audio": "./audio/"
   },
   "bones": [
     {

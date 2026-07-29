@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * 模块职责：管理主菜单、继续游戏、章节选择和收藏入口。
+ * 关键约束：回到菜单时统一结束活跃章节，防止旧输入和音频跨场景残留。
+ */
+
 var e = module;
 var o = exports;
 
@@ -42,9 +47,8 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 displayAdapter.default.apply(this.node, {
                     referenceWidth: 1650
                 });
-                // Every route back to the menu ends the active gameplay
-                // chapter, including completion/ending dialogs that bypass the
-                // normal transition controller.
+                // 所有返回菜单的路径都需结束当前玩法章节，包括绕过常规过场控制器的
+                // 章节完成和结局弹窗。
                 v.default.releasePrefix("gk/d");
                 this.label_version.string = r.default._version;
                 1 == r.default.chapter && 1 == r.default.mapIndex ? this.setSpriteFrame(this.sp_state, "public/btn_xyx") : this.setSpriteFrame(this.sp_state, "public/btn_jxyx");

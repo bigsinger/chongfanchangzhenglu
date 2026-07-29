@@ -1,12 +1,8 @@
 'use strict';
 
-/*
- * Skeleton texture safety gate.
- *
- * Spine and DragonBones atlases are authored together with mesh UVs, trim
- * offsets and attachment geometry. Resizing their already-packed PNG pages
- * independently is unsafe: odd dimensions have to be rounded and native GPU
- * drivers do not all tolerate the resulting UV seams in the same way.
+/**
+ * 模块职责：检查骨骼图集是否适合原样发布。
+ * 关键约束：已打包图集不能独立缩放，否则网格 UV 与附件裁切会在真机破裂。
  */
 
 const fs = require('fs');

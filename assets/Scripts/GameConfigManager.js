@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * 模块职责：加载、修复并持久化章节配置与玩家进度。
+ * 关键约束：损坏键局部恢复，不能因单项异常清空全部收藏和解锁。
+ */
+
 var e = module;
 var o = exports;
 
@@ -33,9 +38,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     var i = JSON.parse(o);
                     return null == i ? e : i;
                 } catch (n) {
-                    // A truncated/legacy save must not make the whole game
-                    // unbootable. Remove only the damaged key and preserve all
-                    // other chapter progress.
+                    // 截断或旧存档不能让整个游戏无法启动，只移除损坏键并保留其他章节进度。
                     console.warn("------------ 存档损坏，已忽略 " + t, n);
                     cc.sys.localStorage.removeItem(t);
                     return e;
@@ -155,8 +158,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
             };
             e.cleanAllSave = function () {
                 this.clearRunState();
-                // Only the explicit "reset all progress" action should erase
-                // permanent collections, story records and unlocks.
+                // 只有明确执行“重置全部进度”才能清除永久收藏、剧情记录和解锁。
                 s.default.removeIfPresent("longmarch");
                 s.default.clearSnapshots();
             };

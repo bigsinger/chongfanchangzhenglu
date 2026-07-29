@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * 模块职责：验证存档恢复、交互集成与关键源码契约。
+ * 关键约束：无法脱离 JSB 实例化的路径通过精确源码断言补足纯逻辑测试。
+ */
+
 const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
@@ -36,7 +41,7 @@ const storage = new LocalStorage({
 global.cc = { sys: { localStorage: storage } };
 const SaveManager = require(path.join(root, 'assets', 'Scripts', 'SaveManager.js')).default;
 
-// Legacy migration and complete single-record snapshot.
+// 旧键迁移后必须生成单记录完整快照。
 const migrated = SaveManager.restoreOrMigrate({ chapter: 1, mapIndex: 1 });
 assert.equal(migrated.chapter, 2);
 let current = JSON.parse(storage.getItem(SaveManager.CURRENT_KEY));
@@ -44,7 +49,7 @@ assert(SaveManager.isValid(current));
 assert.deepEqual(current.state.tempData.scenes_d2_2.heroPos, { x: 300, y: 600 });
 assert.equal(current.state.heroItem.nameid, 'prop20');
 
-// Foreground interaction then background save must advance an atomic revision.
+// 前台交互后进入后台保存必须原子推进修订号。
 const beforeRevision = current.revision;
 storage.setItem('heroItem', JSON.stringify({ nameid: 'prop42' }));
 storage.setItem('tempData', JSON.stringify({ scenes_d2_2: { heroPos: { x: 880, y: 610 }, events: { '9|2': 1 } } }));
@@ -53,7 +58,7 @@ current = JSON.parse(storage.getItem(SaveManager.CURRENT_KEY));
 assert(current.revision > beforeRevision);
 assert.equal(current.state.heroItem.nameid, 'prop42');
 
-// A killed process restores the newest fully committed interaction.
+// 进程被终止后应恢复最新的完整交互。
 storage.setItem('heroItem', 'null');
 storage.setItem('tempData', '{}');
 const restored = SaveManager.restoreOrMigrate({ chapter: 1, mapIndex: 1 });
@@ -61,15 +66,14 @@ assert.equal(restored.chapter, 2);
 assert.equal(JSON.parse(storage.getItem('heroItem')).nameid, 'prop42');
 assert.equal(JSON.parse(storage.getItem('tempData')).scenes_d2_2.events['9|2'], 1);
 
-// Corrupted current generation falls back to previous and repairs current.
+// 当前代损坏时回退上一有效代并修复当前槽。
 const previous = storage.getItem(SaveManager.PREVIOUS_KEY);
 assert(previous, 'previous generation must exist');
 storage.setItem(SaveManager.CURRENT_KEY, '{"truncated":');
 SaveManager.restoreOrMigrate({ chapter: 1, mapIndex: 1 });
 assert(SaveManager.isValid(JSON.parse(storage.getItem(SaveManager.CURRENT_KEY))));
 
-// A checksum-valid snapshot with impossible shapes or unpublished map numbers
-// must not be accepted as a restore source.
+// 即使校验值正确，结构不可能或地图未发布的快照也不能作为恢复源。
 const semanticCorruption = JSON.parse(storage.getItem(SaveManager.CURRENT_KEY));
 semanticCorruption.state.playData.itemData = [];
 semanticCorruption.state.chapter = 999;
@@ -77,8 +81,7 @@ semanticCorruption.state.mapIndex = 999;
 semanticCorruption.checksum = SaveManager.checksum(JSON.stringify(semanticCorruption.state));
 assert.equal(SaveManager.isValid(semanticCorruption), false);
 
-// Gameplay source-level contracts guard the integration points that are hard
-// to instantiate without a running JSB engine.
+// 无法脱离 JSB 引擎实例化的集成点由源码级契约保护。
 const scene = source('GameplaySceneController.js');
 const chapterTransition = source('ChapterTransitionController.js');
 const loading = source('LoadingSceneController.js');
@@ -112,7 +115,9 @@ assert(
   'web A/D/W/S and Creator Android DPAD keyboard movement contract'
 );
 assert(
-  /only nodes reported by physics/.test(event) &&
+  /stack: this\.itemStack/.test(event) &&
+    /o == r\.default\.CO_ITEM/.test(event) &&
+    /this\.addStack\(i\)/.test(event) &&
     /maxDeltaX: 300/.test(event) &&
     /maxDeltaY: 300/.test(event) &&
     /this\.outStack\(e\)/.test(event) &&
@@ -192,6 +197,11 @@ assert(
     /第" \+ e\.chapter \+ "章·第" \+ e\.map \+ "关/.test(chapterSelection) &&
     /publishedLevels = \[\{/.test(gameStateSource),
   'chapter dialog must expose every published chapter/map checkpoint'
+);
+assert(
+  !/cc\.eventManager\.(?:addListener|removeListener)/.test(scene) &&
+    /cc\.internal\s*&&\s*cc\.internal\.eventManager/.test(scene),
+  'global touch controls must use the Creator 2.4.15-compatible internal dispatcher'
 );
 assert(
   !/y = cc\.v2\(\(y\.x - s\.x\) \/ P/.test(scene) &&
@@ -281,8 +291,7 @@ assert.equal(
   'legacy event component alias must remain available'
 );
 
-// A loadDir callback arriving after its owner was destroyed must release its
-// unclaimed assets instead of recreating a permanently retained scope.
+// loadDir 回调在拥有者销毁后到达时，应释放无人认领资源，不能重建永久作用域。
 const releasedAssets = [];
 const removedBundles = [];
 global.cc.isValid = () => true;

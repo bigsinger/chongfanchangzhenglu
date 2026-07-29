@@ -47,7 +47,7 @@ ADB 压缩预览 `opening-animated-06s.preview.jpg` 显示瑞金路线、行军�
 ```powershell
 .\tests\manual\android-game\game-test.ps1 chapter2exit `
   -Serial emulator-5554 `
-  -Adb D:\Android\platform-tools\adb.exe `
+  -Adb adb `
   -WaitSeconds 7
 ```
 

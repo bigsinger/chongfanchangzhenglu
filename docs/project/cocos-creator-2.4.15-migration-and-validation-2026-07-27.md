@@ -25,8 +25,8 @@
 
 | 输入 | 路径/版本 | SHA-256 |
 |---|---|---|
-| Creator 官方 Windows 压缩包 | `E:\temp\CocosCreator_v2.4.15_20250328_win.zip` | `B2E5A465E6E6074CAB0859DE67C6CF0F6442C8195D03E26FAC9B519B90BAFCE0` |
-| Creator 可执行文件 | `E:\temp\CocosCreator-2.4.15\CocosCreator.exe` | `9EBC21345281D1975C6022B6EC8F5877E8AAEAA72558733B40EC262835C0EB6C` |
+| Creator 官方 Windows 压缩包 | `CocosCreator_v2.4.15_20250328_win.zip` | `B2E5A465E6E6074CAB0859DE67C6CF0F6442C8195D03E26FAC9B519B90BAFCE0` |
+| Creator 可执行文件 | `CocosCreator.exe` | `9EBC21345281D1975C6022B6EC8F5877E8AAEAA72558733B40EC262835C0EB6C` |
 | Creator engine `package.json` | 2.4.15 | `34139E3F3D2AACCD266C08E98803754E90EEEA8607A2B9870267310DD3D4A444` |
 | Creator `CocosAndroid.mk` | 2.4.15 | `952A085266AC5E63D0A61883BD6854D86657C9AE9FC67EFE34D9A02E8224A83B` |
 | Android NDK | 20.1.5948944 | `source.properties`: `6AB1F3415CAF51EA55FBBFA7B9DA14E2BCB165E077007A1D4BC8D1FB0C99BAAA` |
@@ -126,7 +126,7 @@ Adreno/Mali 的真实 ARM64 硬件兼容认证。
 
 ```powershell
 .\tools\build-android-release.ps1 `
-  -SigningProperties E:\temp\longmarch-signing-test.properties `
+  -SigningProperties longmarch-signing-test.properties `
   -VersionCode 2026072703 `
   -VersionName 1.1.0
 ```

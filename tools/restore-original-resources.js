@@ -1,11 +1,16 @@
 'use strict';
 
+/**
+ * 模块职责：从 APK 资源包恢复可编辑源资源和元数据。
+ * 关键约束：按 UUID 而非显示路径读取，避免同名多类型记录相互覆盖。
+ */
+
 /*
- * Reconstructs editable Cocos Creator 2.4.3 source assets from the APK's
- * compiled `resources` bundle.  The bundle may contain several asset records
- * with the same project path (for example Texture2D + SpriteFrame + Spine).
- * For that reason this tool reads every record by UUID instead of trusting a
- * path-based reverse-export, where later records overwrite earlier records.
+ * 从 APK 编译后的 resources 包重建可编辑的 Creator 2.4.3 资源。
+ *
+ * 同一路径可能同时对应纹理、精灵帧和骨骼等多种记录，因此必须按 UUID 读取全部记录；
+ * 仅按路径反向导出会让后出现的记录覆盖先前内容。外部工具位置只从环境变量读取，
+ * 恢复清单则统一写成相对路径，避免把维护机器信息带入仓库。
  */
 
 const crypto = require('crypto');
@@ -15,9 +20,20 @@ const path = require('path');
 const projectRoot = path.resolve(__dirname, '..');
 const resourcesRoot = path.join(projectRoot, 'assets', 'resources');
 const recoveryRoot = path.join(projectRoot, 'recovery');
-const bundleRoot = path.resolve(process.env.CFCZL_APK_RESOURCES || 'E:\\temp\\cfczl3-apk\\assets\\assets\\resources');
-const reverseRoot = path.resolve(process.env.CC_REVERSE_ROOT || 'E:\\temp\\cc-reverse');
-const creatorRoot = path.resolve(process.env.COCOS_CREATOR_243_ROOT || 'E:\\temp\\CocosCreator-2.4.3');
+
+function requireExternalRoot(variableName, description) {
+  const value = process.env[variableName];
+  if (!value) throw new Error(`缺少 ${variableName}，无法定位${description}。`);
+  return path.resolve(value);
+}
+
+function portablePath(base, target) {
+  return path.relative(base, target).split(path.sep).join('/');
+}
+
+const bundleRoot = requireExternalRoot('CFCZL_APK_RESOURCES', '原版 APK resources 目录');
+const reverseRoot = requireExternalRoot('CC_REVERSE_ROOT', '资源反编译工具目录');
+const creatorRoot = requireExternalRoot('COCOS_CREATOR_243_ROOT', 'Creator 2.4.3 目录');
 const configPath = path.join(bundleRoot, 'config.json');
 const jobsPath = path.join(recoveryRoot, 'atlas-frame-jobs.json');
 const manifestPath = path.join(recoveryRoot, 'original-resources-manifest.json');
@@ -373,7 +389,7 @@ function recoverOrphanSpriteFrames(bundleNames) {
     try {
       collectMetaUuids(JSON.parse(fs.readFileSync(metaPath, 'utf8')), builtinUuids);
     } catch {
-      // A malformed unrelated editor meta is not a recovery input.
+      // 非本游戏的编辑器元数据即使损坏，也不应阻断原版资源恢复。
     }
   }
 
@@ -415,7 +431,13 @@ function recoverOrphanSpriteFrames(bundleNames) {
       writeJson(`${destination}.meta`, makeImageMeta(textureUuid, {
         uuid, path: `${bundleName}/${safeName}`,
       }, normalizedContent, dimensions));
-      recovered.push({ bundle: bundleName, spriteUuid: uuid, textureUuid, name: safeName, destination });
+      recovered.push({
+        bundle: bundleName,
+        spriteUuid: uuid,
+        textureUuid,
+        name: safeName,
+        destination: portablePath(projectRoot, destination),
+      });
     }
   }
 
@@ -462,8 +484,8 @@ function prepare() {
         path: relativePath,
         spriteUuid: spriteEntry.uuid,
         textureUuid,
-        source: atlasSource,
-        destination,
+        source: portablePath(bundleRoot, atlasSource),
+        destination: portablePath(projectRoot, destination),
         x: Number(content.rect[0]),
         y: Number(content.rect[1]),
         width: Number(content.rect[2]),
@@ -587,7 +609,7 @@ function prepare() {
   writeJson(jobsPath, jobs);
   writeJson(manifestPath, {
     engine: 'Cocos Creator 2.4.3',
-    sourceBundle: configPath,
+    sourceBundle: portablePath(bundleRoot, configPath),
     configUuidCount: bundleConfig.uuids.length,
     pathEntryCount: entries.length,
     counts,
@@ -621,11 +643,12 @@ function verify() {
   const jobs = JSON.parse(fs.readFileSync(jobsPath, 'utf8'));
   const failures = [];
   for (const job of jobs) {
-    if (!fs.existsSync(job.destination)) {
+    const destination = path.resolve(projectRoot, job.destination);
+    if (!fs.existsSync(destination)) {
       failures.push(`Missing extracted frame: ${job.path}`);
       continue;
     }
-    const dimensions = imageDimensions(job.destination);
+    const dimensions = imageDimensions(destination);
     if (dimensions.width !== job.width || dimensions.height !== job.height) {
       failures.push(`Wrong extracted size for ${job.path}: ${dimensions.width}x${dimensions.height}, expected ${job.width}x${job.height}`);
     }

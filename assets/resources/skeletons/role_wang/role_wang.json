@@ -7,7 +7,7 @@
     "width": 153.57,
     "height": 306.61,
     "images": "./images/",
-    "audio": "E:/创新业务组/长征/NPC/ani02/新主角/role_erhu1/../role_wsc"
+    "audio": "./audio/"
   },
   "bones": [
     {

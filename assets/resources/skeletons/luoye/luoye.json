@@ -7,7 +7,7 @@
     "width": 27,
     "height": 21,
     "images": "./images/",
-    "audio": "E:/创新业务组/长征/NPC/道具/树叶"
+    "audio": "./audio/"
   },
   "bones": [
     {

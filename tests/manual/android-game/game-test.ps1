@@ -1,3 +1,12 @@
+﻿<#
+.SYNOPSIS
+通过 ADB 执行游戏状态、直达关卡、截图、日志和稳定性测试。
+
+.DESCRIPTION
+工具使用应用私有 SQLite 检查点快速恢复测试位置，并优先在本地压缩和 OCR 截图。
+所有会修改存档的用例先备份并在结束时恢复，避免破坏玩家真实进度。
+#>
+
 [CmdletBinding()]
 param(
     [Parameter(Position = 0)]
@@ -17,7 +26,7 @@ param(
     [int]$Minutes = 30,
     [switch]$RequireArm64,
     [string]$Serial = 'emulator-5554',
-    [string]$Adb = 'D:\Android\Sdk\platform-tools\adb.exe',
+    [string]$Adb = 'adb',
     [string]$Package = 'com.game.longmarch.creator243',
     [string]$Activity = 'org.cocos2dx.javascript.AppActivity'
 )
@@ -27,8 +36,14 @@ $ResultDir = Join-Path $PSScriptRoot '..\results'
 $ResultDir = [System.IO.Path]::GetFullPath($ResultDir)
 $DeviceSqlite = Join-Path $PSScriptRoot 'device-sqlite.py'
 
-if (-not (Test-Path -LiteralPath $Adb)) {
-    throw "ADB 不存在：$Adb"
+if (Test-Path -LiteralPath $Adb -PathType Leaf) {
+    $Adb = [System.IO.Path]::GetFullPath($Adb)
+} else {
+    # 默认使用 PATH 中的 adb，使测试文档和脚本不依赖维护者个人 SDK 安装目录。
+    $adbCommand = Get-Command $Adb -CommandType Application -ErrorAction SilentlyContinue |
+        Select-Object -First 1
+    if (-not $adbCommand) { throw "ADB 不存在：$Adb" }
+    $Adb = $adbCommand.Source
 }
 if (-not (Test-Path -LiteralPath $DeviceSqlite)) {
     throw "真机 SQLite 桥接工具不存在：$DeviceSqlite"
@@ -52,10 +67,8 @@ function Invoke-Adb {
 
 function Invoke-PreciseTap {
     param([Parameter(Mandatory)][int]$TapX, [Parameter(Mandatory)][int]$TapY)
-    # Xiaomi/HyperOS can deny `adb shell input` unless the separate
-    # "USB debugging (Security settings)" toggle is enabled. Android's Monkey
-    # raw-event replay runs through the system-authorized input path and still
-    # lets the test specify an exact, deterministic coordinate.
+    # 小米/HyperOS 未开启“USB 调试（安全设置）”时可能拒绝 adb shell input。
+    # Monkey 原始事件通过系统授权输入路径，同时仍可指定精确且可复现的坐标。
     $sizeLine = (Invoke-Adb -Arguments @('shell', 'wm', 'size') |
         Select-String 'Physical size:' | Select-Object -First 1).Line
     $orientationLine = (Invoke-Adb -Arguments @('shell', 'dumpsys', 'display') |
@@ -72,9 +85,8 @@ function Invoke-PreciseTap {
     $monkeyY = $TapY
     switch ($orientation) {
         1 {
-            # This device's rotation-90 landscape surface maps the portrait
-            # panel counter-clockwise: display=(physicalHeight-naturalY,
-            # naturalX). Convert screenshot coordinates back to panel space.
+            # 旋转 90 度横屏设备把竖屏面板逆时针映射为
+            # display=(physicalHeight-naturalY, naturalX)，需把截图坐标还原到面板空间。
             $monkeyX = $TapY
             $monkeyY = $physicalHeight - $TapX
         }
@@ -211,9 +223,8 @@ function Restore-Checkpoint {
     if (Test-Path -LiteralPath $checkpointPath -PathType Leaf) {
         Invoke-DeviceSqlite -Action import -File $checkpointPath
     } else {
-        # Compatibility path for checkpoints created before host-side WAL-safe
-        # export was introduced. Most older checkpoints were taken after an
-        # app stop and therefore contain a complete main database.
+        # 兼容主机端 WAL 安全导出前创建的检查点；多数旧检查点在应用停止后生成，
+        # 因此主数据库文件已经完整。
         $remote = "run-as $Package test -s files/checkpoints/$Name.sqlite"
         Invoke-Adb -Arguments @('shell', $remote)
         $remote = "run-as $Package cp files/checkpoints/$Name.sqlite databases/jsb.sqlite"
@@ -401,9 +412,8 @@ function Test-OldSaveMigration {
     $script:Name = $checkpointName
     Save-Checkpoint
     try {
-        # Make the migration case independent of the user's current progress.
-        # A fresh direct scene creates the authored d3_3 snapshot; the test can
-        # then remove prop113 to emulate an older save deterministically.
+        # 迁移用例不能依赖用户当前进度；先直达生成标准 d3_3 快照，再移除 prop113，
+        # 便可稳定模拟旧存档。
         $script:Chapter = 3
         $script:Map = 3
         Set-MapStart
@@ -510,10 +520,11 @@ function Test-Stability {
     $memoryLog = Join-Path $ResultDir "$originalName-stability-memory.log"
     $deadline = (Get-Date).AddMinutes($Minutes)
     $cycle = 0
-    # Keep runtime stability coverage aligned with the same machine-readable
-    # manifest used by the content-completeness gate.
+    # 稳定性遍历与内容完整性门禁共用机器可读地图清单，避免两套范围逐渐偏离。
     $publishedMapFile = Join-Path $PSScriptRoot 'published-maps.json'
-    $maps = @(Get-Content -Raw $publishedMapFile | ConvertFrom-Json)
+    # Windows PowerShell 5 的默认文本编码取决于系统代码页，显式指定 UTF-8 才能
+    # 稳定读取含中文标题的地图清单。
+    $maps = Get-Content -Raw -Encoding UTF8 $publishedMapFile | ConvertFrom-Json
     if ($maps.Count -ne 7) {
         throw "发布地图清单异常：$publishedMapFile"
     }

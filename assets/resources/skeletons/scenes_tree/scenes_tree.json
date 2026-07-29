@@ -7,7 +7,7 @@
     "width": 809,
     "height": 315,
     "images": "./images/",
-    "audio": "E:/创新业务组/长征/场景动画/新场景动画/关卡二/枯树"
+    "audio": "./audio/"
   },
   "bones": [
     {

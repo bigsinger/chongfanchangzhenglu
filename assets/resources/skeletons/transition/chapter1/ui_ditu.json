@@ -7,7 +7,7 @@
     "width": 1189.96,
     "height": 672.11,
     "images": "./过场动画/",
-    "audio": "E:/创新业务组/长征/场景动画/地图"
+    "audio": "./audio/"
   },
   "bones": [
     {

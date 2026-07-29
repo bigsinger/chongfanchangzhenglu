@@ -7,7 +7,7 @@
     "width": 295,
     "height": 315.64,
     "images": "./images/",
-    "audio": "../../../音效/第一关第二关音效/成品/"
+    "audio": "./audio/"
   },
   "bones": [
     {

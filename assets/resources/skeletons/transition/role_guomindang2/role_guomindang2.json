@@ -7,7 +7,7 @@
     "width": 295,
     "height": 310,
     "images": "../../../NPC/新版本NPC/敌军/images/",
-    "audio": "E:/创新业务组/长征/过场动画/第一章节前序/活着/../../../NPC/新版本NPC/敌军"
+    "audio": "./audio/"
   },
   "bones": [
     {

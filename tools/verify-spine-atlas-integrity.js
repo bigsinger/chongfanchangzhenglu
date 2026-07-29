@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * 模块职责：核验 Spine 图集页、附件引用和受控摘要。
+ * 关键约束：任何图集重排都可能让骨骼附件碎裂，因此发布前必须逐页确认。
+ */
+
 const assert = require('assert');
 const crypto = require('crypto');
 const fs = require('fs');
@@ -112,4 +117,23 @@ for (const file of walk(skeletonRoot).filter((entry) => entry.endsWith('.atlas')
   regions += result.regionCount;
 }
 
-console.log(`骨骼图集完整性：${atlases} 个 Spine atlas、${pages} 个页面、${regions} 个附件；9 个原始分辨率基准通过`);
+let skeletonJsonFiles = 0;
+let audioEvents = 0;
+for (const file of walk(skeletonRoot).filter((entry) => entry.endsWith('.json'))) {
+  const data = JSON.parse(fs.readFileSync(file, 'utf8'));
+  if (!data.skeleton) continue;
+  skeletonJsonFiles++;
+  assert.equal(data.skeleton.audio, './audio/', `${file}: 顶层音频目录必须使用脱敏相对路径`);
+  for (const [eventName, event] of Object.entries(data.events || {})) {
+    if (!event.audio) continue;
+    audioEvents++;
+    // 事件字段是运行时音效文件名，不是目录；批量脱敏不能把它改成 ./audio/。
+    assert(!/[\\/]/.test(event.audio) && /\.(?:mp3|wav|ogg)$/i.test(event.audio),
+      `${file}: ${eventName} 的事件音频文件名无效：${event.audio}`);
+  }
+}
+
+console.log(
+  `骨骼图集完整性：${atlases} 个 Spine atlas、${pages} 个页面、${regions} 个附件；` +
+  `${skeletonJsonFiles} 份骨骼数据和 ${audioEvents} 个事件音频；9 个原始分辨率基准通过`
+);

@@ -7,7 +7,7 @@
     "width": 1650.01,
     "height": 800,
     "images": "",
-    "audio": ""
+    "audio": "./audio/"
   },
   "bones": [
     {

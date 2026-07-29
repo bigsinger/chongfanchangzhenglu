@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * 模块职责：隔离原生平台能力与游戏逻辑。
+ * 关键约束：调用前检测运行环境，使浏览器预览与 Android 使用同一业务代码。
+ */
+
 var e = module;
 var o = exports;
 

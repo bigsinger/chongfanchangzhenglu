@@ -7,7 +7,7 @@
     "width": 306,
     "height": 737,
     "images": "../images/",
-    "audio": "E:/创新业务组/长征/场景动画/新场景动画/关卡二"
+    "audio": "./audio/"
   },
   "bones": [
     {

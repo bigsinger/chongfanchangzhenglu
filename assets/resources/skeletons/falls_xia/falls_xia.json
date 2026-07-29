@@ -7,7 +7,7 @@
     "width": 45,
     "height": 377,
     "images": "",
-    "audio": "E:/创新业务组/长征/特效/第二章"
+    "audio": "./audio/"
   },
   "bones": [
     {

@@ -7,7 +7,7 @@
     "width": 169.9,
     "height": 315.16,
     "images": "./images/",
-    "audio": "E:/创新业务组/长征/NPC/新版本NPC/长征-NPC-红军班长"
+    "audio": "./audio/"
   },
   "bones": [
     {

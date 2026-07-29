@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * 模块职责：编排章节地图、历史坐标牌、剧情动画和切场。
+ * 关键约束：骨骼渲染器必须先安全退场再释放纹理，避免原生端下一帧访问失效资源。
+ */
+
 var e = module;
 var o = exports;
 
@@ -462,14 +467,9 @@ var i, n = this && this.__extends || (i = function (t, e) {
                             t.m_gameSceneTransitionPending = !0;
                             l.default.stopBGM();
                             cc.director.getScheduler().setTimeScale(1);
-                            // Creator 2.4.15 releases Spine textures while
-                            // destroying a scene. If a transition renderer is
-                            // still registered for the current frame,
-                            // SkeletonData.isTexturesLoaded() reads the already
-                            // cleared texture list on the next render pass and
-                            // prevents the new gameplay scene from appearing.
-                            // Detach all transition renderers first, let one
-                            // complete frame flush RenderFlow, then switch.
+                            // Creator 销毁场景时会释放 Spine 纹理；若过场渲染器本帧仍登记，
+                            // 下帧检查会读到已清空纹理并阻止新场景显示。先解除全部过场
+                            // 渲染器，让 RenderFlow 完整刷新一帧后再切换。
                             t.node.stopAllActions();
                             t.node.active = !1;
                             var e = function () {

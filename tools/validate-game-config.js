@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * 模块职责：校验关卡事件图、对话、物品、门与收藏引用。
+ * 关键约束：断链、闭环和缺失目标必须在发布前暴露，避免运行时永久卡关。
+ */
+
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
@@ -114,8 +119,7 @@ for (const row of scenes) {
     }
   }
 
-  // An authored item is an interaction entry point, so its first event is a
-  // graph root. Follow explicit next links to reveal disconnected tail events.
+  // 场景物品是交互入口，其首事件即事件图根；沿显式 next 链检查可发现断开的尾事件。
   const reached = new Set();
   const stack = [...roots];
   while (stack.length) {
@@ -131,8 +135,7 @@ for (const row of scenes) {
     }
   }
 
-  // Detect a closed cycle: every node in the cycle has a next edge and no
-  // event can leave it. These are usually accidental infinite scene locks.
+  // 闭环中的每个节点都有 next 且没有出口，通常会造成意外的无限场景锁定。
   for (const start of nodeKeys) {
     const order = [];
     const position = new Map();

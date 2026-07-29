@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * 模块职责：以版本化完整快照保存进度并恢复损坏存档。
+ * 关键约束：当前代与上一有效代双份保留，保证进程中断后仍能恢复一致状态。
+ */
+
 var e = module;
 var o = exports;
 
@@ -7,10 +12,8 @@ Object.defineProperty(o, "__esModule", {
     value: !0
 });
 
-// LocalStorage is backed by SQLite on native builds, so replacing one value is
-// atomic while a sequence of legacy keys is not. Keep a complete versioned
-// snapshot in one key, retain the previous valid generation, and continue
-// mirroring the original keys so old checkpoints and tools remain compatible.
+// 原生 LocalStorage 由 SQLite 支撑，替换单值具有原子性，连续写多个旧键却没有。
+// 因此将版本化完整快照写入一个键，保留上一有效代，同时镜像旧键以兼容检查点和工具。
 var i = {
     SCHEMA_VERSION: 2,
     CURRENT_KEY: "longmarch_save_v2_current",
@@ -76,9 +79,8 @@ var i = {
     },
 
     checksum: function (t) {
-        // FNV-1a 32-bit is intentionally small and deterministic on the old
-        // JavaScript runtime. It detects truncated/cross-generation snapshots;
-        // it is not intended as a cryptographic signature.
+        // FNV-1a 32 位在当前 JavaScript 运行时中体积小且结果稳定，仅用于发现截断或
+        // 跨代快照，不作为密码学签名。
         for (var e = 2166136261, o = 0; o < t.length; o++) {
             e ^= t.charCodeAt(o);
             e = Math.imul(e, 16777619);
@@ -167,8 +169,7 @@ var i = {
         var i = this.bestSnapshot();
         if (i) {
             this.writeLegacy(i.state);
-            // Repair a damaged/missing current slot from the last valid
-            // generation without changing its revision.
+            // 用上一有效代修复损坏或缺失的当前槽，并保持其修订号不变。
             cc.sys.localStorage.setItem(this.CURRENT_KEY, JSON.stringify(i));
             return this.clone(i.state.playData, this.clone(t, {}));
         }

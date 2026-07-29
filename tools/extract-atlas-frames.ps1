@@ -1,17 +1,33 @@
+﻿<#
+.SYNOPSIS
+按恢复清单从原版图集中裁出独立精灵帧。
+
+.DESCRIPTION
+清单只保存相对路径，外部 APK 资源根目录由参数或环境变量提供。旋转帧在写入前恢复
+正向，临时文件写完后再替换目标，避免中断留下半张图片。
+#>
+
 param(
-    [string]$JobsPath = (Join-Path (Split-Path -Parent $PSScriptRoot) 'recovery\atlas-frame-jobs.json')
+    [string]$JobsPath = (Join-Path (Split-Path -Parent $PSScriptRoot) 'recovery\atlas-frame-jobs.json'),
+    [string]$SourceRoot = $env:CFCZL_APK_RESOURCES
 )
 
 $ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName System.Drawing
 
+$projectRoot = Split-Path -Parent $PSScriptRoot
+if ([string]::IsNullOrWhiteSpace($SourceRoot)) {
+    throw '缺少 CFCZL_APK_RESOURCES，无法定位原版 APK resources 目录。'
+}
+$resolvedSourceRoot = [System.IO.Path]::GetFullPath($SourceRoot)
 $resolvedJobsPath = (Resolve-Path -LiteralPath $JobsPath).Path
 $jobs = Get-Content -Raw -LiteralPath $resolvedJobsPath | ConvertFrom-Json
 $completed = 0
 
 foreach ($job in $jobs) {
-    $sourcePath = [System.IO.Path]::GetFullPath([string]$job.source)
-    $destinationPath = [System.IO.Path]::GetFullPath([string]$job.destination)
+    # 清单仅记录相对位置；真正的外部资源根目录由调用者在本机提供。
+    $sourcePath = [System.IO.Path]::GetFullPath((Join-Path $resolvedSourceRoot ([string]$job.source)))
+    $destinationPath = [System.IO.Path]::GetFullPath((Join-Path $projectRoot ([string]$job.destination)))
     if (-not (Test-Path -LiteralPath $sourcePath -PathType Leaf)) {
         throw "Atlas source does not exist: $sourcePath"
     }

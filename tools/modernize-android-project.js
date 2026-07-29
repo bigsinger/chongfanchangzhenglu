@@ -1,11 +1,20 @@
 'use strict';
 
+/**
+ * 模块职责：收敛 Creator 生成的 Android 工程、权限、依赖和 ABI。
+ * 关键约束：所有修改必须离线可复现，并保持 arm64、横屏和原版品牌资源门禁。
+ */
+
 const fs = require('fs');
 const path = require('path');
 
 const root = path.resolve(__dirname, '..');
 const androidProject = path.join(root, 'build', 'jsb-link', 'frameworks', 'runtime-src', 'proj.android-studio');
-const engineRoot = process.env.LONGMARCH_COCOS_ENGINE || 'E:/temp/CocosCreator-2.4.15/resources/cocos2d-x';
+const engineRootValue = process.env.LONGMARCH_COCOS_ENGINE;
+if (!engineRootValue) {
+  throw new Error('缺少 LONGMARCH_COCOS_ENGINE，请由构建入口传入 Creator 原生引擎目录。');
+}
+const engineRoot = path.resolve(engineRootValue);
 const versionCode = Number(process.env.LONGMARCH_VERSION_CODE || 2026072902);
 const versionName = process.env.LONGMARCH_VERSION_NAME || '1.2.0';
 const packageName = 'com.game.longmarch.creator243';
@@ -41,8 +50,8 @@ write(
   `package org.cocos2dx.lib;
 
 /**
- * Offline compatibility surface for Creator's native downloader registration.
- * The game has no download call sites, network permission, OkHttp, or Okio.
+ * 为 Creator 原生下载器注册提供离线兼容外壳。
+ * 游戏没有下载调用点、网络权限、OkHttp 或 Okio，因此实现不能创建网络任务。
  */
 public final class Cocos2dxDownloader {
     private final int id;
@@ -76,11 +85,11 @@ public final class Cocos2dxDownloader {
     }
 
     public static void abort(Cocos2dxDownloader downloader, int taskId) {
-        // No network task can be created.
+        // 离线发布不允许创建网络任务。
     }
 
     public static void cancelAllRequests(Cocos2dxDownloader downloader) {
-        // No network task can be created.
+        // 离线发布不允许创建网络任务。
     }
 
     native void nativeOnFinish(
@@ -169,11 +178,9 @@ write(
   cocosAndroidMk.replace(/LOCAL_MODULE\s*:=\s*cocos2djs(?:_shared)?/, 'LOCAL_MODULE := cocos2djs')
 );
 
-// Creator 2.4.15 enables a V8 inspector listener whenever COCOS2D_DEBUG is
-// non-zero. Android 9+ emulators may deny binding 0.0.0.0:6086; the upstream
-// inspector then aborts the whole process. QA builds remain Android-debuggable
-// and retain native symbols, but they must not expose or depend on a TCP debug
-// listener.
+// COCOS2D_DEBUG 非零时 Creator 会启动 V8 调试端口；Android 9 以上模拟器可能
+// 拒绝绑定并让进程退出。质量验证包仍保留 Android 调试与原生符号，但不暴露或依赖
+// TCP 调试监听。
 const appDelegateFile = path.join(androidProject, '..', 'Classes', 'AppDelegate.cpp');
 const appDelegate = read(appDelegateFile);
 const debuggerBlock = /#if defined\(COCOS2D_DEBUG\) && \(COCOS2D_DEBUG > 0\)\s*\/\/ Enable debugger here\s*jsb_enable_debugger\("0\.0\.0\.0", 6086, false\);\s*#endif/;
@@ -186,9 +193,8 @@ write(
   appDelegate.replace(debuggerBlock, debuggerDisabled)
 );
 
-// Android's stock Cocos2dxGLSurfaceView only forwards DPAD keys; physical
-// A/D/W/S key events fall through and never reach cc.systemEvent. Map those
-// four hardware keys to the equivalent DPAD events in the generated Activity.
+// Android 标准 Cocos2dxGLSurfaceView 只转发方向键，实体 A/D/W/S 不会到达
+// cc.systemEvent，因此在生成的 Activity 中映射为等价方向键。
 const appActivityFile = path.join(
   androidProject,
   'app',
@@ -213,7 +219,7 @@ if (!appActivity.includes(hardwareKeyMarker)) {
     activityClass,
     `${activityClass}
 
-    // LongMarch hardware key bridge: Cocos native forwards DPAD, not A/D/W/S.
+    // 实体键桥接：Cocos 原生只转发方向键，不直接转发 A/D/W/S。
     private static int mapMovementKey(int keyCode) {
         switch (keyCode) {
             case KeyEvent.KEYCODE_A: return KeyEvent.KEYCODE_DPAD_LEFT;
@@ -289,7 +295,7 @@ android {
     namespace "${packageName}"
     compileSdk 36
     buildToolsVersion "35.0.0"
-    // Creator 2.4.15's Android.mk runtime is validated against NDK r20.
+    // Creator Android.mk 运行时只在 NDK r20 兼容组合下验证。
     ndkVersion "20.1.5948944"
 
     defaultConfig {
@@ -426,9 +432,7 @@ let appManifest = read(appManifestFile)
   .replace(/\s*<uses-permission android:name="android\.permission\.(?:INTERNET|ACCESS_NETWORK_STATE|ACCESS_WIFI_STATE)"\/>\s*/g, '\n');
 write(appManifestFile, appManifest);
 
-// Use the exact four density-specific launcher icons recovered from the
-// original APK. Keeping them outside Creator's assets tree prevents the
-// launcher artwork from being duplicated in the game resource bundles.
+// 四档启动图标精确复用受控原版资源；放在 Creator 资源树之外可避免启动图在游戏包内重复。
 const launcherIconRoot = path.join(root, 'native', 'android');
 for (const density of ['mdpi', 'hdpi', 'xhdpi', 'xxhdpi']) {
   const relativeIcon = path.join(`mipmap-${density}`, 'ic_launcher.png');

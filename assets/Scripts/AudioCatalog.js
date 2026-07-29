@@ -1,11 +1,15 @@
 'use strict';
 
+/**
+ * 模块职责：统一背景音乐、语音和动作音效的资源路由。
+ * 关键约束：资源路径不带扩展名，以同时兼容 Creator Web 与 JSB 加载规则。
+ */
+
 Object.defineProperty(exports, "__esModule", {
     value: !0
 });
 
-// Keep the historical configuration strings compatible while exposing
-// descriptive, extension-free resource paths to the runtime.
+// 对配置中的旧音频字符串保持兼容，同时向运行时提供可读且无扩展名的资源路径。
 var effectAliases = {
     "action/dig-hands-rubble": "dig-hands",
     "action/fire": "burn",

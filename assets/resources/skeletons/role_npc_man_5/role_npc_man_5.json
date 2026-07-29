@@ -7,7 +7,7 @@
     "width": 140,
     "height": 329.84,
     "images": "./images/",
-    "audio": "E:/创新业务组/长征/NPC/新版本NPC/NPC_小偷"
+    "audio": "./audio/"
   },
   "bones": [
     {

@@ -3,7 +3,7 @@
     "hash": "18eLfC6M0fPS0ylDqw/BrBrEjK0",
     "spine": "3.8.84",
     "images": "../../../NPC/新版本NPC/敌军/images/",
-    "audio": "E:/创新业务组/长征/NPC/新版本NPC/敌军"
+    "audio": "./audio/"
   },
   "bones": [
     {

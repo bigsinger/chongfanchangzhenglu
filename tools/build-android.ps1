@@ -1,9 +1,18 @@
+﻿<#
+.SYNOPSIS
+生成并验证 Android arm64 调试安装包。
+
+.DESCRIPTION
+脚本先解析可移植工具链并执行源码门禁，再生成 Creator 工程、应用原生兼容修补、
+编译单 ABI 库并组装安装包。默认重建生成目录，增量选项只供受控诊断使用。
+#>
+
 [CmdletBinding()]
 param(
-    [string]$CreatorPath = 'E:\temp\CocosCreator-2.4.15\CocosCreator.exe',
-    [string]$JavaHome = 'E:\temp\jdk17',
-    [string]$AndroidSdk = 'D:\Android\Sdk',
-    [string]$NdkPath = 'D:\Android\Sdk\ndk\20.1.5948944',
+    [string]$CreatorPath,
+    [string]$JavaHome,
+    [string]$AndroidSdk,
+    [string]$NdkPath,
     [ValidatePattern('^[A-Z]$')]
     [string]$DriveLetter = 'R',
     [switch]$SkipGenerate,
@@ -13,6 +22,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'resolve-toolchain.ps1')
 
 function Assert-File {
     param([string]$Path, [string]$Description)
@@ -36,9 +46,8 @@ function Replace-Required {
 
     $text = [System.IO.File]::ReadAllText($Path)
     if (-not [System.Text.RegularExpressions.Regex]::IsMatch($text, $Pattern)) {
-        # Incremental Creator builds preserve some of our previous generated
-        # project patches. Treat an already-applied replacement as success so
-        # the debug build remains repeatable.
+        # Creator 增量构建会保留此前对生成工程的修补；已出现目标文本即视为成功，
+        # 使调试构建可以重复执行。
         if ($text.Contains($Replacement)) {
             return
         }
@@ -77,6 +86,16 @@ $runtimeSource = Join-Path $buildRoot 'frameworks\runtime-src'
 $androidProject = Join-Path $runtimeSource 'proj.android-studio'
 $packageName = 'com.game.longmarch.creator243'
 $expectedAbis = @('arm64-v8a')
+$toolchain = Resolve-LongMarchToolchain `
+    -CreatorPath $CreatorPath `
+    -JavaHome $JavaHome `
+    -AndroidSdk $AndroidSdk `
+    -NdkPath $NdkPath
+$CreatorPath = $toolchain.CreatorPath
+$JavaHome = $toolchain.JavaHome
+$AndroidSdk = $toolchain.AndroidSdk
+$NdkPath = $toolchain.NdkPath
+$cocosEngineRoot = $toolchain.CocosEngineRoot
 
 if ($SkipGenerate -and $IncrementalGenerate) {
     throw '-SkipGenerate and -IncrementalGenerate cannot be used together.'
@@ -100,7 +119,16 @@ if ($LASTEXITCODE -ne 0) {
     throw 'Creator/NDK build input hash verification failed.'
 }
 
+# Java 按约定把版本写到 stderr；Windows PowerShell 5 在 Stop 模式下会把这类正常输出
+# 升级成 NativeCommandError，因此只在读取版本期间降为 Continue，并单独检查退出码。
+$savedErrorPreference = $ErrorActionPreference
+$ErrorActionPreference = 'Continue'
 $javaVersion = (& (Join-Path $JavaHome 'bin\java.exe') -version 2>&1) -join "`n"
+$javaVersionExitCode = $LASTEXITCODE
+$ErrorActionPreference = $savedErrorPreference
+if ($javaVersionExitCode -ne 0) {
+    throw "读取 Java 版本失败，退出码：$javaVersionExitCode"
+}
 if ($javaVersion -notmatch 'version "(17|18|19|2[0-9])') {
     throw "Debug build requires JDK 17+. Found: $javaVersion"
 }
@@ -120,11 +148,8 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 if (-not $SkipGenerate) {
-    # The release pipeline modernizes the generated Android project in place.
-    # Creator only refreshes assets on a later incremental build. The default
-    # therefore recreates the exact generated subtree; maintainers may opt into
-    # an incremental Creator refresh when the existing tree is known to be the
-    # unmodified debug project.
+    # 发布流程会原地修改生成的 Android 工程，而 Creator 后续增量构建只刷新资源。
+    # 默认重建完整生成子树；只有确认现有目录仍是未修改调试工程时才允许增量刷新。
     if (-not $IncrementalGenerate -and (Test-Path -LiteralPath $buildRoot)) {
         $resolvedGeneratedBuild = [System.IO.Path]::GetFullPath($buildRoot)
         $resolvedProject = [System.IO.Path]::GetFullPath($projectRoot)
@@ -146,9 +171,8 @@ if (-not $SkipGenerate) {
         -ArgumentList @('--path', $projectRoot, '--build', $buildOptions) `
         -WindowStyle Hidden -PassThru
 
-    # Creator 2.4.15's launcher exits before its Electron build worker. Wait for
-    # the worker's success marker and the final settings.js instead of letting
-    # Gradle package a half-written native build.
+    # Creator 启动器会早于 Electron 构建进程退出，因此等待成功标记和最终 settings.js，
+    # 不能让 Gradle 打包仍在写入的原生工程。
     $creatorLog = Join-Path $env:USERPROFILE '.CocosCreator\logs\CocosCreator.log'
     $successMarker = 'Built to "' + $buildRoot + '" successfully'
     $failureMarker = 'Build Failed:'
@@ -194,7 +218,7 @@ if ($LASTEXITCODE -ne 0) {
 
 Assert-File -Path (Join-Path $androidProject 'gradlew.bat') -Description 'Generated Gradle wrapper'
 
-$env:LONGMARCH_COCOS_ENGINE = 'E:/temp/CocosCreator-2.4.15/resources/cocos2d-x'
+$env:LONGMARCH_COCOS_ENGINE = $cocosEngineRoot.Replace('\', '/')
 $env:LONGMARCH_VERSION_CODE = '2026072902'
 $env:LONGMARCH_VERSION_NAME = '1.2.0'
 & node (Join-Path $projectRoot 'tools\modernize-android-project.js')
@@ -228,7 +252,6 @@ foreach ($staleAbiDirectory in @(
         Remove-Item -LiteralPath $resolvedStaleAbiDirectory -Recurse -Force
     }
 }
-$cocosEngineRoot = 'E:/temp/CocosCreator-2.4.15/resources/cocos2d-x'
 $modulePath = @($cocosEngineRoot, "$cocosEngineRoot/cocos", "$cocosEngineRoot/external") -join ';'
 $nativeArguments = @(
     'NDK_PROJECT_PATH=null',

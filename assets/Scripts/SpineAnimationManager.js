@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * 模块职责：加载、播放并延迟释放 Spine 骨骼动画。
+ * 关键约束：切场保留短暂引用窗口，避免原生渲染下一帧访问已释放纹理。
+ */
+
 var e = module;
 var o = exports;
 
@@ -44,14 +49,9 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     this.m_resourceScope = v.default.createScope("spine");
                 };
                 e.prototype.onDestroy = function () {
-                    // Scene changes can destroy the outgoing Spine component
-                    // immediately before the incoming scene requests the same
-                    // cached SkeletonData (notably role_erwa1 between chapters
-                    // 2 and 3). Creator 2.4.15 clears SkeletonData.textures on
-                    // release, so a same-frame reload can receive a poisoned
-                    // cached asset and fail in isTexturesLoaded every frame.
-                    // A short grace period lets the next owner register its
-                    // reference while keeping abandoned assets bounded.
+                    // 切场可能在新场景请求同一缓存 SkeletonData 前立刻销毁旧组件。Creator
+                    // 释放时会清空 textures，同帧重载便会收到失效缓存。短暂宽限期允许
+                    // 新拥有者登记引用，同时仍限制无人使用资源的存活时间。
                     v.default.releaseScopeDeferred(this.m_resourceScope);
                 };
                 e.prototype.start = function () {
@@ -146,17 +146,12 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 };
                 e.prototype.setSlotColor = function (t) {
                     void 0 === t && (t = null);
-                    // The Creator 2.4 Android Spine binding exposes a native
-                    // Color proxy whose assignment throws and whose mutation
-                    // can crash under Houdini translation.  This tint is only
-                    // optional "already carrying this item" feedback, so keep
-                    // native gameplay safe and leave the attachment unchanged.
+                    // Creator Android Spine 绑定暴露的原生 Color 代理在 Houdini 转译下
+                    // 赋值或修改可能异常；染色只是“已持有”可选反馈，原生端保持附件不变。
                     if (cc.sys && cc.sys.isNative) return;
                     var e = this.m_skeleton.findSlot("body_prop"), o = t || this.m_spineColor;
                     if (e && e.color && o) {
-                        // Creator 2.4's native Spine binding exposes Slot.color
-                        // as a getter-only object.  Assigning the whole property
-                        // throws on Android; mutate the returned Color instead.
+                        // 原生 Slot.color 是只读属性，整体赋值会抛错，需修改返回的 Color 对象。
                         var i = e.color;
                         "function" == typeof i.setFromColor ? i.setFromColor(o) : "function" == typeof i.set ? i.set(o.r, o.g, o.b, o.a) : (i.r = o.r, i.g = o.g, i.b = o.b, i.a = o.a);
                     }

@@ -1,8 +1,12 @@
 'use strict';
 
-// Pure query helpers shared by the scene and event controllers.  Keeping
-// engine mutations outside this module makes target selection deterministic
-// and lets the behaviour run in Node-based regression tests.
+/**
+ * 模块职责：提供无引擎副作用的交互目标查询算法。
+ * 关键约束：纯函数设计保证运行时选择与 Node 回归测试使用同一套规则。
+ */
+
+// 场景和事件控制器共享这些纯查询；把引擎修改留在模块之外，可让目标选择稳定复现，
+// 并直接运行于 Node 回归测试。
 
 function distanceSquared(node, hero) {
     var offsetX = node.x - hero.x;
@@ -30,8 +34,7 @@ function operationPriority(component, heldGoods) {
     if (receiver) return receiver + 2;
     var conf = component && typeof component.getConf === 'function' ? component.getConf() : component && component.itemConf;
     var event = unfinishedEvent(component);
-    // Authored transfer triggers are sometimes unnamed after save repair, so
-    // recognise doors by both their readable name and their event contract.
+    // 存档修补后的传送触发器可能没有名称，因此同时按可读名称和事件契约识别入口。
     var isDoor = conf && /门/.test(conf.name || "") ||
         event && (Number(event.trigger) === 10 || Number(event.key) === 13);
     return isDoor ? 0 : 1;
@@ -62,10 +65,8 @@ function selectClosestOperation(options) {
         var candidatePriority = operationPriority(component, options.heldGoods);
         var deltaX = Math.abs(node.x - hero.x);
         var deltaY = Math.abs(node.y - hero.y);
-        // The original APK only kept collider candidates while both axes
-        // stayed within 300 design units. Prefer that authored contact model
-        // when axis limits are supplied; radial reach remains available for
-        // isolated non-gameplay callers.
+        // 原作仅保留两轴都在 300 设计单位内的碰撞候选；提供轴向限制时优先该接触模型，
+        // 径向范围只供非玩法的独立调用者使用。
         var isReachable = Number.isFinite(maxDeltaX) && Number.isFinite(maxDeltaY) ?
             deltaX <= maxDeltaX && deltaY <= maxDeltaY :
             candidateDistance < reachSquared;

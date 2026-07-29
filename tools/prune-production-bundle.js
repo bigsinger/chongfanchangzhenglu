@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * 模块职责：从生产脚本包移除确认不可达的编辑与旧网络模块。
+ * 关键约束：仅裁剪清单内模块，并保留配置反射和场景序列化可能引用的组件。
+ */
+
 const fs = require('fs');
 const path = require('path');
 

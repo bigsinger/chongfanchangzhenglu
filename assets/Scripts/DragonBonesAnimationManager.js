@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * 模块职责：统一加载和播放 DragonBones 动画资源。
+ * 关键约束：引用计数与组件生命周期绑定，避免切场后仍保留大纹理。
+ */
+
 var e = module;
 var o = exports;
 

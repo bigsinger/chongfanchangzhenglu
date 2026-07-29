@@ -79,7 +79,7 @@ node .\tools\restore-original-resources.js --verify
 
 ```powershell
 .\tools\build-android-release.ps1 `
-  -SigningProperties E:\安全目录\longmarch-signing.properties `
+  -SigningProperties longmarch-signing.properties `
   -VersionCode 2026072701 `
   -VersionName 1.1.0
 ```

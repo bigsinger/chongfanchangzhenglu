@@ -7,7 +7,7 @@
     "width": 574.14,
     "height": 226.76,
     "images": "./墙火/",
-    "audio": "E:/创新业务组/长征/特效/项目三泼水火墙"
+    "audio": "./audio/"
   },
   "bones": [
     {

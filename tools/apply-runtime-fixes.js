@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * 模块职责：把已验证的运行时兼容修复应用到恢复源码。
+ * 关键约束：每项替换必须可重复执行且精确命中，防止静默修改错误代码段。
+ */
+
 const fs = require('fs');
 const path = require('path');
 
@@ -291,9 +296,8 @@ function patchInteractionControls(source) {
 function patchGameScene(source) {
   let updated = source;
 
-  // The reliable-input pass below is already present in the checked-in scene.
-  // Treat it as the canonical, idempotent result so normal incremental builds
-  // do not try to reapply the older, narrower key-handler substitutions.
+  // 已跟踪场景包含完整可靠输入修复，将其视为幂等标准结果，增量构建无需再次套用
+  // 范围更窄的旧键盘替换。
   if (updated.includes('e.prototype.directionForKey')) return patchGlobalTouchListener(patchInteractionControls(patchCanvasTouchReceiver(patchWakeMovementInput(updated))));
 
   updated = replaceRequired(updated,

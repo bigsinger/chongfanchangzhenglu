@@ -3,7 +3,7 @@
     "hash": "GtHxti8e4FOpPa69wkqlfvDZP7s",
     "spine": "3.8.84",
     "images": "",
-    "audio": "E:/创新业务组/长征/特效/引导手"
+    "audio": "./audio/"
   },
   "bones": [
     {

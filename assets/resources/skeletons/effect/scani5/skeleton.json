@@ -7,7 +7,7 @@
     "width": 128,
     "height": 512.16,
     "images": "",
-    "audio": "E:/小游戏项目/长征"
+    "audio": "./audio/"
   },
   "bones": [
     {

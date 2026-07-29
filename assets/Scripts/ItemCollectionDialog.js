@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * 模块职责：展示任务物品图鉴和收集进度。
+ * 关键约束：图鉴状态与手持任务物分离，交付后仍保留已发现记录。
+ */
+
 var e = module;
 var o = exports;
 
@@ -117,10 +122,8 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 this.magnify_where.overflow = cc.Label.Overflow.SHRINK;
             };
             e.prototype.itemCallBack = function (t) {
-                // Native touch dispatch can report the slot's icon/selection
-                // child as the event target (and the touch that opens this
-                // popup can occasionally reach it). Resolve the owning slot
-                // and ignore clicks outside a configured item.
+                // 原生触摸可能把槽位图标或选中子节点作为目标，打开弹窗的同一次触摸也
+                // 偶尔会传入。先解析所属槽位，并忽略未配置物品区域的点击。
                 var e = t && t.target;
                 while (e && e.parent != this.itemcontent && e != this.itemcontent) e = e.parent;
                 if (!e || e == this.itemcontent || null == e.ID || !s.default.goodsConf[e.ID]) return;

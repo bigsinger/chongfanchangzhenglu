@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * 模块职责：检查全部游戏脚本语法和核心配置 JSON。
+ * 关键约束：在启动 Creator 前快速失败，避免长构建后才发现基础格式错误。
+ */
+
 const fs = require('fs');
 const path = require('path');
 const vm = require('vm');

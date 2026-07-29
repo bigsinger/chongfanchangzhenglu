@@ -2,7 +2,7 @@
 
 日期：2026-07-27
 
-工程：`F:\bigsinger\chongfanchangzhenglu`
+工程：`.`
 
 包名：`com.game.longmarch.creator243`
 

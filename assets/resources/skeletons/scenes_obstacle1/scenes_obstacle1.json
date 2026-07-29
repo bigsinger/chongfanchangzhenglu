@@ -7,7 +7,7 @@
     "width": 497,
     "height": 271,
     "images": "./images/",
-    "audio": "E:/创新业务组/长征/场景动画/新场景动画/关卡一/scenes_obstacle1"
+    "audio": "./audio/"
   },
   "bones": [
     {

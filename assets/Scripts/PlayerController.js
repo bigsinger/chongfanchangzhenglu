@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * 模块职责：处理主角移动、攀爬、动画、手持物和脚步声。
+ * 关键约束：输入、动画附件与任务持有状态保持同步，避免角色姿势和道具显示分离。
+ */
+
 var e = module;
 var o = exports;
 
@@ -138,11 +143,9 @@ var i, n = this && this.__extends || (i = function (t, e) {
                         this.setSwitchSolt();
                     }
                     this.m_dragonBones.setAction(t, e, o || 1);
-                    // Several legacy turn timelines set before/centre/after to
-                    // null. Spine keeps that slot state when the next animation
-                    // has no attachment timeline, so the hero can retain the
-                    // carrying pose while the bucket/box disappears. Reapply
-                    // the held prop after each normal animation switch.
+                    // 若转身时间线把 before/centre/after 置空，而下一动画没有附件时间线，
+                    // Spine 会保留空槽，造成主角仍是搬运姿势但桶或箱子消失。普通动画
+                    // 切换后需重新应用手持道具。
                     if (this.m_goods && "3" == this.m_goods.isthrow && "splash_await" != t) {
                         this.setSwitchLoad(this.m_goods);
                     }
@@ -1110,9 +1113,8 @@ var i, n = this && this.__extends || (i = function (t, e) {
             e.prototype.changeVol = function () {
                 var t = (Math.abs(this.node.x - this.m_posAry[1]) / (this.m_posAry[2] - this.m_posAry[1])).toFixed(1);
                 var e = 1 - Number(t) < .1 ? .1 : 1 - Number(t);
-                // Distance is quantized to tenths, so most 200 ms updates do
-                // not change the mix. Avoid a native audio call and log write
-                // until the effective volume actually changes.
+                // 距离按十分位量化，大多数 200 毫秒更新不会改变混音；有效音量变化后
+                // 才调用原生音频并记录日志。
                 if (this.m_soundVal === e) return;
                 this.m_soundVal = e;
                 r.default.setSoundVolume(this.m_soundId, this.m_soundVal);

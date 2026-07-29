@@ -1,9 +1,18 @@
+﻿<#
+.SYNOPSIS
+生成经过签名与完整门禁的 Android arm64 正式发布包。
+
+.DESCRIPTION
+正式流程要求可追溯源码、外置签名配置和固定兼容工具版本；生成后校验 ABI、权限、
+签名、压缩对齐、资源完整性与发布内容，避免调试配置进入交付产物。
+#>
+
 [CmdletBinding()]
 param(
-    [string]$CreatorPath = 'E:\temp\CocosCreator-2.4.15\CocosCreator.exe',
-    [string]$JavaHome = 'E:\temp\jdk17',
-    [string]$AndroidSdk = 'D:\Android\Sdk',
-    [string]$NdkPath = 'D:\Android\Sdk\ndk\20.1.5948944',
+    [string]$CreatorPath,
+    [string]$JavaHome,
+    [string]$AndroidSdk,
+    [string]$NdkPath,
     [Parameter(Mandatory)]
     [string]$SigningProperties,
     [ValidateRange(1, 2100000000)]
@@ -18,6 +27,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'resolve-toolchain.ps1')
 
 function Assert-File {
     param([string]$Path, [string]$Description)
@@ -60,6 +70,16 @@ $runtimeSource = Join-Path $buildRoot 'frameworks\runtime-src'
 $androidProject = Join-Path $runtimeSource 'proj.android-studio'
 $packageName = 'com.game.longmarch.creator243'
 $expectedAbis = @('arm64-v8a')
+$toolchain = Resolve-LongMarchToolchain `
+    -CreatorPath $CreatorPath `
+    -JavaHome $JavaHome `
+    -AndroidSdk $AndroidSdk `
+    -NdkPath $NdkPath
+$CreatorPath = $toolchain.CreatorPath
+$JavaHome = $toolchain.JavaHome
+$AndroidSdk = $toolchain.AndroidSdk
+$NdkPath = $toolchain.NdkPath
+$cocosEngineRoot = $toolchain.CocosEngineRoot
 $sourceCommit = (& git -C $projectRoot rev-parse HEAD).Trim()
 if ($LASTEXITCODE -ne 0) { throw '无法读取 Git 源码版本' }
 $sourceChanges = @(& git -C $projectRoot status --porcelain)
@@ -79,7 +99,16 @@ Assert-File -Path $signingPath -Description '签名配置'
     "--ndk-root=$NdkPath"
 if ($LASTEXITCODE -ne 0) { throw 'Creator/NDK 构建输入哈希验证失败' }
 
+# Java 按约定把版本写到 stderr；Windows PowerShell 5 在 Stop 模式下会把这类正常输出
+# 升级成 NativeCommandError，因此只在读取版本期间降为 Continue，并单独检查退出码。
+$savedErrorPreference = $ErrorActionPreference
+$ErrorActionPreference = 'Continue'
 $javaVersion = (& (Join-Path $JavaHome 'bin\java.exe') -version 2>&1) -join "`n"
+$javaVersionExitCode = $LASTEXITCODE
+$ErrorActionPreference = $savedErrorPreference
+if ($javaVersionExitCode -ne 0) {
+    throw "读取 Java 版本失败，退出码：$javaVersionExitCode"
+}
 if ($javaVersion -notmatch 'version "(17|18|19|2[0-9])') {
     throw "正式构建要求 JDK 17+，当前：$javaVersion"
 }
@@ -142,7 +171,7 @@ if ($LASTEXITCODE -ne 0) { throw '生产包裁剪失败' }
 & node (Join-Path $projectRoot 'tools\verify-production-bundle.js')
 if ($LASTEXITCODE -ne 0) { throw '生产包裁剪验证失败' }
 
-$env:LONGMARCH_COCOS_ENGINE = 'E:/temp/CocosCreator-2.4.15/resources/cocos2d-x'
+$env:LONGMARCH_COCOS_ENGINE = $cocosEngineRoot.Replace('\', '/')
 $env:LONGMARCH_VERSION_CODE = "$VersionCode"
 $env:LONGMARCH_VERSION_NAME = $VersionName
 & node (Join-Path $projectRoot 'tools\modernize-android-project.js')
@@ -172,7 +201,6 @@ foreach ($staleAbiDirectory in @(
         Remove-Item -LiteralPath $resolvedStaleAbiDirectory -Recurse -Force
     }
 }
-$cocosEngineRoot = 'E:/temp/CocosCreator-2.4.15/resources/cocos2d-x'
 $modulePath = @($cocosEngineRoot, "$cocosEngineRoot/cocos", "$cocosEngineRoot/external") -join ';'
 $nativeArguments = @(
     'NDK_PROJECT_PATH=null',

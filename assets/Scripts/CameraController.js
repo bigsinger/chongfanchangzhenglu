@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * 模块职责：跟随主角并处理前后景、脚本镜头与地图边界。
+ * 关键约束：所有边界按实际可视区域计算，避免宽屏设备遗漏地面或越界露底。
+ */
+
 var e = module;
 var o = exports;
 
@@ -53,9 +58,8 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 this.gameManager = n;
                 this.camera_ts = this.node.getComponent(cc.Camera);
                 this.camera_ts.zoomRatio = 1;
-                // Camera focus offsets belong to the previous scripted shot.
-                // This component survives map reloads, so retaining them can
-                // leave the hero at the edge of the next playable view.
+                // 镜头焦点偏移属于上一段脚本镜头；组件跨地图复用时必须清除，否则主角
+                // 会停在下一可玩画面的边缘。
                 this.dif_x = 0;
                 this.dif_y = 0;
                 this.showWidth = t;
@@ -149,8 +153,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     c += h;
                     l += d;
                     if (--s <= 0) {
-                        // Make "return to hero" exact; accumulated fractional
-                        // offsets otherwise remain visible on wide screens.
+                        // “返回主角”需精确归零，累积的小数偏移在宽屏上仍会明显可见。
                         if (!o) {
                             a.dif_x = 0;
                             a.dif_y = 0;

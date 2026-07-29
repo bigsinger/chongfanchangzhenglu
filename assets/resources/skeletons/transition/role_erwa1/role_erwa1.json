@@ -7,7 +7,7 @@
     "width": 170.1,
     "height": 359.46,
     "images": "../../../NPC/ani02/新主角/images/",
-    "audio": "E:/创新业务组/长征/NPC/ani02/新主角"
+    "audio": "./audio/"
   },
   "bones": [
     {

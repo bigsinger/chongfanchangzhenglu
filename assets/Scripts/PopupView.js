@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * 模块职责：为旧尺寸弹窗提供安全区缩放与关闭按钮兜底。
+ * 关键约束：按可视宽度缩放并修正锚点，保证不同横屏比例都能关闭弹窗。
+ */
+
 var e = module;
 var o = exports;
 
@@ -41,10 +46,8 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 }
                 var e = this.node.getChildByName("btn_close");
                 if (e = e || this.btn_close) {
-                    // Several legacy popups are 1650 design units wide while
-                    // the migrated game viewport is 1334. Their left-aligned
-                    // close button was therefore laid out beyond the screen,
-                    // leaving the modal impossible to dismiss by touch.
+                    // 部分弹窗宽 1650 设计单位，而当前视口约宽 1334；左对齐关闭键会落到
+                    // 屏幕外，需按可视宽度修正，否则模态层无法触摸关闭。
                     var o = e.getComponent(cc.Widget);
                     !o && e.parent && (o = e.parent.getComponent(cc.Widget));
                     if (o && this.node.width > cc.winSize.width) {

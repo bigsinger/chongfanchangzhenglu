@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * 模块职责：校验脚本 require 路径、文件名大小写和跟踪状态。
+ * 关键约束：Android 文件系统区分大小写，Windows 上可工作的错名必须提前失败。
+ */
+
 const fs = require('fs');
 const path = require('path');
 const childProcess = require('child_process');

@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * 模块职责：按作用域加载、复用和释放 Creator 资源。
+ * 关键约束：异步加载与引用计数结合，防止迟到回调复活已销毁场景的资源。
+ */
+
 var e = module;
 var o = exports;
 
@@ -9,11 +14,9 @@ Object.defineProperty(o, "__esModule", {
 
 var n = require("./AssetCatalog");
 
-// Creator 2.4's cc.resources.release("directory") only tries to release an
-// asset whose URL literally equals that directory; it does not undo loadDir.
-// Track every concrete asset returned by loadDir and release it only after all
-// registered scopes stop using it. AssetCatalog also keeps legacy configuration
-// paths compatible with the readable source tree and the three chapter bundles.
+// cc.resources.release("directory") 只会查找 URL 恰好等于目录名的资源，不能撤销
+// loadDir。记录 loadDir 返回的每个具体资源，等所有作用域停用后再释放；AssetCatalog
+// 同时维持配置旧路径、可读源码树和三个章节包之间的兼容。
 var i = {
     _scopeSeed: 0,
     _scopes: {},
@@ -87,8 +90,7 @@ var i = {
         if (!e || !e.length) return;
         null == s && (s = this.beginScope(t, o, a));
         var r = this._scopes[t];
-        // A component/scene may be destroyed while its loadDir request is in
-        // flight. Never recreate the released scope from a late callback.
+        // 组件或场景可能在 loadDir 进行中销毁，迟到回调不能重建已释放作用域。
         if (!r || s && r.epoch !== s || this._releasedEpochs[t] === s) {
             this.releaseUnclaimed(e, i, n);
             return;

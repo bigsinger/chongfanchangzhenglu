@@ -3,7 +3,7 @@
     "hash": "K3ccVX4+AlxNuP2C8LOxd2y8p/o",
     "spine": "3.8.84",
     "images": "",
-    "audio": ""
+    "audio": "./audio/"
   },
   "bones": [
     {

@@ -7,7 +7,7 @@
     "width": 250.68,
     "height": 309.41,
     "images": "./images/",
-    "audio": "F:/长征/场景/可破坏障碍"
+    "audio": "./audio/"
   },
   "bones": [
     {

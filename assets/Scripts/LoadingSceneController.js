@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * 模块职责：编排启动片头、资源预载和首个场景入口。
+ * 关键约束：直达测试标记仅消费一次，正常启动始终保留完整叙事流程。
+ */
+
 var e = module;
 var o = exports;
 
@@ -62,11 +67,8 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     c.default.playData = e;
                  }
                  cc.sys.localStorage.getItem("longmarch_first") && (this.m_isFirst = !0);
-                 // The five original Spine pages are now excluded from dynamic
-                 // atlas packing, so their authored atlas coordinates remain
-                 // valid on Creator 2.4.15 and Android. Prefer the complete
-                 // original animation everywhere; retain static art only as a
-                 // last-resort fallback when SkeletonData is genuinely absent.
+                 // 五张片头 Spine 页面不参与动态图集后，其原始坐标在 Creator 和
+                 // Android 上保持有效。优先播放完整动画，仅在骨骼数据确实缺失时退回静态图。
                  this.m_useStableOpening = !(this.cg && this.cg.skeletonData);
                  this.btn_skip.active = this.m_isFirst;
                  this.cg.node.active = !this.m_useStableOpening;
@@ -95,9 +97,8 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     t.m_openingGateCallback = function () {
                         t.finishOpeningGate();
                     };
-                     // The final authored subtitle ends at 49 seconds. Keep an
-                     // idempotent watchdog in case a device loses the Spine
-                     // completion callback while backgrounding.
+                     // 最后一条字幕在 49 秒结束；幂等看门狗用于处理设备切后台时丢失
+                     // Spine 完成回调的情况。
                      t.scheduleOnce(t.m_openingGateCallback, t.m_useStableOpening ? 52 : 65);
                  };
                 y.default.loadDir("sound/effect/ui", function () { }, function () { }, "core:ui-sound");
@@ -106,8 +107,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
              e.prototype.prepareStableOpening = function () {
                  var t = this.node.getChildByName("bg"), e = this.node.getChildByName("loding"), o = this.node.getChildByName("image_logo2");
                  t && (t.active = !0, t.opacity = 255);
-                 // Do not leave any native Spine renderer alive behind the
-                 // fallback; even an obscured mesh can emit corrupted geometry.
+                 // 静态兜底后不能留下原生 Spine 渲染器，即使被遮住的网格也可能提交坏几何。
                  e && (e.active = !1);
                  if (o) {
                      o.active = !0;
@@ -163,12 +163,9 @@ var i, n = this && this.__extends || (i = function (t, e) {
             e.prototype.onComplete = function () {
                 this.loadtip.string = "资源加载完成进入游戏中!.....";
                 if ("gameScene" == cc.sys.localStorage.getItem("codex_direct_scene")) {
-                    // Manual regression checkpoints already contain the exact
-                    // chapter, map, hero and event state.  Load the playable
-                    // scene as soon as configuration/tempData is ready instead
-                    // of replaying the title, chapter transition and CG chain.
-                    // The marker is one-shot so normal player launches keep the
-                    // original presentation flow.
+                    // 回归检查点已包含精确章节、地图、主角和事件状态；配置与 tempData
+                    // 就绪后直接进入可玩场景，不重复片头、章节过场和 CG。标记只消费一次，
+                    // 正常玩家启动仍保留完整演出。
                     cc.sys.localStorage.removeItem("codex_direct_scene");
                     cc.sys.localStorage.setItem("longmarch_first", "11111");
                     cc.director.loadScene("gameScene", function () {

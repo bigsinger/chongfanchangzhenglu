@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * 模块职责：回归纯逻辑交互、存档、目标和音频路径。
+ * 关键约束：测试复用运行时模块，避免另写一套看似通过但行为不同的算法。
+ */
+
 const assert = require('assert');
 const interaction = require('../assets/Scripts/GameplayInteractionQuery.js');
 const persistence = require('../assets/Scripts/GameplayPersistence.js');

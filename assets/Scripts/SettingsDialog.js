@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * 模块职责：管理音乐、音效、语音设置和帮助入口。
+ * 关键约束：各滑块只影响对应类别，关闭设置后立即保存并恢复游戏输入。
+ */
+
 var e = module;
 var o = exports;
 
@@ -158,9 +163,8 @@ var i, n = this && this.__extends || (i = function (t, e) {
                         case 2:
                             r.default.MUSIC_VOICE = t.progress.toFixed(1);
                             cc.sys.localStorage.setItem("MUSIC_VOICE", r.default.MUSIC_VOICE);
-                            // The restored package has no separate voice clips.
-                            // Do not route this legacy slider through the global
-                            // effects bus or it also mutes footsteps and actions.
+                            // 当前资源没有独立语音音轨；旧语音滑块不能接入全局音效总线，
+                            // 否则也会静音脚步和动作反馈。
                             l.default.refreshSoundVolumes();
                     }
                 }

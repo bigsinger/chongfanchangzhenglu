@@ -1,8 +1,11 @@
 'use strict';
 
-// Persistence adapter for GameplaySceneController.  The controller owns when
-// a save is needed; this module owns how a complete scene snapshot is captured
-// and committed.
+/**
+ * 模块职责：捕获并提交场景物品、跟随者和主角临时状态。
+ * 关键约束：一次交互写入完整快照，避免前台与后台切换留下半完成状态。
+ */
+
+// GameplaySceneController 决定何时保存，本模块负责如何捕获并提交完整场景快照。
 
 function captureItems(itemMap, followMap, heroTempProvider) {
     var items = [];

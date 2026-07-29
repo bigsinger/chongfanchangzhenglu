@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * 模块职责：集中修补配置中的断链、缺失收藏和错误阻挡。
+ * 关键约束：修补保持幂等并区分新档与已收集存档，不能让永久物品重新出现。
+ */
+
 var e = module;
 var o = exports;
 
@@ -7,10 +12,8 @@ Object.defineProperty(o, "__esModule", {
     value: !0
 });
 
-// The recovered authoring table contains a small number of stale event
-// indices left by deleted/reordered editor rows. Keep corrections in one
-// declarative table so runtime and the offline graph validator use exactly the
-// same migration and the source data remains traceable to the APK.
+// 配置表中有少量因编辑行删除或重排留下的过期事件索引。修补集中在声明式表中，
+// 使运行时和离线事件图校验使用同一迁移，并保持原始数据可追溯。
 var i = {
     scenes_d1_1: {
         "1|25": "11|4",
@@ -28,16 +31,13 @@ var i = {
         "27|1": "27|2"
     },
     scenes_d3_5: {
-        // This unused dialogue once pointed to deleted NPC 68. Ending the
-        // dormant branch is safer than allowing a transition into null.
+        // 未使用对白指向已删除的 NPC 68；在此结束休眠分支，避免切入空目标。
         "67|2": ""
     }
 }, n = {
     scenes_d3_3: [{
-        // prop113 existed in the recovered catalogue and chapter total but was
-        // never placed in a published map. Put the original Red Star Newspaper
-        // collectible on the route through the school/exchange area so the
-        // advertised third-section 5/5 completion is actually attainable.
+        // prop113 已计入图鉴和章节总数，却未放入任何发布地图；将红星报放在小学堂
+        // 兑换路线，使第三节 5/5 完成度确实可达。
         name: "收藏品-红星报",
         url: "item/items/item3",
         key: "collection",
@@ -88,10 +88,8 @@ var i = {
 }, geometryRepairs = {
     scenes_d3_3: {
         13: {
-            // Keep the original collider-driven interaction range. Move the
-            // stale queue boundary just behind the exchange clerk so the hero
-            // can physically enter the clerk's authored 100x100 sensor. The
-            // story later hides this boundary before the supply box is used.
+            // 保留碰撞驱动的原作交互范围，只把过期队列边界移到兑换员身后，使主角能
+            // 进入其 100x100 传感器；剧情会在使用物资箱前隐藏该边界。
             name: "阻挡",
             x: 835,
             boxWidth: 30
@@ -113,8 +111,7 @@ var i = {
                 var y = e.confArr[g], v = y.eventTrigger || [];
                 for (var b = 0; b < v.length; b++) v[b].param === _ && (f = !0);
             }
-            // Saved item arrays intentionally remove collected props. Do not
-            // reinsert a compatibility placement after permanent collection.
+            // 存档物品数组会主动移除已收藏物，永久收藏后不能因兼容修补再次放回。
             f || o && o[_] || (e.confArr.push(JSON.parse(JSON.stringify(m))), r++);
         }
         if (geometry) for (var w = 0; w < e.confArr.length; w++) {

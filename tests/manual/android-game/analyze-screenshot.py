@@ -1,4 +1,4 @@
-"""Create a small preview and run fully local Chinese/English OCR."""
+"""生成压缩预览，并完全在本地执行中英文 OCR。"""
 
 from __future__ import annotations
 

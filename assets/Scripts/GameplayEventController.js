@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * 模块职责：选择当前可交互对象并调度物品、人物和剧情事件。
+ * 关键约束：候选对象只来自真实碰撞接触，再按任务相关性稳定排序以避免误操作。
+ */
+
 var e = module;
 var o = exports;
 
@@ -81,10 +86,8 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     }
                 };
                 e.selectClosestItem = function () {
-                    // Match the original APK: only nodes reported by physics
-                    // collider contact may become actionable. Deterministic
-                    // priority inside that contact stack preserves the newer
-                    // correct-receiver fix without exposing distant scenery.
+                    // 只有物理碰撞接触上报的节点可以交互；接触栈内再按稳定优先级选择，
+                    // 既保持正确接收者修复，也不会暴露远处景物。
                     var e = interactionQuery.selectClosestOperation({
                         hero: this.hero,
                         heldGoods: this.hero_ts.goods,

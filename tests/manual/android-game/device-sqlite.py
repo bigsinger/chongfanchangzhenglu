@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
-"""Operate on a debuggable Android app's SQLite database from the host.
+"""在主机端安全操作可调试 Android 应用的 SQLite 数据库。
 
-Recent Android builds no longer ship a shell sqlite3 executable.  ADB can
-still stream the private database through ``run-as``; all SQL is therefore
-executed by Python's host-side sqlite3 module and the modified database is
-streamed back while the app is stopped.
+新系统通常不再提供 shell sqlite3，但 ADB 仍可通过 ``run-as`` 传输私有数据库。
+SQL 由主机 Python sqlite3 执行，并只在应用停止期间把修改后的数据库传回设备。
 """
 
 from __future__ import annotations
@@ -12,6 +10,7 @@ from __future__ import annotations
 import argparse
 import os
 from pathlib import Path
+import shutil
 import sqlite3
 import subprocess
 import sys
@@ -50,11 +49,8 @@ def export_database(args: argparse.Namespace, destination: Path) -> None:
         )
     if destination.stat().st_size < 4096:
         raise RuntimeError(f"Exported database is unexpectedly small: {destination}")
-    # Android's LocalStorage database normally runs in WAL mode. A newly
-    # created database can keep even its schema exclusively in -wal, so the
-    # main file alone is not a valid snapshot.
-    # Never copy -shm: it is transient shared-memory coordination state and
-    # can make a perfectly valid main+WAL pair look malformed on another host.
+    # Android LocalStorage 数据库通常使用 WAL，新库甚至会把表结构只写在 -wal 中，
+    # 因而主文件本身不是有效快照。-shm 是瞬态共享内存协调状态，不能跨主机复制。
     for suffix in ("-wal",):
         companion = destination.with_name(destination.name + suffix)
         with companion.open("wb") as output:
@@ -195,16 +191,18 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main() -> int:
-    # PowerShell captures native stdout before ConvertFrom-Json. Force UTF-8
-    # so Chinese item/NPC names survive a read-modify-write checkpoint round
-    # trip instead of becoming replacement characters.
+    # PowerShell 会先捕获原生输出再 ConvertFrom-Json，强制 UTF-8 才能保证中文物品和
+    # NPC 名称经过检查点读写后不变成替代字符。
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8", errors="strict")
     if hasattr(sys.stderr, "reconfigure"):
         sys.stderr.reconfigure(encoding="utf-8", errors="replace")
     args = build_parser().parse_args()
-    if not os.path.isfile(args.adb):
+    # 参数既可为文件路径，也可为 PATH 中的命令名，避免测试工具绑定个人 SDK 目录。
+    adb_path = args.adb if os.path.isfile(args.adb) else shutil.which(args.adb)
+    if not adb_path:
         raise RuntimeError(f"ADB does not exist: {args.adb}")
+    args.adb = str(Path(adb_path).resolve())
 
     if args.command == "export":
         if not args.file:

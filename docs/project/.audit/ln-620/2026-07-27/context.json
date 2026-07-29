@@ -2,7 +2,7 @@
   "audit": "ln-620 follow-up",
   "date": "2026-07-27",
   "projectType": "native mobile game client",
-  "codebaseRoot": "F:/bigsinger/chongfanchangzhenglu",
+  "codebaseRoot": ".",
   "techStack": {
     "gameEngine": "Cocos Creator 2.4.3",
     "gameLogic": "JavaScript",

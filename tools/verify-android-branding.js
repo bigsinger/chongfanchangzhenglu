@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * 模块职责：核验生成工程中的应用图标尺寸与内容。
+ * 关键约束：四档图标必须与受控原版资源一致，防止 Creator 默认图标混入发布包。
+ */
+
 const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');

@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * 模块职责：处理烹饪等计时判定和结果反馈。
+ * 关键约束：错过窗口也必须收敛为结果，不能让事件永久等待。
+ */
+
 var e = module;
 var o = exports;
 
@@ -95,9 +100,8 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 console.log("------------- timing second " + this.second);
                 this.second > this.maxTime ? this.itemTs.setPaoSprite(this.resultFrame + "_3") : this.second >= this.minTime && this.itemTs.setPaoSprite(this.resultFrame + "_2");
                 this.drawTimingHud(0);
-                // Do not leave a missed timing window scheduling callbacks and
-                // logging forever. Resolve it as overcooked shortly after the
-                // red segment is reached so play can continue.
+                // 错过计时窗口后不能永久调度回调和写日志；进入红色区间不久即判为过火，
+                // 让玩法能够继续。
                 this.second > this.maxTime + 2 && this.itemTs.bubbleBack();
             };
             e.prototype.ensureTimingHud = function () {

@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * 模块职责：核验 Creator、NDK 与离线依赖等构建输入。
+ * 关键约束：固定输入摘要用于阻止工具被无意替换后产出不可追溯安装包。
+ */
+
 const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');

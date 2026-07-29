@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * 模块职责：异步加载、显示并跟踪全局弹窗。
+ * 关键约束：以请求序号淘汰迟到回调，避免关闭后又出现无法管理的弹窗。
+ */
+
 var e = module;
 var o = exports;
 
@@ -16,9 +21,8 @@ Object.defineProperty(o, "__esModule", {
                 this.close(a);
                 this._pendingMap[a] = c;
                 r.default.load(n, cc.Prefab, function (s, r) {
-                    // A prefab can finish loading after a second open/close
-                    // request. Only the newest request may create a node;
-                    // otherwise an untracked modal remains over gameplay.
+                    // 预制体可能在第二次开关请求后才加载完，只有最新请求可以创建节点，
+                    // 否则会留下无法跟踪的模态层覆盖玩法。
                     if (i._pendingMap[a] !== c) return;
                     delete i._pendingMap[a];
                     if (l && cc.director.getScene && l !== cc.director.getScene()) return;
@@ -41,10 +45,8 @@ Object.defineProperty(o, "__esModule", {
                     console.error("------------ 弹窗实例化失败 " + t);
                     return;
                 }
-                // Prefab-root group indices are not reliably preserved when
-                // Creator 2.4 instantiates a prefab under Canvas on native.
-                // A default-group popup is then rendered by the moving world
-                // camera and can be covered/cropped by foreground scenery.
+                // 原生端在 Canvas 下实例化预制体时不可靠地保留根节点分组；落入默认组的
+                // 弹窗会被移动世界镜头渲染并受前景遮挡，因此需显式恢复 UI 分组。
                 var l = cc.game.groupList ? cc.game.groupList.indexOf("ui") : 2;
                 l < 0 && (l = 2);
                 var s = function (t) {

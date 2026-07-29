@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * 模块职责：显示头像、对白、选项和剧情遮罩。
+ * 关键约束：使用独立界面摄像机与安全区坐标，避免移动世界镜头裁切对白。
+ */
+
 var e = module;
 var o = exports;
 
@@ -44,12 +49,9 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 return e;
             }
             e.prototype.onLoad = function () {
-                // Creator 2.4's native renderer can leak the stencil/scissor
-                // state from an active cc.Mask into a later UI-camera pass.
-                // goods_mask's right edge was consequently clipping every
-                // plot-dialog child at the same vertical line. A modal plot
-                // should hide the underlying HUD anyway, so suspend masked HUD
-                // nodes while it is alive and restore their state on close.
+                // 原生渲染器可能把活动 cc.Mask 的模板/裁剪状态泄漏到后续 UI 镜头，
+                // 导致 goods_mask 右缘裁掉对白子节点。模态剧情本就覆盖 HUD，因此显示
+                // 期间暂停带遮罩 HUD，关闭后恢复。
                 var t = this, e = ["Canvas/goods_mask"];
                 this.hiddenHudNodes = [];
                 e.forEach(function (e) {
@@ -58,11 +60,8 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 });
             };
             e.prototype.fitViewport = function () {
-                // The scene still has a 1650-wide legacy Canvas while the popup
-                // prefab was authored at 1800x900.  Resolve the explicit UI
-                // camera (Camera.findCamera may return the moving world camera)
-                // and feed it design coordinates, which is what Creator native
-                // Touch/Camera APIs use after the 1920 -> 1333 view scale.
+                // 场景 Canvas 宽 1650，而弹窗按 1800x900 制作。必须显式选择 UI 镜头，
+                // 因为 Camera.findCamera 可能返回移动世界镜头；触摸和镜头 API 均传设计坐标。
                 var t = cc.view.getFrameSize(), e = cc.view.getVisibleSize(), o = cc.find("Canvas/camera_ui"), n = o && o.getComponent(cc.Camera), a = null, s = null;
                 var g = cc.game.groupList ? cc.game.groupList.indexOf("ui") : 2;
                 g < 0 && (g = 2);

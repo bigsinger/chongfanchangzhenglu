@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * 模块职责：根据事件链计算当前任务文字、目标节点和引导位置。
+ * 关键约束：只展示真正可执行的首事件，避免 HUD 指向尚未轮到的交付对象。
+ */
+
 var e = module;
 var o = exports;
 
@@ -203,10 +208,8 @@ var i = {
                         n && p.limit && (f -= p.limit === n ? 2e9 : 1e9);
                         e && e.interactNode === c && (f -= 3e9);
                         /门/.test(h.name || "") && (f += 5e8);
-                        // Optional collections must not replace a nearby main
-                        // NPC as the chapter objective. They remain directly
-                        // pickable through their own bubble and normal nearest
-                        // interaction selection.
+                        // 可选收藏不能替换附近主线 NPC 的章节目标；它们仍可通过自身气泡
+                        // 和常规最近交互直接拾取。
                         /^收藏品/.test(h.name || "") && (f += 2e8);
                         if (f < s) {
                             s = f;
@@ -219,10 +222,8 @@ var i = {
                                 isDoor: /门/.test(h.name || "")
                             };
                         }
-                        // InteractiveObject.getEvent() executes the first
-                        // unfinished actionable event. Do not advertise a
-                        // later delivery merely because it matches the held
-                        // item; that makes the HUD disagree with the button.
+                        // InteractiveObject.getEvent() 执行首个未完成可操作事件；不能仅因
+                        // 手持物匹配就提示更后的交付，否则 HUD 会与实际按钮行为不一致。
                         break;
                     }
                 }

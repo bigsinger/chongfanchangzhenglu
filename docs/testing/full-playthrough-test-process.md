@@ -2,7 +2,7 @@
 
 版本：2026-07-29（适用 1.2.0）
 
-适用工程：`F:\bigsinger\chongfanchangzhenglu`
+适用工程：`.`
 
 适用包名：`com.game.longmarch.creator243`
 
@@ -35,9 +35,14 @@
 | 第三章 | 医疗点 | `scenes_d3_2` | 两轮共九次物资分发、送错提示、补给箱交付 |
 | 第三章 | 小学堂兑换点 | `scenes_d3_3` | 揭露小偷、线索答题、领取物资箱、拾取红星报 |
 
-`czconfig.json` 中还保留 `scenes_d1_3`、`scenes_d2_3`、`scenes_d3_4`、
-`scenes_d3_5` 等历史编辑数据，但当前工程没有与它们一一对应的已发布地图预制体。它们
-不能计入玩家可玩地图，也不能代替七张地图的发布回归。
+原版章节界面预留了 11 张卡片，名称依次为“友谊、相遇、团结、离别、手足、先锋、
+死战、奇缘、奉献、神农、决胜”。只有前三张带章节正文和开场顺序；其余八张的正文、
+角色、字幕、动画和播放顺序都是空值。
+
+`czconfig.json` 还保留 `scenes_d1_3`、`scenes_d2_3`、`scenes_d3_4`、
+`scenes_d3_5` 等历史编辑数据，但原版 APK 与当前工程都没有与它们对应的可加载地图
+预制体。模拟器强行进入 `1_3` 会完成过场加载后停在黑屏。因此这些内容属于未发布草稿，
+不能计入玩家可玩地图，也不能为了凑足 11 关而编造剧情或复用错误地图。
 
 ### 2.2 必测交互合同
 
@@ -60,8 +65,8 @@
 
 ### 3.1 固定工具
 
-- Cocos Creator：`E:\temp\CocosCreator-2.4.15\CocosCreator.exe`
-- ADB：`D:\Android\Sdk\platform-tools\adb.exe`
+- Cocos Creator：`CocosCreator.exe`
+- ADB：`adb`
 - 默认设备：`emulator-5554`
 - 调试 APK：`dist\chongfanchangzhenglu-arm64-debug.apk`
 - ADB 工具：`tests\manual\android-game\game-test.ps1`
@@ -71,8 +76,8 @@
 以下命令都从工程根目录执行。
 
 ```powershell
-Set-Location F:\bigsinger\chongfanchangzhenglu
-& D:\Android\Sdk\platform-tools\adb.exe devices
+Set-Location .
+& adb devices
 .\tests\manual\android-game\game-test.ps1 state
 ```
 
@@ -227,7 +232,7 @@ d<章>-<图>-<before|after>-<节点>-<序号>
 ### 5.1 阶段 A：安装与冒烟
 
 ```powershell
-& D:\Android\Sdk\platform-tools\adb.exe -s emulator-5554 install -r -t `
+& adb -s emulator-5554 install -r -t `
   .\dist\chongfanchangzhenglu-armv7-arm64-debug.apk
 .\tests\manual\android-game\game-test.ps1 smoke -Name install-smoke
 ```
@@ -432,7 +437,7 @@ d<章>-<图>-<before|after>-<节点>-<序号>
 模拟器可以临时覆盖分辨率，但必须使用 `finally` 恢复，避免影响后续测试：
 
 ```powershell
-$adb = 'D:\Android\Sdk\platform-tools\adb.exe'
+$adb = 'adb'
 try {
     & $adb -s emulator-5554 shell wm size 1080x2400
     .\tests\manual\android-game\game-test.ps1 stop

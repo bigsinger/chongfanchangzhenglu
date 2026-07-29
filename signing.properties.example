@@ -1,5 +1,5 @@
-# Copy outside the repository and keep the real values private.
-storeFile=E:/secure/longmarch-upload.jks
+# 将真实文件保存在仓库之外，此处只展示字段格式。
+storeFile=longmarch-upload.jks
 storePassword=change-me
 keyAlias=longmarch-upload
 keyPassword=change-me

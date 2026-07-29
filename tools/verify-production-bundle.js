@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * 模块职责：检查裁剪后的生产脚本包仍满足运行依赖。
+ * 关键约束：既要确认旧模块消失，也要确认所有场景所需组件仍可解析。
+ */
+
 const fs = require('fs');
 const path = require('path');
 

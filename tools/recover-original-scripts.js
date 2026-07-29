@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * 模块职责：从归档脚本包拆分 Creator 模块并恢复稳定 UUID。
+ * 关键约束：模块边界以 cc._RF 元数据为准，不能依赖压缩后的临时变量名。
+ */
+
 const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');

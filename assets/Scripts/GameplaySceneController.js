@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * 模块职责：装载关卡地图并协调输入、事件、镜头、目标和存档。
+ * 关键约束：所有异步回调先检查场景代次，防止上张地图的迟到结果污染当前场景。
+ */
+
 var e = module;
 var o = exports;
 
@@ -150,9 +155,8 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 displayAdapter.default.apply(this.node, {
                     referenceWidth: 1334
                 });
-                // Keep modal dialogs and HUD above every world/foreground
-                // camera. The legacy scene assigned the same depth to both
-                // cameras, whose order is undefined on native renderers.
+                // 弹窗和 HUD 必须高于所有世界镜头；场景原先给两台镜头设置了相同深度，
+                // 而原生渲染器并不保证同深度镜头的顺序。
                 this.camera_ui && (this.camera_ui.depth = 100, this.camera_ui.cullingMask = 4);
                 this.gameWidth = cc.winSize.width;
                 this.gameHeight = cc.winSize.height;
@@ -167,10 +171,8 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 cc.PhysicsManager.POSITION_ITERATIONS = 8;
                 cc.debug.setDisplayStats(!1);
                 this.setClick(this.node, !0);
-                // Persist the fully materialized scene when Android backgrounds
-                // the activity.  Previously a pickup/dialogue completed in
-                // memory could be lost unless the player moved or changed map
-                // before the process was reclaimed.
+                // Android 进入后台时立即保存完整场景，否则尚未触发移动或切图的拾取、
+                // 对话结果只存在内存中，进程被回收后会丢失。
                 var t = this;
                 this.m_onGameHide = function () {
                     t.resetActiveInput();
@@ -412,11 +414,8 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 };
             };
             e.prototype.cameraTargetForHero = function (t) {
-                // Keep the hero only slightly below center. The former 58%
-                // half-screen offset still pushed feet and nearby ground out
-                // of view after a 1.6x doorway shot on tall Android surfaces.
-                // This zoom-aware cap leaves room for tall held props and the
-                // interaction bubble above the character.
+                // 主角只需略低于画面中心。旧的半屏 58% 偏移在高屏设备的 1.6 倍入口
+                // 镜头中会裁掉脚部和地面；按缩放限制偏移还能给高道具与交互气泡留空间。
                 var e = this.camera_master_ts ? Math.max(.01, Number(this.camera_master_ts.getZoom()) || 1) : 1, o = cc.view.getVisibleSize(), i = Math.min(120, o.height / (2 * e) * .28);
                 return {
                     x: t.x,
@@ -471,15 +470,11 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 this.m_progressSavePending = !1;
                 this.m_progressSaveFrames = 0;
                 this.operateDir = 0;
-                // A chapter transition can be requested from inside an event
-                // callback while legacy move actions are still active. Stop
-                // them and deactivate the scene before destroying its nodes;
-                // otherwise Creator 2.4.15 may tick a stale action once more
-                // and call SetTransform on an already released native body.
+                // 章节切换可能发生在事件回调内，此时旧移动动作仍在运行。销毁节点前先停
+                // 动作并停用场景，否则 Creator 可能再更新一次动作并访问已释放的刚体。
                 this.stopNodeRuntime(this.gameNode);
-                // Deactivation is the Creator-supported way to detach all
-                // rigid bodies. It emits final contact callbacks, so retain
-                // GameplayEventController's hero references until afterwards.
+                // 停用场景是 Creator 正式支持的刚体解绑方式；它会产生最后一批接触回调，
+                // 因此必须等停用完成后再清除事件控制器中的主角引用。
                 this.gameNode.active = !1;
                 u.default.resetTransientState();
                 this.itemMap = {};
@@ -627,10 +622,8 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     return console.log("111关卡结束未配置参数");
                 }
                 c.default.Smallplot = t;
-                // Persist the destination before entering the transition
-                // scene. If Android kills the process during the chapter
-                // animation, the next launch resumes the new chapter instead
-                // of returning to an already-completed ending.
+                // 进入过场前先保存目标地图，确保 Android 在章节动画中回收进程后，重启
+                // 仍进入新章节，而不是返回已经完成的结尾。
                 c.default.chapter = i;
                 c.default.mapIndex = 1;
                 if (i > c.default.chapterCur) {
@@ -657,9 +650,8 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     t && console.warn("------------ 章节过场预加载失败，将直接加载", t);
                     n();
                 });
-                // Some Android graphics drivers lose the preload completion
-                // callback while tearing down the old scene. Never leave the
-                // player on an inert black frame.
+                // 个别 Android 图形驱动在销毁旧场景时会丢失预载完成回调，超时兜底避免
+                // 玩家永久停在无法操作的黑屏。
                 this.scheduleOnce(function () {
                     if (!transitionHost.m_transitionSceneLoadStarted) {
                         console.warn("------------ 章节过场预加载超时，直接进入");
@@ -696,12 +688,8 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 this.btn_user.opacity = t;
             };
             e.prototype.fitInteractionHud = function () {
-                // The legacy Canvas is 1650 wide while current Android devices
-                // use a 1334-wide visible design area.  Widget's stored
-                // right/bottom offsets therefore place the operation button in
-                // the cropped part of the Canvas.  Position it directly in the
-                // UI camera's visible design area; using physical frame pixels
-                // here produces a second scale conversion on native Android.
+                // 场景 Canvas 宽 1650，而当前 Android 可视设计区约宽 1334，旧 Widget
+                // 偏移会把操作键放进裁切区。直接使用 UI 镜头设计坐标可避免原生端二次缩放。
                 var t = cc.view.getVisibleSize(), e = this.node, o = this.camera_ui, n = cc.game.groupList ? cc.game.groupList.indexOf("ui") : -1;
                 n < 0 && (n = 2);
                 var a = function (t) {
@@ -732,8 +720,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 void 0 === t && (t = 0);
                 this.interactMod = t || c.default.OP_USE;
                 var e = t > 0;
-                // A collision has selected an item.  Expose its operation on the
-                // HUD instead of leaving the item only as a world-space hint.
+                // 碰撞选中物品后同步显示 HUD 操作键，不能只留下世界空间提示。
                 this.fitInteractionHud();
                 this.btn_user.active = e && t != c.default.OP_CLIMB;
                 this.btn_climb.active = e && t == c.default.OP_CLIMB;
@@ -773,14 +760,9 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     if (p && "initPos" != p.key && Number(p.index) < 1e4 && p.eventTrigger) {
                         for (var m = 0; m < p.eventTrigger.length; m++) {
                             var _ = p.eventTrigger[m], f = _ && _.next, g = f && t[f];
-                            // Legacy events are persisted as finished before
-                            // their delayed `next` callback runs. If Android is
-                            // stopped during that delay, the callback disappears
-                            // and the chapter can never advance after restore.
-                            // A positive delay plus a finished predecessor is an
-                            // unambiguous recovery marker. Exclude initPos role
-                            // events because those intentionally do not persist
-                            // their transient animation state as finished.
+                            // 事件会在延迟的 next 回调前保存为完成；若进程在延迟期间停止，
+                            // 回调消失后流程将无法继续。“正延迟且前驱已完成”可作为明确恢复
+                            // 标记，但 initPos 角色事件的临时动画本就不应保存，需要排除。
                             if (_.isFinish && Number(_.last) > 0 && f && g && !g.isFinish && !o[f]) {
                                 o[f] = !0;
                                 e.push(f);
@@ -834,11 +816,8 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 this.m_chapterTransitionPending = !0;
                 this.operateDir = 0;
                 this.gameOperate = !0;
-                // The event that ends a chapter may itself be running from a
-                // cc.Action callback. Destroying its physics target inside the
-                // same ActionManager tick leaves that callback with one stale
-                // update. Defer teardown to a scheduler tick after the current
-                // action frame has completed.
+                // 章节结束事件可能正在 cc.Action 回调内；同一个 ActionManager 更新周期
+                // 销毁物理目标会留下过期更新，因此推迟到当前动作帧结束后的调度周期清理。
                 var e = this;
                 this.scheduleOnce(function () {
                     e.goTransitionScene(t);
@@ -846,9 +825,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
             };
             e.prototype.alignLayer = function () {
                 var t = this.camera_master.node.x, e = this.camera_master.node.y;
-                // Most story scenes spend long periods completely still.
-                // Avoid dirtying ten parallax transforms every frame when the
-                // camera has not moved.
+                // 剧情场景经常长时间静止，镜头未移动时不重复写入十余个视差节点变换。
                 if (this.m_lastParallaxX === t && this.m_lastParallaxY === e) return;
                 this.m_lastParallaxX = t;
                 this.m_lastParallaxY = e;
@@ -874,11 +851,8 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 this.layer_far3.y = .4 * e;
             };
             e.prototype.alignCamera = function () {
-                // Some legacy story shots leave camera following disabled even
-                // after control has been returned to the player.  Do not allow
-                // a freely controlled hero to walk out to the edge of the
-                // viewport: once the horizontal safe area is exceeded, resume
-                // normal tracking automatically.
+                // 部分剧情镜头在恢复操作后仍关闭跟随；主角越过水平安全区时自动恢复跟随，
+                // 避免可控制角色走到视口边缘。
                 if (!this.hero) {
                     this.alignLayer();
                     return;
@@ -959,8 +933,8 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 this.btn_user.on(cc.Node.EventType.TOUCH_CANCEL, this.endBack, this);
                 this.btn_throw.on(cc.Node.EventType.TOUCH_START, this.throwBack, this);
                 this.btn_climb.on(cc.Node.EventType.TOUCH_START, this.startClimbBack, this);
-                // The restored full-screen Spine layer wins node hit testing on
-                // Android.  Use a non-swallowing global listener for the ground.
+                // 全屏 Spine 层在 Android 节点命中测试中会覆盖地面，因此地面改用不吞噬
+                // 事件的全局监听器。
                 this.installGlobalTouchControls();
                 this.setThrowBtn(!1);
                 this.btn_user.active = !1;
@@ -1018,15 +992,20 @@ var i, n = this && this.__extends || (i = function (t, e) {
             };
             e.prototype.installGlobalTouchControls = function () {
                 var t = this;
-                this.m_globalTouchListener && cc.eventManager.removeListener(this.m_globalTouchListener);
+                // 2.4.15 访问已移除的 cc.eventManager 属性会主动记录 ERROR；底层兼容
+                // 分发器仍由 cc.internal 暴露，使用同一实例可保留“不吞噬触摸”的能力。
+                var e = cc.internal && cc.internal.eventManager;
+                if (!e) {
+                    console.error("[GameplaySceneController] 全局触摸分发器不可用");
+                    return;
+                }
+                this.m_globalTouchListener && e.removeListener(this.m_globalTouchListener);
                 this.m_globalTouchListener = cc.EventListener.create({
                     event: cc.EventListener.TOUCH_ONE_BY_ONE,
                     swallowTouches: !1,
                     onTouchBegan: function (e) {
-                        // Popup roots use the UI camera, while this legacy global
-                        // listener runs below the node event dispatcher. Without
-                        // an explicit modal guard, the same press can close a
-                        // pickup card and also move/use/pause the game beneath it.
+                        // 弹窗使用 UI 镜头，而全局监听位于节点分发器下层；显式检查模态状态，
+                        // 防止一次触摸既关闭拾取卡又触发底层移动、使用或暂停。
                         if (d.default.hasOpenPopup && d.default.hasOpenPopup()) {
                             t.controlCancel();
                             return !1;
@@ -1065,7 +1044,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                         t.controlCancel();
                     }
                 });
-                cc.eventManager.addListener(this.m_globalTouchListener, -1);
+                e.addListener(this.m_globalTouchListener, -1);
             };
             e.prototype.getCurrentInteractionTouch = function (t) {
                 var e = u.default.cItem, o = e && e.activeInHierarchy && e.getComponent("InteractiveObject"), i = o && o.getOpType();
@@ -1073,20 +1052,16 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 var n = e.x - this.hero.x, a = e.y - this.hero.y;
                 if (Math.abs(n) > 300 || Math.abs(a) > 300) return null;
                 var s = this.camera_master.getComponent(cc.Camera), r = e.parent ? e.parent.convertToWorldSpaceAR(e.position) : e.position, c = s ? s.getWorldToScreenPoint(r) : r, l = t.getLocation();
-                // Include the visible torso and legs, but leave the surrounding
-                // road available for movement. This is deliberately tied to
-                // cItem, so unrelated scenery can never consume the tap.
+                // 命中区覆盖可见躯干和腿部，同时保留周围道路用于移动；只绑定当前 cItem，
+                // 避免无关景物消耗触摸。
                 return cc.rect(c.x - 110, c.y - 45, 220, 310).contains(l) ? o : null;
             };
             e.prototype.getInteractiveBubble = function (t) {
                 if (!this.itemMap) return null;
                 var e = t.getLocation(), o = e, i = this.camera_master && this.camera_master.getComponent(cc.Camera), n = cc.view.getScaleX ? cc.view.getScaleX() : 1, a = cc.view.getScaleY ? cc.view.getScaleY() : 1;
-                // Item bubbles live in the scrolling world, so their world
-                // bounds must be compared with a camera-projected touch point.
-                // Android JSB reports Touch in design coordinates here, and
-                // Creator's Camera projection uses that same space.  Do not test
-                // scale-multiplied/divided aliases: those aliases can fold a road
-                // tap hundreds of pixels away back into a nearby door bubble.
+                // 物品气泡位于滚动世界中，需用镜头投影后的触点比较世界边界。Android
+                // JSB 与 Creator 镜头在这里都使用设计坐标，额外乘除缩放会把远处道路
+                // 触摸错误折算到附近入口气泡。
                 i && (o = i.getScreenToWorldPoint(e));
                 var r = [e];
                 var l = null, h = Number.MAX_VALUE, d = null;
@@ -1095,14 +1070,11 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     if (_ && _.activeInHierarchy) {
                         var f = _.getBoundingBoxToWorld(), g = _.getChildByName("Background"), v = g && g.getBoundingBoxToWorld();
                         if (i) {
-                            // Creator 2.4 native returns these camera-projected
-                            // points in the same design space as Touch here.
-                            // Dividing by view scale a second time shifts a
-                            // visible NPC bubble hundreds of pixels left/up.
+                            // Creator 原生镜头投影与 Touch 返回同一设计坐标；再次除以视图
+                            // 缩放会让可见 NPC 气泡向左上偏移数百像素。
                             var b = v || f, y = i.getWorldToScreenPoint(cc.v2(b.xMin, b.yMin)), w = i.getWorldToScreenPoint(cc.v2(b.xMax, b.yMax));
-                            // A modest design-space margin keeps the bubbles
-                            // finger-friendly without creating invisible
-                            // half-screen blockers around raised item tips.
+                            // 适量设计坐标边距兼顾手指点击，又不会在抬高的物品提示周围形成
+                            // 不可见的半屏阻挡。
                             var S = 26, I = 32, C = cc.rect(Math.min(y.x, w.x) - S, Math.min(y.y, w.y) - I, Math.abs(w.x - y.x) + 2 * S, Math.abs(w.y - y.y) + 2 * I), M = cc.v2((C.xMin + C.xMax) / 2, (C.yMin + C.yMax) / 2);
                             d || (d = p + " touch=" + Math.round(e.x) + "," + Math.round(e.y) + " projected=" + Math.round(C.xMin) + "," + Math.round(C.yMin) + "," + Math.round(C.width) + "," + Math.round(C.height) + " scale=" + n.toFixed(3) + "," + a.toFixed(3));
                             for (var x = 0; x < r.length; x++) if (C.contains(r[x])) {
@@ -1137,11 +1109,9 @@ var i, n = this && this.__extends || (i = function (t, e) {
                     x: o.width - 105,
                     y: 245
                 }], n = null, a = Number.MAX_VALUE;
-                // The legacy prefabs contain a roughly 283px transparent node
-                // around a 130px visible disc. Native Button/bounds tests made
-                // that invisible area consume nearby road taps. All three HUD
-                // controls are positioned at these screen centres above, so a
-                // finger-friendly 84px circle is both accurate and sufficient.
+                // 旧预制体在约 130 像素圆盘外还有约 283 像素透明节点，原生 Button
+                // 边界会吞掉附近道路触摸。三个 HUD 控件均已按圆心定位，84 像素半径
+                // 足以兼顾准确性和手指操作。
                 for (var s = 0; s < i.length; s++) {
                     var r = i[s], c = r.node, l = e.x - r.x, h = e.y - r.y, p = l * l + h * h;
                     c && c.activeInHierarchy && p <= 84 * 84 && p < a && (a = p, n = c);
@@ -1169,7 +1139,8 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 this.btn_user && this.btn_user.off(cc.Node.EventType.TOUCH_CANCEL, this.endBack, this);
                 this.btn_throw && this.btn_throw.off(cc.Node.EventType.TOUCH_START, this.throwBack, this);
                 this.btn_climb && this.btn_climb.off(cc.Node.EventType.TOUCH_START, this.startClimbBack, this);
-                this.m_globalTouchListener && cc.eventManager.removeListener(this.m_globalTouchListener);
+                var e = cc.internal && cc.internal.eventManager;
+                this.m_globalTouchListener && e && e.removeListener(this.m_globalTouchListener);
                 this.m_globalTouchListener = null;
                 this.m_onGameHide && cc.game.off(cc.game.EVENT_HIDE, this.m_onGameHide, this);
                 this.m_onGameHide = null;
@@ -1178,11 +1149,9 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 u.default.resetTransientState();
                 l.default.stopSceneSounds();
                 w.default.destroy(this);
-                // Cocos invokes component onDestroy after its node hierarchy has
-                // started teardown. Serialized child references can therefore
-                // still be truthy while their internal component arrays are
-                // already gone. Guard every engine-object access so rapid scene
-                // switches cannot query or destroy an invalid native object.
+                // Cocos 会在节点树开始拆除后调用 onDestroy；序列化子节点引用此时可能仍
+                // 为真，但内部组件数组已消失。访问引擎对象前必须防御检查，避免快速切场
+                // 查询或销毁无效原生对象。
                 if (this.camera_part && cc.isValid(this.camera_part, !0)) {
                     var t = this.camera_part.getComponent(cc.Camera);
                     t && cc.isValid(t, !0) && (t.targetTexture = null);
@@ -1246,10 +1215,8 @@ var i, n = this && this.__extends || (i = function (t, e) {
             };
             e.prototype.revalidateInteractionStack = function () {
                 if (!this.hero || this.isCheck || this.gameOperate || d.default.hasOpenPopup && d.default.hasOpenPopup()) return;
-                // Begin/end contact remains the sole source of interaction
-                // candidates, matching the original APK. This pass only clears
-                // stale contacts after a destroyed node, teleport or missed
-                // physics callback; it never discovers distant map objects.
+                // 交互候选仍只来自物理接触开始/结束。本轮只清理节点销毁、传送或漏回调
+                // 产生的过期接触，不会主动发现远处地图物体。
                 for (var t = u.default.itemStack.length - 1; t >= 0; t--) {
                     var e = u.default.itemStack[t];
                     if (!e || !e.activeInHierarchy || Math.abs(e.x - this.hero.x) > 300 || Math.abs(e.y - this.hero.y) > 300) {
@@ -1286,8 +1253,7 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 }
                 this.alignCamera();
                 if (this.m_moveSavePending && this.hero_ts && null == this.hero_ts.targetX && null == this.hero_ts.targetY && !this.isCheck && !this.gameOperate) {
-                    // Coalesce a burst of short ground taps into one save. The
-                    // background hook still forces an immediate snapshot.
+                    // 连续短点地面合并为一次存档，进入后台时仍强制立即快照。
                     if (++this.m_moveSaveFrames >= 45) {
                         this.m_moveSavePending = !1;
                         this.m_moveSaveFrames = 0;
@@ -1477,16 +1443,12 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 if ("scenes_d2_2" != this.mapName || !this.hero || !this.hero_ts || t <= this.hero.x + 50 || this.hero.x < -1650 || this.hero.x > -1500 || this.hero.y < -50) return !1;
                 var o = this.itemMap && this.itemMap[11], i = o && o.getComponent("InteractiveObject"), n = i && i.getConf();
                 if (!n || 7 != Number(n.lastEvent)) return !1;
-                // The fallen tree connects the upper ledge to the waterfall's
-                // lower path.  Its old JSB physics relied on an animated shape
-                // that is not reproduced by Creator 2.4's static map collider;
-                // normal walking therefore stops forever at x=-1593.  Treat the
-                // committed rightward input as a short one-way ramp traversal.
+                // 倒树连接上层平台与瀑布下路，但其动画碰撞形状无法由静态地图碰撞体复现，
+                // 普通行走会卡在 x=-1593。持续向右输入时执行一次短距离单向坡道穿越。
                 this.changeForceWait(!0);
                 this.hero_ts.setEntity(!1);
                 this.hero_ts.alignPos({
-                    // Land beyond the waterfall rock's broad static collider;
-                    // x=-900 looks clear but still overlaps it on the right.
+                    // 落点越过瀑布岩石的宽静态碰撞体；x=-900 看似空旷仍会与右缘重叠。
                     x: -600,
                     y: -530
                 }, function () {
@@ -1506,15 +1468,14 @@ var i, n = this && this.__extends || (i = function (t, e) {
                 if (d.default.hasOpenPopup && d.default.hasOpenPopup()) return;
                 if (this.hero_ts && this.hero) {
                     if (this.tryDeadTreeDescent(t)) return;
-                    // Scripted close-ups occasionally omit their matching
-                    // restore event. Once free input resumes, keep the hero and
-                    // nearby interaction UI inside the playable safe area.
+                    // 个别脚本特写缺少对应恢复事件；自由输入恢复后，将主角和附近交互界面
+                    // 保持在可玩安全区内。
                     if (!this.gameOperate) {
                         this.isLockCamera = !0;
                         this.camera_master_ts.restoreHeroTracking(this.cameraTargetForHero(this.hero));
                     }
-                    // Story events can unschedule role_1.moveAct().  A new player
-                    // input must re-enable it before assigning the next target.
+                    // 剧情事件可能取消 role_1.moveAct() 调度，新玩家输入在设置目标前必须
+                    // 重新启用移动更新。
                     this.hero_ts.setControl(!0);
                     this.hero_ts.posMove(t, e);
                     this.m_moveSavePending = !0;
@@ -1647,10 +1608,8 @@ var i, n = this && this.__extends || (i = function (t, e) {
             };
             e.prototype.startBack = function () {
                 if (d.default.hasOpenPopup && d.default.hasOpenPopup()) return;
-                // Timing mini-games intentionally keep the scene locked while
-                // the meter is running. The visible action button must still
-                // be able to submit the second press; otherwise only the small
-                // world-space bubble works and the HUD appears broken.
+                // 计时玩法运行时会主动锁定场景，但可见操作键仍要接受第二次按下；否则
+                // 只能点击很小的世界气泡，HUD 会表现得像失效。
                 var t = u.default.cItem, e = t && t.getComponent(timingEvent.default), o = !!(e && e.isTiming);
                 if (!((this.isCheck && !o) || this.isToucheLong || this.btnShield > 0)) {
                     this.btnShield = 25;

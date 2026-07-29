@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * 模块职责：管理音乐和音效的加载、播放、音量与释放。
+ * 关键约束：不同音频类别分别计算音量，避免旧语音滑块误伤脚步和动作反馈。
+ */
+
 Object.defineProperty(exports, "__esModule", {
     value: !0
 });
@@ -135,9 +140,8 @@ var AudioManager = function () {
     };
 
     AudioManager.refreshSoundVolumes = function () {
-        // Creator exposes one legacy global effects volume for every category.
-        // Keep it neutral so the unused voice slider cannot mute footsteps and
-        // action sounds, then apply the player's sound setting per active clip.
+        // Creator 只提供一个覆盖所有类别的全局音效音量；将它保持中性，再按每个活动
+        // 音频应用玩家设置，避免未使用的语音滑块静音脚步和动作音效。
         cc.audioEngine.setEffectsVolume(1);
         var soundVolume = numberInRange(GameState.default.MUSIC_SOUND, 1);
         for (var key in this.soundMap) {
